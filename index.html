@@ -160,6 +160,20 @@ ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
 .tips { display: grid; gap: 12px; }
 .tip { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 
+/* perfil */
+.profile { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.big { font-family: var(--display); font-size: 1.5rem; font-weight: 800; color: var(--leaf); }
+.goals { display: grid; gap: 8px; }
+.goal { display: grid; grid-template-columns: 7.5rem 1fr; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.goal b { font-family: var(--display); font-size: 1.1rem; color: var(--leaf); }
+.goal span { color: var(--muted); font-size: .9rem; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row input { flex: 1 1 140px; min-width: 0; font: inherit; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.plog { list-style: none; margin: 12px 0 0; padding: 0; display: grid; }
+.plog li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.plog .del { border: 0; background: none; color: var(--muted); font-size: .8rem; text-decoration: underline; padding: 0; }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -192,6 +206,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <span class="pill num">~1.900 kcal/dia</span>
       <span class="pill water num" id="water-pill">Água 0 de 12 copos</span>
       <span class="pill warm">Amamentando</span>
+      <span class="pill num" id="peso-pill">Meta: −0,5 kg/semana</span>
     </div>
   </header>
 
@@ -274,14 +289,46 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   <!-- DICAS -->
   <section data-view="dicas" hidden>
     <div>
-      <p class="eyebrow">Como funciona o plano</p>
-      <h2>Emagrecer amamentando, com calma</h2>
+      <p class="eyebrow">Avaliação</p>
+      <h2>Meu plano</h2>
     </div>
+    <div class="next">
+      <div class="profile">
+        <div><p class="eyebrow">Peso atual</p><p class="big num" id="pf-peso">70 kg</p></div>
+        <div><p class="eyebrow">Altura</p><p class="big num">1,50 m</p></div>
+        <div><p class="eyebrow">IMC</p><p class="big num" id="pf-imc">31,1</p></div>
+      </div>
+      <p class="muted" id="pf-imc-txt"></p>
+      <div class="bar"><i id="pf-bar" style="background:var(--leaf)"></i></div>
+      <p class="num" id="pf-meta"></p>
+    </div>
+
+    <div class="goals">
+      <div class="goal"><b class="num">66,5 kg</b><span>Meta 1 · perder 5% · cerca de 7 semanas</span></div>
+      <div class="goal"><b class="num">63 kg</b><span>Meta 2 · perder 10% · cerca de 14 semanas</span></div>
+      <div class="goal"><b class="num">56 a 58 kg</b><span>Peso saudável para 1,50 m · depois, com calma</span></div>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:8px">Registrar peso</h3>
+      <p class="muted" style="margin-bottom:10px">Pese-se 1 vez por semana, no mesmo dia, de manhã, depois de amamentar e antes de comer.</p>
+      <form id="peso-form" class="row">
+        <label for="peso-input" class="sr">Peso em kg</label>
+        <input id="peso-input" type="number" inputmode="decimal" step="0.1" min="35" max="200" placeholder="Ex.: 69,4">
+        <button class="btn" type="submit">Salvar peso</button>
+      </form>
+      <ul class="plog num" id="peso-log"></ul>
+    </div>
+
     <div class="tips">
-      <div class="tip"><h3>Por que ~1.900 kcal?</h3><p>Quem amamenta gasta uns 400 a 500 kcal a mais por dia para produzir leite. Comer menos de 1.800 kcal pode diminuir o leite e deixar você sem energia. Com esse plano, a perda costuma ser de 0,5 kg por semana, que é o ritmo seguro.</p></div>
+      <div class="tip"><h3>Suas contas</h3><p>Seu corpo gasta cerca de <b>1.330 kcal</b> só para funcionar (metabolismo basal, calculado para uma mulher de uns 30 anos). Com a rotina de casa e o bebê, isso vai para uns <b>1.850 kcal</b>. A amamentação soma mais uns <b>500 kcal</b>. Total: cerca de <b>2.350 kcal</b> por dia.</p><p style="margin-top:6px">O plano dá <b>~1.900 kcal</b>. A diferença de ~450 kcal por dia vira cerca de <b>0,5 kg a menos por semana</b>, sem mexer no seu leite.</p></div>
+      <div class="tip"><h3>Proteína: 90 a 110 g por dia</h3><p>É o que mais segura a fome e protege o leite. Por isso todo café da manhã tem ovo, leite ou queijo, e almoço e jantar têm frango ou ovo.</p></div>
+      <div class="tip"><h3>Como não passar fome</h3><p>1. Coma a cada 2h30 a 3h, nos horários do cardápio. Pular refeição dá fome forte depois.<br>2. Comece almoço e jantar pela salada. Folhas e legumes são à vontade.<br>3. Mastigue devagar: o corpo leva 20 minutos para avisar que está satisfeito.<br>4. Água antes de cada refeição e em toda mamada.<br>5. Fome mesmo assim? Use a aba <b>Fome!</b>: até 2 lanches extras por dia estão previstos.<br>6. Durma quando o bebê dormir, se der. Noite mal dormida aumenta a fome no dia seguinte.</p></div>
+      <div class="tip"><h3>Sem café</h3><p>Você não toma café preto, então o café da manhã usa <b>leite puro ou morno com canela</b>. Você não precisa de cafeína, e o bebê também agradece.</p></div>
+      <div class="tip"><h3>Não desça de 1.800 kcal</h3><p>Comer menos que isso amamentando pode diminuir o leite e deixar você sem energia. Perder mais rápido que 1 kg por semana não é o objetivo.</p></div>
       <div class="tip"><h3>Medidas caseiras</h3><p><b>Colher de sopa (cs)</b> = colher grande de mesa, cheia mas sem montinho. <b>Concha</b> = concha média de feijão. <b>Filé de frango de 120 g</b> = do tamanho da palma da sua mão. <b>Xícara</b> = 240 ml.</p></div>
       <div class="tip"><h3>Proteína em toda refeição</h3><p>Frango, ovo, leite, iogurte, queijo e feijão seguram a fome por mais tempo. Por isso aparecem em quase todas as refeições.</p></div>
-      <div class="tip"><h3>Fome de verdade é normal</h3><p>Se você tiver fome depois de seguir o cardápio, use a aba <b>Fome</b>. Até 2 lanches extras por dia não atrapalham. Se a fome for todo dia e muito forte, aumente 2 cs de arroz no almoço.</p></div>
+      <div class="tip"><h3>Fome todo dia, muito forte?</h3><p>Aumente 2 cs de arroz no almoço ou 1 ovo no café da manhã. Se o peso parar de cair por 3 semanas seguidas, volte ao cardápio original sem os extras.</p></div>
       <div class="tip"><h3>Troca livre</h3><p>Não gostou de um dia? Troque pelo cardápio de outro dia. Todos têm calorias parecidas. Arroz pode virar macarrão (mesma quantidade) ou batata-doce (1 média).</p></div>
       <div class="tip"><h3>Fica fora do plano</h3><p>Chia, quiabo e carne vermelha não aparecem em nenhuma receita. A proteína vem de frango, ovos, leite e feijão.</p></div>
       <div class="tip"><h3>Converse com quem te acompanha</h3><p>Este é um plano geral. Mostre para sua nutricionista, médica ou pediatra do bebê, principalmente se você tiver diabetes, anemia, pressão alta ou se o bebê não estiver ganhando peso.</p></div>
@@ -300,7 +347,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     <button type="button" data-tab="compras">
       <svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Compras</button>
     <button type="button" data-tab="dicas">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Dicas</button>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Meu plano</button>
   </div>
 </nav>
 
@@ -318,7 +365,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   var WEEK = [
     { name: "Segunda", short: "Seg", note: "Dia de começar leve: tudo já pronto do preparo de domingo.", meals: {
-      cafe:   { k: 420, items: ["2 ovos mexidos (1 fio de azeite)", "2 fatias de pão integral", "1 xícara de café com leite (200 ml)", "1 banana"] },
+      cafe:   { k: 420, items: ["2 ovos mexidos (1 fio de azeite)", "2 fatias de pão integral", "1 copo de leite (200 ml), puro ou morno com canela", "1 banana"] },
       lanche1:{ k: 180, items: ["1 pote de iogurte natural (170 g)", "1 cs de aveia"] },
       almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 filé de frango grelhado (120 g)", "3 cs de cenoura cozida", "Salada de alface e tomate à vontade + 1 col. chá de azeite"] },
       lanche2:{ k: 230, items: ["1 fatia de pão integral", "1 fatia de queijo branco (30 g)", "1 copo de leite (200 ml)"] },
@@ -326,7 +373,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       ceia:   { k: 150, items: ["1 copo de leite morno (200 ml)", "1/2 maçã"] }
     }},
     { name: "Terça", short: "Ter", note: "O frango desfiado de domingo vira sanduíche e recheio de tapioca hoje.", meals: {
-      cafe:   { k: 400, items: ["1 tapioca média (3 cs de goma)", "Recheio: 1 ovo mexido + 1 fatia de queijo branco", "1 xícara de café com leite (200 ml)"] },
+      cafe:   { k: 400, items: ["1 tapioca média (3 cs de goma)", "Recheio: 1 ovo mexido + 1 fatia de queijo branco", "1 copo de leite (200 ml), puro ou morno com canela"] },
       lanche1:{ k: 160, items: ["1 maçã", "1 fatia de queijo branco (30 g)"] },
       almoco: { k: 530, items: ["4 cs de arroz", "1 concha de feijão", "4 cs de frango desfiado refogado com tomate", "Abobrinha refogada (3 cs)", "Salada de pepino e tomate à vontade"] },
       lanche2:{ k: 220, items: ["1 pote de iogurte natural (170 g)", "1 banana picada", "1 cs de aveia"] },
@@ -334,7 +381,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       ceia:   { k: 150, items: ["1 copo de leite (200 ml)", "2 castanhas-do-pará"] }
     }},
     { name: "Quarta", short: "Qua", note: "Macarrão no jantar. Use a mesma medida do arroz.", meals: {
-      cafe:   { k: 410, items: ["Panqueca de banana: 1 banana + 2 ovos + 2 cs de aveia (frigideira antiaderente)", "1 xícara de café com leite (200 ml)"] },
+      cafe:   { k: 410, items: ["Panqueca de banana: 1 banana + 2 ovos + 2 cs de aveia (frigideira antiaderente)", "1 copo de leite (200 ml), puro ou morno com canela"] },
       lanche1:{ k: 170, items: ["1 pera ou 2 tangerinas", "1 ovo cozido"] },
       almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 coxa ou sobrecoxa de frango assada sem pele", "Brócolis no vapor (4 ramos)", "Salada de alface e cenoura ralada"] },
       lanche2:{ k: 230, items: ["1 fatia de pão integral com 1 ovo mexido", "1 copo de suco natural de laranja (200 ml)"] },
@@ -342,15 +389,15 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       ceia:   { k: 140, items: ["1 pote de iogurte natural (170 g)"] }
     }},
     { name: "Quinta", short: "Qui", note: "Sopa no jantar: faça o dobro e congele uma porção para um dia corrido.", meals: {
-      cafe:   { k: 400, items: ["2 fatias de pão integral", "1 fatia de queijo branco (30 g)", "1 ovo cozido", "1 xícara de café com leite (200 ml)"] },
+      cafe:   { k: 400, items: ["2 fatias de pão integral", "1 fatia de queijo branco (30 g)", "1 ovo cozido", "1 copo de leite (200 ml), puro ou morno com canela"] },
       lanche1:{ k: 180, items: ["1 banana", "1 col. sopa de pasta de amendoim"] },
       almoco: { k: 530, items: ["4 cs de arroz", "1 concha de feijão", "Strogonoff light: 4 cs de frango em cubos + molho de tomate + 2 cs de iogurte natural", "Salada de tomate e pepino à vontade"] },
       lanche2:{ k: 210, items: ["1 copo de vitamina: 200 ml de leite + 1/2 mamão papaia", "1 cs de aveia"] },
       jantar: { k: 400, items: ["Sopa de legumes com frango: 1 prato fundo (batata, cenoura, chuchu, abobrinha e frango desfiado)", "1 fatia de pão integral"] },
       ceia:   { k: 150, items: ["1 copo de leite morno (200 ml)", "1/2 banana"] }
     }},
-    { name: "Sexta", short: "Sex", note: "Cuscuz no café segura a fome até o almoço.", meals: {
-      cafe:   { k: 430, items: ["Cuscuz de milho: 1 fatia média (4 cs de flocão)", "2 ovos mexidos", "1 xícara de café com leite (200 ml)"] },
+    { name: "Sexta", short: "Sex", note: "Cuscuz no café da manhã segura a fome até o almoço.", meals: {
+      cafe:   { k: 430, items: ["Cuscuz de milho: 1 fatia média (4 cs de flocão)", "2 ovos mexidos", "1 copo de leite (200 ml), puro ou morno com canela"] },
       lanche1:{ k: 160, items: ["1 xícara de melão ou melancia picados", "1 fatia de queijo branco (30 g)"] },
       almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 filé de frango acebolado (120 g)", "Purê de abóbora (3 cs)", "Salada verde à vontade"] },
       lanche2:{ k: 220, items: ["1 pote de iogurte natural (170 g)", "1 maçã picada", "1 cs de aveia"] },
@@ -366,7 +413,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       ceia:   { k: 140, items: ["1 pote de iogurte natural (170 g)"] }
     }},
     { name: "Domingo", short: "Dom", note: "Dia do preparo! Veja os passos na aba Compras. Almoço de família, com porções iguais às da semana.", meals: {
-      cafe:   { k: 410, items: ["1 tapioca média (3 cs de goma) com 1 ovo e tomate", "1 xícara de café com leite (200 ml)", "1/2 mamão papaia"] },
+      cafe:   { k: 410, items: ["1 tapioca média (3 cs de goma) com 1 ovo e tomate", "1 copo de leite (200 ml), puro ou morno com canela", "1/2 mamão papaia"] },
       lanche1:{ k: 170, items: ["1 maçã", "1 copo de leite (200 ml)"] },
       almoco: { k: 560, items: ["4 cs de arroz", "1 concha de feijão", "1 coxa de frango assada com batatas (2 batatas pequenas)", "Salada de alface e tomate à vontade"] },
       lanche2:{ k: 220, items: ["Vitamina: 200 ml de leite + 1 banana", "1 cs de aveia"] },
@@ -392,7 +439,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   var WATER = [
     { t: "06:30", g: 1, w: "ao acordar" },
-    { t: "08:00", g: 1, w: "depois do café" },
+    { t: "08:00", g: 1, w: "depois do café da manhã" },
     { t: "09:00", g: 1, w: "meio da manhã" },
     { t: "11:00", g: 1, w: "antes do almoço" },
     { t: "12:00", g: 1, w: "30 min antes de comer" },
@@ -411,7 +458,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     { cat: "Pães e grãos", items: [["Pão integral", "2 pacotes"], ["Arroz", "1 kg"], ["Macarrão integral", "500 g"], ["Aveia em flocos", "1 pacote"], ["Goma de tapioca", "500 g"], ["Flocão de milho (cuscuz)", "500 g"], ["Pão sírio integral", "1 pacote"], ["Milho de pipoca", "1 pacote"]] },
     { cat: "Frutas", items: [["Banana", "2 pencas"], ["Maçã", "6 unid."], ["Tangerina", "6 unid."], ["Mamão papaia", "2 unid."], ["Laranja (suco)", "1 kg"], ["Melão ou melancia", "1 pedaço"], ["Pera ou kiwi", "3 unid."]] },
     { cat: "Legumes e verduras", items: [["Alface", "2 pés"], ["Tomate", "1 kg"], ["Pepino", "3 unid."], ["Cenoura", "1 kg"], ["Abobrinha", "3 unid."], ["Brócolis", "1 maço"], ["Chuchu", "2 unid."], ["Batata", "1 kg"], ["Abóbora", "1 pedaço"], ["Espinafre ou couve", "1 maço"], ["Cebola e alho", "o de sempre"]] },
-    { cat: "Outros", items: [["Pasta de amendoim", "1 pote"], ["Castanha-do-pará", "100 g"], ["Azeite", "1 vidro"], ["Molho de tomate", "2 caixinhas"], ["Café", "1 pacote"], ["Orégano e canela", "se acabou"]] }
+    { cat: "Outros", items: [["Pasta de amendoim", "1 pote"], ["Castanha-do-pará", "100 g"], ["Azeite", "1 vidro"], ["Molho de tomate", "2 caixinhas"], ["Canela em pó", "1 pote"], ["Orégano", "se acabou"]] }
   ];
 
   // ---------- ARMAZENAMENTO (só neste aparelho) ----------
@@ -566,6 +613,49 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   });
   $("shop-clear").addEventListener("click", function () { shopState = {}; save("mp:shop", shopState); renderShop(); });
 
+  // ---------- MEU PLANO / PESO ----------
+  var START = 70, HEIGHT = 1.5, GOAL = 63;
+  var pesos = load("mp:pesos", []);
+  function fmt(n, d) { return n.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function imcTxt(imc) {
+    if (imc < 18.5) return "abaixo do peso";
+    if (imc < 25) return "peso saudável";
+    if (imc < 30) return "sobrepeso";
+    if (imc < 35) return "obesidade grau 1";
+    return "obesidade grau 2";
+  }
+  function renderPeso() {
+    var cur = pesos.length ? pesos[pesos.length - 1].kg : START;
+    var imc = cur / (HEIGHT * HEIGHT);
+    $("pf-peso").textContent = fmt(cur, cur % 1 ? 1 : 0) + " kg";
+    $("pf-imc").textContent = fmt(imc, 1);
+    $("pf-imc-txt").textContent = "IMC " + fmt(imc, 1) + ": " + imcTxt(imc) + ". Para 1,50 m, o peso saudável vai de 42 a 56 kg.";
+    var lost = START - cur, toGo = cur - GOAL;
+    $("pf-bar").style.width = Math.max(0, Math.min(100, lost / (START - GOAL) * 100)) + "%";
+    $("pf-meta").textContent = (lost > 0 ? "Você já perdeu " + fmt(lost, 1) + " kg. " : "Começando em 70 kg. ") +
+      (toGo > 0 ? "Faltam " + fmt(toGo, 1) + " kg para a meta 2 (63 kg)." : "Meta 2 alcançada!");
+    $("peso-pill").textContent = lost > 0 ? "−" + fmt(lost, 1) + " kg até agora" : "Meta: −0,5 kg/semana";
+    $("peso-log").innerHTML = pesos.slice().reverse().map(function (p, i) {
+      var idx = pesos.length - 1 - i, prev = idx > 0 ? pesos[idx - 1].kg : START, diff = p.kg - prev;
+      var dd = p.d.split("-");
+      return '<li><span>' + dd[2] + "/" + dd[1] + '</span><b>' + fmt(p.kg, 1) + ' kg</b><span class="muted">' +
+        (diff === 0 ? "=" : (diff > 0 ? "+" : "−") + fmt(Math.abs(diff), 1)) + '</span><button type="button" class="del" data-del="' + idx + '">apagar</button></li>';
+    }).join("");
+  }
+  $("peso-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = parseFloat(String($("peso-input").value).replace(",", "."));
+    if (!(v >= 35 && v <= 200)) { $("peso-input").focus(); return; }
+    var d = key(new Date());
+    pesos = pesos.filter(function (p) { return p.d !== d; });
+    pesos.push({ d: d, kg: Math.round(v * 10) / 10 });
+    save("mp:pesos", pesos); $("peso-input").value = ""; renderPeso();
+  });
+  $("peso-log").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-del]"); if (!b) return;
+    pesos.splice(+b.getAttribute("data-del"), 1); save("mp:pesos", pesos); renderPeso();
+  });
+
   // ---------- ABAS ----------
   var TABS = ["cardapio", "fome", "agua", "compras", "dicas"];
   function show(tab) {
@@ -581,7 +671,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     var b = e.target.closest("[data-tab]"); if (b) show(b.getAttribute("data-tab"));
   });
 
-  renderCardapio(); renderWater(); renderShop();
+  renderCardapio(); renderWater(); renderShop(); renderPeso();
   show((location.hash || "").slice(1) || "cardapio");
 
   // atualiza "próxima refeição" a cada minuto
