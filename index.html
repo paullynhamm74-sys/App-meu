@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--APP-START-->
+<title>Meu Prato da Semana</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: app de celular, uma coluna, navegação fixa embaixo; cartões só para a próxima refeição */
+:root {
+  --bg: #f4f7f2;
+  --surface: #ffffff;
+  --ink: #1d2a22;
+  --muted: #5d6e63;
+  --line: #dde6dc;
+  --leaf: #2f6b4f;
+  --leaf-soft: #e1eee5;
+  --apricot: #e9894a;
+  --apricot-soft: #fbe9dc;
+  --water: #2f7fc1;
+  --water-soft: #e2eff9;
+  --done: #8aa596;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
+    --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
+    --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
+  --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
+  --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.5;
+}
+.wrap {
+  max-width: 640px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 110px;
+  display: grid; gap: 20px;
+}
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.15; }
+h1 { font-size: 1.75rem; font-weight: 800; }
+h2 { font-size: 1.3rem; font-weight: 800; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.eyebrow { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); outline-offset: 2px; }
+
+/* header */
+.top { display: grid; gap: 12px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px; font-size: .85rem; font-weight: 700;
+  background: var(--leaf-soft); color: var(--leaf);
+}
+.pill.water { background: var(--water-soft); color: var(--water); }
+.pill.warm { background: var(--apricot-soft); color: var(--apricot); }
+
+/* day chips */
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+  padding: 8px 0; display: grid; justify-items: center; gap: 0; font-weight: 800; font-size: .85rem;
+}
+.day small { font-weight: 600; font-size: .7rem; color: var(--muted); }
+.day[aria-pressed="true"] { background: var(--leaf); border-color: var(--leaf); color: var(--bg); }
+.day[aria-pressed="true"] small { color: var(--bg); opacity: .85; }
+.day.today:not([aria-pressed="true"]) { border-color: var(--leaf); }
+
+/* next meal */
+.next {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 18px; display: grid; gap: 10px;
+  box-shadow: 0 6px 20px -12px rgba(30, 60, 40, .35);
+}
+.next .when { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.next .time { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--leaf); }
+
+/* meals list */
+.meals { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.meal { display: grid; grid-template-columns: 58px 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.meal .t { font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--leaf); padding-top: 1px; }
+.meal .body { min-width: 0; display: grid; gap: 4px; }
+.meal ul, .next ul { margin: 0; padding-left: 18px; display: grid; gap: 2px; }
+.meal li, .next li { font-size: .95rem; }
+.meal .kcal { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.meal.done .body { color: var(--done); }
+.meal.done .body li { text-decoration: line-through; text-decoration-thickness: 1px; }
+.meal.is-next .t::after { content: "agora"; display: block; font-family: var(--body); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; color: var(--apricot); }
+
+.check {
+  width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface);
+  display: grid; place-items: center; flex: none;
+}
+.check svg { width: 18px; height: 18px; opacity: 0; }
+.check[aria-pressed="true"] { background: var(--leaf); border-color: var(--leaf); }
+.check[aria-pressed="true"] svg { opacity: 1; stroke: var(--bg); }
+
+.btn {
+  border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 800;
+  background: var(--leaf); color: var(--bg);
+}
+.btn.ghost { background: var(--leaf-soft); color: var(--leaf); }
+
+/* sections */
+section[data-view] { display: grid; gap: 16px; }
+.note { background: var(--apricot-soft); color: var(--ink); border-radius: 14px; padding: 14px 16px; font-size: .92rem; display: grid; gap: 6px; }
+.note strong { color: var(--apricot); }
+
+/* hunger */
+.snacks { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.snack { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.snack .q { font-size: .9rem; color: var(--muted); grid-column: 1 / -1; }
+.snack .tag { font-size: .72rem; font-weight: 800; color: var(--apricot); align-self: center; }
+.random { background: var(--surface); border: 2px dashed var(--apricot); border-radius: 18px; padding: 16px; display: grid; gap: 10px; }
+
+/* water */
+.glasses { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.glass {
+  aspect-ratio: 3 / 4; max-width: 100%; border-radius: 6px 6px 12px 12px; border: 2px solid var(--water);
+  background: var(--surface); position: relative; overflow: hidden; padding: 0;
+}
+.glass::after { content: ""; position: absolute; inset: auto 0 0 0; height: 0; background: var(--water); transition: height .25s ease; }
+.glass[aria-pressed="true"]::after { height: 78%; }
+.glass span { position: relative; z-index: 1; font-size: .7rem; font-weight: 800; color: var(--water); }
+.glass[aria-pressed="true"] span { color: var(--surface); }
+.bar { height: 10px; border-radius: 999px; background: var(--water-soft); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--water); width: 0; transition: width .3s ease; }
+.wtimes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.wtime { display: flex; gap: 8px; align-items: baseline; padding: 10px 12px; border-radius: 12px; background: var(--water-soft); }
+.wtime b { font-family: var(--display); color: var(--water); }
+.wtime small { color: var(--muted); font-size: .8rem; }
+
+/* shopping */
+.shop { display: grid; gap: 18px; }
+.shop ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.shop li label { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.shop input { width: 22px; height: 22px; accent-color: var(--leaf); flex: none; }
+.shop input:checked + span { color: var(--done); text-decoration: line-through; }
+.shop .qty { margin-left: auto; color: var(--muted); font-size: .85rem; white-space: nowrap; }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+
+.tips { display: grid; gap: 12px; }
+.tip { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+
+/* bottom nav */
+nav.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: max(8px, env(safe-area-inset-left, 0px));
+  padding-right: max(8px, env(safe-area-inset-right, 0px));
+}
+nav.tabs .in { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+nav.tabs button {
+  border: 0; background: none; padding: 10px 2px 12px; display: grid; justify-items: center; gap: 2px;
+  font-size: .72rem; font-weight: 800; color: var(--muted);
+}
+nav.tabs svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+nav.tabs button[aria-current="page"] { color: var(--leaf); }
+nav.tabs button.fome[aria-current="page"], nav.tabs button.fome { color: var(--apricot); }
+nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<!--APP-HEAD-END-->
+</head>
+<body>
+<!--APP-BODY-START-->
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow" id="today-label">Hoje</p>
+    <h1 id="greet">Olá, mamãe</h1>
+    <div class="stats">
+      <span class="pill num">~1.900 kcal/dia</span>
+      <span class="pill water num" id="water-pill">Água 0 de 12 copos</span>
+      <span class="pill warm">Amamentando</span>
+    </div>
+  </header>
+
+  <!-- CARDÁPIO -->
+  <section data-view="cardapio">
+    <div class="days" id="days" role="group" aria-label="Dia da semana"></div>
+    <div class="next" id="next"></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px">
+        <h2 id="day-title">Cardápio</h2>
+        <span class="muted num" id="day-progress"></span>
+      </div>
+      <div class="meals" id="meals"></div>
+    </div>
+    <div class="note" id="day-note"></div>
+  </section>
+
+  <!-- FOME -->
+  <section data-view="fome" hidden>
+    <div>
+      <p class="eyebrow">Bateu a fome fora de hora?</p>
+      <h2>Lanches rápidos, já com a porção</h2>
+    </div>
+    <div class="note">
+      <p><strong>Primeiro:</strong> beba 1 copo de água (250 ml). Amamentar dá muita sede, e sede às vezes parece fome.</p>
+      <p>Se em 10 minutos a fome continuar, escolha <b>um</b> lanche da lista. Pode comer sem culpa: seu corpo está produzindo leite.</p>
+    </div>
+    <div class="random">
+      <p class="eyebrow">Não quer pensar? Eu escolho</p>
+      <h3 id="pick">Toque no botão</h3>
+      <p class="muted" id="pick-q">Sorteio um lanche de até 200 kcal para você.</p>
+      <button class="btn" id="pick-btn" type="button">Escolher um lanche</button>
+    </div>
+    <div class="snacks" id="snacks"></div>
+  </section>
+
+  <!-- ÁGUA -->
+  <section data-view="agua" hidden>
+    <div>
+      <p class="eyebrow">Meta de hoje</p>
+      <h2 class="num" id="water-title">0 de 3 litros</h2>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="water-bar"></i></div>
+    <p class="muted">Cada copo = 250 ml. Toque no copo quando beber.</p>
+    <div class="glasses" id="glasses"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="water-add" type="button">+1 copo</button>
+      <button class="btn ghost" id="water-undo" type="button">Desfazer</button>
+    </div>
+    <div class="note">
+      <p><strong>Regra da mamada:</strong> toda vez que for amamentar, deixe um copo de água do lado e beba durante a mamada. Isso já resolve metade da meta.</p>
+    </div>
+    <h3>Horários da água</h3>
+    <div class="wtimes" id="wtimes"></div>
+  </section>
+
+  <!-- COMPRAS -->
+  <section data-view="compras" hidden>
+    <div>
+      <p class="eyebrow">Para a semana toda</p>
+      <h2>Lista de compras</h2>
+    </div>
+    <div class="shop" id="shop"></div>
+    <button class="btn ghost" id="shop-clear" type="button">Desmarcar tudo</button>
+    <div>
+      <h2>Preparo de domingo</h2>
+      <p class="muted" style="margin:6px 0 12px">Cerca de 1h30 no domingo e a semana fica pronta na geladeira.</p>
+      <ol class="steps">
+        <li><b>Frango:</b> cozinhe 1,2 kg de peito de frango com alho, cebola e sal. Desfie metade e guarde a outra metade em filés. Dura 4 dias na geladeira; congele o resto em potes.</li>
+        <li><b>Arroz:</b> faça 3 xícaras de arroz cru (rende uns 9 dias de porções). Guarde em potes de 1 porção e congele metade.</li>
+        <li><b>Feijão:</b> cozinhe 500 g e congele em potes de 2 conchas.</li>
+        <li><b>Ovos:</b> cozinhe 6 ovos (10 min). Duram 5 dias com casca na geladeira. Ótimo lanche de fome.</li>
+        <li><b>Legumes:</b> pique cenoura, abobrinha, brócolis e chuchu. Cozinhe no vapor por 5 min e guarde em pote fechado.</li>
+        <li><b>Salada:</b> lave e seque alface e folhas, guarde com papel-toalha no pote.</li>
+        <li><b>Frutas:</b> deixe banana e maçã à vista na mesa; fruta lavada é fruta comida.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- DICAS -->
+  <section data-view="dicas" hidden>
+    <div>
+      <p class="eyebrow">Como funciona o plano</p>
+      <h2>Emagrecer amamentando, com calma</h2>
+    </div>
+    <div class="tips">
+      <div class="tip"><h3>Por que ~1.900 kcal?</h3><p>Quem amamenta gasta uns 400 a 500 kcal a mais por dia para produzir leite. Comer menos de 1.800 kcal pode diminuir o leite e deixar você sem energia. Com esse plano, a perda costuma ser de 0,5 kg por semana, que é o ritmo seguro.</p></div>
+      <div class="tip"><h3>Medidas caseiras</h3><p><b>Colher de sopa (cs)</b> = colher grande de mesa, cheia mas sem montinho. <b>Concha</b> = concha média de feijão. <b>Filé de frango de 120 g</b> = do tamanho da palma da sua mão. <b>Xícara</b> = 240 ml.</p></div>
+      <div class="tip"><h3>Proteína em toda refeição</h3><p>Frango, ovo, leite, iogurte, queijo e feijão seguram a fome por mais tempo. Por isso aparecem em quase todas as refeições.</p></div>
+      <div class="tip"><h3>Fome de verdade é normal</h3><p>Se você tiver fome depois de seguir o cardápio, use a aba <b>Fome</b>. Até 2 lanches extras por dia não atrapalham. Se a fome for todo dia e muito forte, aumente 2 cs de arroz no almoço.</p></div>
+      <div class="tip"><h3>Troca livre</h3><p>Não gostou de um dia? Troque pelo cardápio de outro dia. Todos têm calorias parecidas. Arroz pode virar macarrão (mesma quantidade) ou batata-doce (1 média).</p></div>
+      <div class="tip"><h3>Fica fora do plano</h3><p>Chia, quiabo e carne vermelha não aparecem em nenhuma receita. A proteína vem de frango, ovos, leite e feijão.</p></div>
+      <div class="tip"><h3>Converse com quem te acompanha</h3><p>Este é um plano geral. Mostre para sua nutricionista, médica ou pediatra do bebê, principalmente se você tiver diabetes, anemia, pressão alta ou se o bebê não estiver ganhando peso.</p></div>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="Seções">
+  <div class="in">
+    <button type="button" data-tab="cardapio" aria-current="page">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cardápio</button>
+    <button type="button" data-tab="fome" class="fome">
+      <svg viewBox="0 0 24 24"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg>Fome!</button>
+    <button type="button" data-tab="agua">
+      <svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Água</button>
+    <button type="button" data-tab="compras">
+      <svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Compras</button>
+    <button type="button" data-tab="dicas">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Dicas</button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  // ---------- DADOS ----------
+  var SLOTS = [
+    { id: "cafe",   name: "Café da manhã",   time: "07:00" },
+    { id: "lanche1",name: "Lanche da manhã", time: "10:00" },
+    { id: "almoco", name: "Almoço",          time: "12:30" },
+    { id: "lanche2",name: "Lanche da tarde", time: "15:30" },
+    { id: "jantar", name: "Jantar",          time: "19:00" },
+    { id: "ceia",   name: "Ceia",            time: "21:30" }
+  ];
+
+  var WEEK = [
+    { name: "Segunda", short: "Seg", note: "Dia de começar leve: tudo já pronto do preparo de domingo.", meals: {
+      cafe:   { k: 420, items: ["2 ovos mexidos (1 fio de azeite)", "2 fatias de pão integral", "1 xícara de café com leite (200 ml)", "1 banana"] },
+      lanche1:{ k: 180, items: ["1 pote de iogurte natural (170 g)", "1 cs de aveia"] },
+      almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 filé de frango grelhado (120 g)", "3 cs de cenoura cozida", "Salada de alface e tomate à vontade + 1 col. chá de azeite"] },
+      lanche2:{ k: 230, items: ["1 fatia de pão integral", "1 fatia de queijo branco (30 g)", "1 copo de leite (200 ml)"] },
+      jantar: { k: 400, items: ["Omelete de 2 ovos com tomate e cebola", "3 cs de arroz", "Salada verde à vontade"] },
+      ceia:   { k: 150, items: ["1 copo de leite morno (200 ml)", "1/2 maçã"] }
+    }},
+    { name: "Terça", short: "Ter", note: "O frango desfiado de domingo vira sanduíche e recheio de tapioca hoje.", meals: {
+      cafe:   { k: 400, items: ["1 tapioca média (3 cs de goma)", "Recheio: 1 ovo mexido + 1 fatia de queijo branco", "1 xícara de café com leite (200 ml)"] },
+      lanche1:{ k: 160, items: ["1 maçã", "1 fatia de queijo branco (30 g)"] },
+      almoco: { k: 530, items: ["4 cs de arroz", "1 concha de feijão", "4 cs de frango desfiado refogado com tomate", "Abobrinha refogada (3 cs)", "Salada de pepino e tomate à vontade"] },
+      lanche2:{ k: 220, items: ["1 pote de iogurte natural (170 g)", "1 banana picada", "1 cs de aveia"] },
+      jantar: { k: 420, items: ["Sanduíche: 2 fatias de pão integral + 3 cs de frango desfiado + alface, tomate e cenoura ralada", "1 cs de requeijão light"] },
+      ceia:   { k: 150, items: ["1 copo de leite (200 ml)", "2 castanhas-do-pará"] }
+    }},
+    { name: "Quarta", short: "Qua", note: "Macarrão no jantar. Use a mesma medida do arroz.", meals: {
+      cafe:   { k: 410, items: ["Panqueca de banana: 1 banana + 2 ovos + 2 cs de aveia (frigideira antiaderente)", "1 xícara de café com leite (200 ml)"] },
+      lanche1:{ k: 170, items: ["1 pera ou 2 tangerinas", "1 ovo cozido"] },
+      almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 coxa ou sobrecoxa de frango assada sem pele", "Brócolis no vapor (4 ramos)", "Salada de alface e cenoura ralada"] },
+      lanche2:{ k: 230, items: ["1 fatia de pão integral com 1 ovo mexido", "1 copo de suco natural de laranja (200 ml)"] },
+      jantar: { k: 450, items: ["1 prato raso de macarrão integral (1 xícara cozido)", "3 cs de frango desfiado ao molho de tomate caseiro", "Salada verde à vontade"] },
+      ceia:   { k: 140, items: ["1 pote de iogurte natural (170 g)"] }
+    }},
+    { name: "Quinta", short: "Qui", note: "Sopa no jantar: faça o dobro e congele uma porção para um dia corrido.", meals: {
+      cafe:   { k: 400, items: ["2 fatias de pão integral", "1 fatia de queijo branco (30 g)", "1 ovo cozido", "1 xícara de café com leite (200 ml)"] },
+      lanche1:{ k: 180, items: ["1 banana", "1 col. sopa de pasta de amendoim"] },
+      almoco: { k: 530, items: ["4 cs de arroz", "1 concha de feijão", "Strogonoff light: 4 cs de frango em cubos + molho de tomate + 2 cs de iogurte natural", "Salada de tomate e pepino à vontade"] },
+      lanche2:{ k: 210, items: ["1 copo de vitamina: 200 ml de leite + 1/2 mamão papaia", "1 cs de aveia"] },
+      jantar: { k: 400, items: ["Sopa de legumes com frango: 1 prato fundo (batata, cenoura, chuchu, abobrinha e frango desfiado)", "1 fatia de pão integral"] },
+      ceia:   { k: 150, items: ["1 copo de leite morno (200 ml)", "1/2 banana"] }
+    }},
+    { name: "Sexta", short: "Sex", note: "Cuscuz no café segura a fome até o almoço.", meals: {
+      cafe:   { k: 430, items: ["Cuscuz de milho: 1 fatia média (4 cs de flocão)", "2 ovos mexidos", "1 xícara de café com leite (200 ml)"] },
+      lanche1:{ k: 160, items: ["1 xícara de melão ou melancia picados", "1 fatia de queijo branco (30 g)"] },
+      almoco: { k: 520, items: ["4 cs de arroz", "1 concha de feijão", "1 filé de frango acebolado (120 g)", "Purê de abóbora (3 cs)", "Salada verde à vontade"] },
+      lanche2:{ k: 220, items: ["1 pote de iogurte natural (170 g)", "1 maçã picada", "1 cs de aveia"] },
+      jantar: { k: 430, items: ["Wrap: 1 pão sírio integral + 3 cs de frango desfiado + alface, tomate e cenoura ralada", "1 cs de requeijão light"] },
+      ceia:   { k: 140, items: ["1 copo de leite (200 ml)", "1 kiwi ou 1/2 maçã"] }
+    }},
+    { name: "Sábado", short: "Sáb", note: "Fim de semana: escondidinho no almoço e pizza de frigideira no jantar.", meals: {
+      cafe:   { k: 420, items: ["2 fatias de pão integral", "1 ovo mexido + 1 fatia de queijo branco", "1 copo de suco natural de laranja (200 ml)"] },
+      lanche1:{ k: 170, items: ["1 banana", "1 copo de leite (200 ml)"] },
+      almoco: { k: 550, items: ["Escondidinho: 4 cs de purê de batata + 4 cs de frango desfiado + 1 col. sopa de queijo ralado", "Arroz 2 cs", "Salada de alface, tomate e cenoura à vontade"] },
+      lanche2:{ k: 200, items: ["2 ovos cozidos", "1 tangerina"] },
+      jantar: { k: 430, items: ["Pizza de frigideira: 2 ovos + 2 cs de aveia (massa)", "Cobertura: molho de tomate, 2 cs de frango desfiado, 1 fatia de queijo, orégano", "Salada verde"] },
+      ceia:   { k: 140, items: ["1 pote de iogurte natural (170 g)"] }
+    }},
+    { name: "Domingo", short: "Dom", note: "Dia do preparo! Veja os passos na aba Compras. Almoço de família, com porções iguais às da semana.", meals: {
+      cafe:   { k: 410, items: ["1 tapioca média (3 cs de goma) com 1 ovo e tomate", "1 xícara de café com leite (200 ml)", "1/2 mamão papaia"] },
+      lanche1:{ k: 170, items: ["1 maçã", "1 copo de leite (200 ml)"] },
+      almoco: { k: 560, items: ["4 cs de arroz", "1 concha de feijão", "1 coxa de frango assada com batatas (2 batatas pequenas)", "Salada de alface e tomate à vontade"] },
+      lanche2:{ k: 220, items: ["Vitamina: 200 ml de leite + 1 banana", "1 cs de aveia"] },
+      jantar: { k: 400, items: ["Arroz com legumes e frango (estilo risoto): 1 prato raso", "Salada verde à vontade"] },
+      ceia:   { k: 150, items: ["1 copo de leite morno (200 ml)", "2 castanhas-do-pará"] }
+    }}
+  ];
+
+  var SNACKS = [
+    { n: "1 banana + 1 col. sopa de pasta de amendoim", k: 180, tag: "Rápido", q: "Segura bem a fome por 2 horas." },
+    { n: "2 ovos cozidos", k: 150, tag: "Pronto", q: "Deixe cozidos na geladeira desde domingo." },
+    { n: "1 pote de iogurte natural (170 g) + 1 col. sopa de aveia", k: 160, tag: "Rápido", q: "Pode adicionar canela." },
+    { n: "1 copo de leite (200 ml) + 1 fruta pequena", k: 170, tag: "Rápido", q: "Ótimo durante a mamada da madrugada." },
+    { n: "1 fatia de pão integral + 1 fatia de queijo branco", k: 150, tag: "Rápido", q: "Esquente na frigideira se quiser." },
+    { n: "1 maçã + 1 fatia de queijo branco", k: 140, tag: "Sem preparo", q: "Doce + proteína." },
+    { n: "Pipoca de panela: 2 cs de milho + 1 col. chá de óleo", k: 130, tag: "Volume", q: "Rende uma tigela grande. Bom para fome de beliscar." },
+    { n: "Vitamina: 200 ml de leite + 1/2 banana", k: 160, tag: "Bebida", q: "Bata no liquidificador em 1 minuto." },
+    { n: "Cenoura e pepino em palitos + 1 ovo cozido", k: 110, tag: "Leve", q: "Mastigar ajuda a acalmar a ansiedade." },
+    { n: "3 castanhas-do-pará + 1 tangerina", k: 160, tag: "Sem preparo", q: "Cabe na bolsa." },
+    { n: "Crepioca: 1 ovo + 1 cs de goma de tapioca", k: 130, tag: "Quente", q: "Pronta em 3 minutos na frigideira." },
+    { n: "1 xícara de melancia ou melão + 1 copo de leite", k: 150, tag: "Leve", q: "Hidrata e mata a fome." }
+  ];
+
+  var WATER = [
+    { t: "06:30", g: 1, w: "ao acordar" },
+    { t: "08:00", g: 1, w: "depois do café" },
+    { t: "09:00", g: 1, w: "meio da manhã" },
+    { t: "11:00", g: 1, w: "antes do almoço" },
+    { t: "12:00", g: 1, w: "30 min antes de comer" },
+    { t: "14:00", g: 1, w: "depois do almoço" },
+    { t: "15:00", g: 1, w: "com o lanche" },
+    { t: "16:30", g: 1, w: "fim da tarde" },
+    { t: "18:00", g: 1, w: "antes do jantar" },
+    { t: "20:00", g: 1, w: "depois do jantar" },
+    { t: "21:00", g: 1, w: "antes da ceia" },
+    { t: "Mamadas", g: 1, w: "+1 copo extra a cada mamada" }
+  ];
+  var WATER_GOAL = 12; // copos de 250 ml = 3 L
+
+  var SHOP = [
+    { cat: "Proteínas", items: [["Peito de frango", "1,2 kg"], ["Coxa/sobrecoxa de frango", "6 unid."], ["Ovos", "2 dúzias"], ["Leite", "5 litros"], ["Iogurte natural", "6 potes"], ["Queijo branco", "300 g"], ["Requeijão light", "1 pote"], ["Queijo ralado", "1 pacote pequeno"], ["Feijão", "1 kg"]] },
+    { cat: "Pães e grãos", items: [["Pão integral", "2 pacotes"], ["Arroz", "1 kg"], ["Macarrão integral", "500 g"], ["Aveia em flocos", "1 pacote"], ["Goma de tapioca", "500 g"], ["Flocão de milho (cuscuz)", "500 g"], ["Pão sírio integral", "1 pacote"], ["Milho de pipoca", "1 pacote"]] },
+    { cat: "Frutas", items: [["Banana", "2 pencas"], ["Maçã", "6 unid."], ["Tangerina", "6 unid."], ["Mamão papaia", "2 unid."], ["Laranja (suco)", "1 kg"], ["Melão ou melancia", "1 pedaço"], ["Pera ou kiwi", "3 unid."]] },
+    { cat: "Legumes e verduras", items: [["Alface", "2 pés"], ["Tomate", "1 kg"], ["Pepino", "3 unid."], ["Cenoura", "1 kg"], ["Abobrinha", "3 unid."], ["Brócolis", "1 maço"], ["Chuchu", "2 unid."], ["Batata", "1 kg"], ["Abóbora", "1 pedaço"], ["Espinafre ou couve", "1 maço"], ["Cebola e alho", "o de sempre"]] },
+    { cat: "Outros", items: [["Pasta de amendoim", "1 pote"], ["Castanha-do-pará", "100 g"], ["Azeite", "1 vidro"], ["Molho de tomate", "2 caixinhas"], ["Café", "1 pacote"], ["Orégano e canela", "se acabou"]] }
+  ];
+
+  // ---------- ARMAZENAMENTO (só neste aparelho) ----------
+  function load(key, fallback) {
+    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
+  }
+  function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  // ---------- DATAS ----------
+  var now = new Date();
+  var todayIdx = (now.getDay() + 6) % 7; // 0 = segunda
+  var selected = todayIdx;
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function dateFor(idx) {
+    var d = new Date(now); d.setDate(now.getDate() + (idx - todayIdx)); return d;
+  }
+  function key(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function minutes(t) { var p = t.split(":"); return (+p[0]) * 60 + (+p[1]); }
+  var nowMin = now.getHours() * 60 + now.getMinutes();
+
+  function dayState(idx) { return load("mp:" + key(dateFor(idx)), { meals: {}, water: 0 }); }
+  function setDayState(idx, s) { save("mp:" + key(dateFor(idx)), s); }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  // ---------- CABEÇALHO ----------
+  var MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  $("today-label").textContent = WEEK[todayIdx].name + "-feira, " + now.getDate() + " de " + MONTHS[now.getMonth()];
+  if (todayIdx >= 5) $("today-label").textContent = WEEK[todayIdx].name + ", " + now.getDate() + " de " + MONTHS[now.getMonth()];
+  var h = now.getHours();
+  $("greet").textContent = (h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite") + ", mamãe";
+
+  // ---------- CARDÁPIO ----------
+  function nextSlotIdx() {
+    for (var i = 0; i < SLOTS.length; i++) {
+      if (minutes(SLOTS[i].time) + 45 >= nowMin) return i;
+    }
+    return -1;
+  }
+
+  function renderDays() {
+    $("days").innerHTML = WEEK.map(function (d, i) {
+      return '<button type="button" class="day' + (i === todayIdx ? " today" : "") + '" aria-pressed="' + (i === selected) + '" data-day="' + i + '">' +
+        d.short + '<small class="num">' + dateFor(i).getDate() + '</small></button>';
+    }).join("");
+  }
+
+  function renderNext() {
+    var box = $("next");
+    if (selected !== todayIdx) { box.hidden = true; return; }
+    var i = nextSlotIdx();
+    box.hidden = false;
+    if (i === -1) {
+      box.innerHTML = '<p class="eyebrow">Por hoje é só</p><h2>Dia concluído. Descanse!</h2>' +
+        '<p class="muted">Se acordar com fome para amamentar de madrugada, veja a aba Fome: 1 copo de leite + 1 fruta pequena funciona bem.</p>';
+      return;
+    }
+    var s = SLOTS[i], m = WEEK[todayIdx].meals[s.id];
+    var st = dayState(todayIdx);
+    var late = minutes(s.time) < nowMin;
+    box.innerHTML = '<div class="when"><div><p class="eyebrow">' + (late ? "Está na hora" : "Próxima refeição") + '</p><h2>' + s.name + '</h2></div>' +
+      '<span class="time num">' + s.time + '</span></div>' +
+      '<ul>' + m.items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">' +
+      '<span class="muted num">≈ ' + m.k + ' kcal · + 1 copo de água</span>' +
+      '<button type="button" class="btn" data-eat="' + s.id + '">' + (st.meals[s.id] ? "Feito ✓" : "Já comi") + '</button></div>';
+  }
+
+  function renderMeals() {
+    var d = WEEK[selected], st = dayState(selected);
+    var ni = selected === todayIdx ? nextSlotIdx() : -1;
+    var total = 0, done = 0;
+    $("day-title").textContent = d.name + (selected === todayIdx ? " (hoje)" : "");
+    $("meals").innerHTML = SLOTS.map(function (s, i) {
+      var m = d.meals[s.id]; total += m.k;
+      var isDone = !!st.meals[s.id]; if (isDone) done++;
+      return '<div class="meal' + (isDone ? " done" : "") + (i === ni ? " is-next" : "") + '">' +
+        '<span class="t num">' + s.time + '</span>' +
+        '<div class="body"><h3>' + s.name + '</h3><ul>' + m.items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' +
+        '<span class="kcal num">≈ ' + m.k + ' kcal</span></div>' +
+        '<button type="button" class="check" aria-label="Marcar ' + s.name + ' como feita" aria-pressed="' + isDone + '" data-eat="' + s.id + '">' + CHECK + '</button>' +
+        '</div>';
+    }).join("");
+    $("day-progress").textContent = done + "/6 feitas · ≈ " + total.toLocaleString("pt-BR") + " kcal";
+    $("day-note").innerHTML = "<p><strong>Dica do dia:</strong> " + esc(d.note) + "</p>";
+  }
+
+  function renderCardapio() { renderDays(); renderNext(); renderMeals(); }
+
+  document.addEventListener("click", function (e) {
+    var day = e.target.closest("[data-day]");
+    if (day) { selected = +day.getAttribute("data-day"); renderCardapio(); return; }
+    var eat = e.target.closest("[data-eat]");
+    if (eat) {
+      var st = dayState(selected), id = eat.getAttribute("data-eat");
+      st.meals[id] = !st.meals[id]; setDayState(selected, st); renderCardapio();
+    }
+  });
+
+  // ---------- FOME ----------
+  $("snacks").innerHTML = SNACKS.map(function (s) {
+    return '<div class="snack"><b>' + esc(s.n) + '</b><span class="tag num">' + s.k + ' kcal</span><span class="q">' + esc(s.tag) + ' · ' + esc(s.q) + '</span></div>';
+  }).join("");
+  var lastPick = -1;
+  $("pick-btn").addEventListener("click", function () {
+    var i; do { i = Math.floor(Math.random() * SNACKS.length); } while (i === lastPick && SNACKS.length > 1);
+    lastPick = i;
+    $("pick").textContent = SNACKS[i].n;
+    $("pick-q").textContent = "≈ " + SNACKS[i].k + " kcal. " + SNACKS[i].q;
+    this.textContent = "Escolher outro";
+  });
+
+  // ---------- ÁGUA ----------
+  function renderWater() {
+    var st = dayState(todayIdx), n = st.water || 0;
+    $("glasses").innerHTML = Array.from({ length: WATER_GOAL }, function (_, i) {
+      return '<button type="button" class="glass" aria-label="Copo ' + (i + 1) + '" aria-pressed="' + (i < n) + '" data-glass="' + (i + 1) + '"><span class="num">' + (i + 1) + '</span></button>';
+    }).join("");
+    var liters = (n * 0.25).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    $("water-title").textContent = liters + " de 3 litros" + (n >= WATER_GOAL ? " · meta batida!" : "");
+    $("water-bar").style.width = Math.min(100, n / WATER_GOAL * 100) + "%";
+    $("water-pill").textContent = "Água " + n + " de " + WATER_GOAL + " copos";
+  }
+  function setWater(n) { var st = dayState(todayIdx); st.water = Math.max(0, Math.min(20, n)); setDayState(todayIdx, st); renderWater(); }
+  $("glasses").addEventListener("click", function (e) {
+    var g = e.target.closest("[data-glass]"); if (!g) return;
+    var n = +g.getAttribute("data-glass"), cur = dayState(todayIdx).water || 0;
+    setWater(n === cur ? n - 1 : n);
+  });
+  $("water-add").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) + 1); });
+  $("water-undo").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) - 1); });
+  $("wtimes").innerHTML = WATER.map(function (w) {
+    return '<div class="wtime"><b class="num">' + w.t + '</b><small>' + esc(w.w) + '</small></div>';
+  }).join("");
+
+  // ---------- COMPRAS ----------
+  var shopState = load("mp:shop", {});
+  function renderShop() {
+    var k = 0;
+    $("shop").innerHTML = SHOP.map(function (c) {
+      return '<div><h3 style="margin-bottom:6px">' + c.cat + '</h3><ul>' + c.items.map(function (it) {
+        var id = "shop-" + (k++);
+        return '<li><label for="' + id + '"><input type="checkbox" id="' + id + '"' + (shopState[id] ? " checked" : "") + '><span>' + esc(it[0]) + '</span><span class="qty">' + esc(it[1]) + '</span></label></li>';
+      }).join("") + '</ul></div>';
+    }).join("");
+  }
+  $("shop").addEventListener("change", function (e) {
+    if (e.target.type !== "checkbox") return;
+    shopState[e.target.id] = e.target.checked; save("mp:shop", shopState);
+  });
+  $("shop-clear").addEventListener("click", function () { shopState = {}; save("mp:shop", shopState); renderShop(); });
+
+  // ---------- ABAS ----------
+  var TABS = ["cardapio", "fome", "agua", "compras", "dicas"];
+  function show(tab) {
+    if (TABS.indexOf(tab) < 0) tab = "cardapio";
+    document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });
+    document.querySelectorAll("nav.tabs button").forEach(function (b) {
+      if (b.getAttribute("data-tab") === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+    save("mp:tab", tab);
+    window.scrollTo(0, 0);
+  }
+  document.querySelector("nav.tabs").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-tab]"); if (b) show(b.getAttribute("data-tab"));
+  });
+
+  renderCardapio(); renderWater(); renderShop();
+  show((location.hash || "").slice(1) || "cardapio");
+
+  // atualiza "próxima refeição" a cada minuto
+  setInterval(function () {
+    now = new Date(); nowMin = now.getHours() * 60 + now.getMinutes();
+    var newToday = (now.getDay() + 6) % 7;
+    if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; renderWater(); }
+    renderNext(); renderMeals();
+  }, 60000);
+})();
+</script>
+<!--APP-END-->
+</body>
+</html>
