@@ -23,6 +23,8 @@
   --water: #2f7fc1;
   --water-soft: #e2eff9;
   --done: #8aa596;
+  --high: #c2452f;
+  --high-soft: #f8e1dc;
   --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body: "Nunito", "Segoe UI", system-ui, sans-serif;
 }
@@ -30,13 +32,13 @@
   :root:not([data-theme="light"]) {
     --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
     --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
-    --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; color-scheme: dark;
+    --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
   --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
-  --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; color-scheme: dark;
+  --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -174,6 +176,38 @@ ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
 .plog li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
 .plog .del { border: 0; background: none; color: var(--muted); font-size: .8rem; text-decoration: underline; padding: 0; }
 
+/* foto */
+.shoot { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.shoot label { display: grid; justify-items: center; gap: 6px; padding: 18px 8px; border-radius: 16px; font-weight: 800; cursor: pointer; text-align: center; }
+.shoot label.cam { background: var(--leaf); color: var(--bg); }
+.shoot label.gal { background: var(--leaf-soft); color: var(--leaf); }
+.shoot svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.shoot input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.preview { width: 100%; max-height: 300px; object-fit: cover; border-radius: 16px; display: block; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 700; font-size: .9rem; }
+.field input, .field select { font: inherit; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); width: 100%; min-width: 0; }
+.result { display: grid; gap: 12px; }
+.total { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.total .k { font-family: var(--display); font-size: 2.4rem; font-weight: 800; color: var(--ink); line-height: 1; }
+.verdict { padding: 6px 12px; border-radius: 999px; font-weight: 800; font-size: .85rem; }
+.verdict.ok { background: var(--leaf-soft); color: var(--leaf); }
+.verdict.mid { background: var(--apricot-soft); color: var(--apricot); }
+.verdict.high { background: var(--high-soft); color: var(--high); }
+ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.items li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.items li small { color: var(--muted); grid-column: 1 / -1; }
+.exs { display: grid; gap: 8px; }
+.ex { display: grid; grid-template-columns: 4.2rem 1fr; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; background: var(--water-soft); }
+.ex b { font-family: var(--display); font-size: 1.35rem; color: var(--water); line-height: 1.05; }
+.ex b small { display: block; font-family: var(--body); font-size: .7rem; font-weight: 700; }
+.ex span { font-size: .92rem; }
+.ex span em { display: block; font-style: normal; color: var(--muted); font-size: .82rem; }
+.thinking { display: flex; gap: 10px; align-items: center; color: var(--muted); font-weight: 700; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--apricot); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; transform: scale(.7); } }
+.err { color: var(--high); font-weight: 700; }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -182,10 +216,10 @@ nav.tabs {
   padding-left: max(8px, env(safe-area-inset-left, 0px));
   padding-right: max(8px, env(safe-area-inset-right, 0px));
 }
-nav.tabs .in { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+nav.tabs .in { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); }
 nav.tabs button {
   border: 0; background: none; padding: 10px 2px 12px; display: grid; justify-items: center; gap: 2px;
-  font-size: .72rem; font-weight: 800; color: var(--muted);
+  font-size: .66rem; font-weight: 800; color: var(--muted);
 }
 nav.tabs svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 nav.tabs button[aria-current="page"] { color: var(--leaf); }
@@ -241,6 +275,49 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <button class="btn" id="pick-btn" type="button">Escolher um lanche</button>
     </div>
     <div class="snacks" id="snacks"></div>
+  </section>
+
+  <!-- FOTO -->
+  <section data-view="foto" hidden>
+    <div>
+      <p class="eyebrow">Detector de calorias</p>
+      <h2>Tire foto antes de comer</h2>
+      <p class="muted" style="margin-top:6px">Eu estimo as calorias do prato e comparo com o seu plano. Se passar muito, te mostro um exercício para compensar.</p>
+    </div>
+
+    <div class="shoot" id="shoot">
+      <label class="cam" for="foto-cam"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Tirar foto
+        <input id="foto-cam" type="file" accept="image/*" capture="environment"></label>
+      <label class="gal" for="foto-gal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg>Da galeria
+        <input id="foto-gal" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+    </div>
+
+    <div id="foto-form" hidden style="display:grid;gap:12px">
+      <img class="preview" id="foto-preview" alt="Foto do prato">
+      <div class="field">
+        <label for="foto-desc">O que é? (opcional, ajuda a acertar)</label>
+        <input id="foto-desc" type="text" placeholder="Ex.: 1 fatia de bolo de chocolate, prato raso">
+      </div>
+      <div class="field">
+        <label for="foto-slot">Essa comida é no lugar de qual refeição?</label>
+        <select id="foto-slot"></select>
+      </div>
+      <button class="btn" id="foto-go" type="button">Calcular calorias</button>
+    </div>
+
+    <div class="next result" id="foto-result" hidden></div>
+    <p class="muted" id="foto-off" hidden>O detector funciona quando você abre o app pelo link do Claude, logada na sua conta. O resto do app funciona normalmente.</p>
+
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px">
+        <h3>Fotos de hoje</h3><span class="muted num" id="foto-sum"></span>
+      </div>
+      <ul class="items num" id="foto-log"></ul>
+      <p class="muted" id="foto-empty" style="margin-top:8px">Nada registrado hoje. Toque em "Comi isso" depois de calcular.</p>
+    </div>
+    <div class="note">
+      <p><strong>Importante:</strong> a foto dá uma estimativa, que pode errar uns 20% para mais ou para menos. Molhos, óleo e açúcar escondidos são difíceis de ver. Escrever o que é ajuda bastante.</p>
+    </div>
   </section>
 
   <!-- ÁGUA -->
@@ -342,6 +419,8 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cardápio</button>
     <button type="button" data-tab="fome" class="fome">
       <svg viewBox="0 0 24 24"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg>Fome!</button>
+    <button type="button" data-tab="foto">
+      <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Foto</button>
     <button type="button" data-tab="agua">
       <svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Água</button>
     <button type="button" data-tab="compras">
@@ -656,8 +735,147 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     pesos.splice(+b.getAttribute("data-del"), 1); save("mp:pesos", pesos); renderPeso();
   });
 
+  // ---------- FOTO / DETECTOR ----------
+  var EXERCISES = [
+    { n: "Caminhada com o carrinho do bebê", met: 3.5, how: "Passo firme, conversando com o bebê." },
+    { n: "Caminhada rápida", met: 4.3, how: "Sem correr; dá para fazer em casa, de um cômodo ao outro." },
+    { n: "Dançar na sala", met: 5.0, how: "Coloque 4 ou 5 músicas animadas. O bebê costuma adorar." },
+    { n: "Subir e descer escada", met: 8.0, how: "Ritmo leve, segurando no corrimão. Pare se cansar demais." },
+    { n: "Circuito em casa", met: 7.0, how: "Repita: 30 s agachamento, 30 s polichinelo, 30 s parada, 30 s marcha no lugar." }
+  ];
+  function curWeight() { return pesos.length ? pesos[pesos.length - 1].kg : START; }
+  function kcalPerMin(met) { return met * 3.5 * curWeight() / 200; }
+
+  var fotoFile = null, fotoData = null, fotoCtl = null, sampleFn = null;
+  var fotoKey = function () { return "mp:fotos:" + key(new Date()); };
+  var fotoLog = load(fotoKey(), []);
+
+  function slotForNow() {
+    var best = 0, bestD = 1e9;
+    SLOTS.forEach(function (s, i) { var d = Math.abs(minutes(s.time) - nowMin); if (d < bestD) { bestD = d; best = i; } });
+    return SLOTS[best].id;
+  }
+  function fillSlots() {
+    var m = WEEK[todayIdx].meals;
+    $("foto-slot").innerHTML = SLOTS.map(function (s) {
+      return '<option value="' + s.id + '">' + s.name + ' (' + s.time + ') · plano ≈ ' + m[s.id].k + ' kcal</option>';
+    }).join("") + '<option value="extra">Lanche extra de fome · até 200 kcal</option>';
+    $("foto-slot").value = slotForNow();
+  }
+  function budgetFor(slot) { return slot === "extra" ? 200 : WEEK[todayIdx].meals[slot].k; }
+
+  function onPick(e) {
+    var f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    fotoFile = f; fotoData = null;
+    var r = new FileReader();
+    r.onload = function () { $("foto-preview").src = r.result; };
+    r.readAsDataURL(f);
+    fillSlots();
+    $("foto-form").hidden = false; $("foto-result").hidden = true;
+    $("foto-go").disabled = false; $("foto-go").textContent = "Calcular calorias";
+  }
+  $("foto-cam").addEventListener("change", onPick);
+  $("foto-gal").addEventListener("change", onPick);
+
+  function errCopy(code) {
+    if (code === "not_granted" || code === "sampling_disabled" || code === "images_unavailable" || code === "capability_disabled") return "O detector não foi liberado neste aparelho. Toque no menu do app e permita o uso do Claude.";
+    if (code === "rate_limited") return "Muitas fotos seguidas. Espere alguns minutos e tente de novo.";
+    if (code === "image_rejected") return "Não consegui abrir essa foto. Tente outra, em JPG ou PNG.";
+    if (code === "session_expired") return "Sua sessão expirou. Entre de novo na sua conta Claude.";
+    if (code === "invalid_json" || code === "empty_completion") return "Não entendi bem a foto. Tente de novo ou escreva o que é no campo acima.";
+    return "Algo deu errado na conexão. Tente de novo.";
+  }
+
+  $("foto-go").addEventListener("click", function () {
+    if (!fotoFile || !sampleFn) return;
+    var btn = this, box = $("foto-result");
+    var slot = $("foto-slot").value, budget = budgetFor(slot);
+    var slotName = slot === "extra" ? "lanche extra" : SLOTS.filter(function (s) { return s.id === slot; })[0].name;
+    var desc = $("foto-desc").value.trim();
+    btn.disabled = true; btn.textContent = "Calculando...";
+    box.hidden = false;
+    box.innerHTML = '<div class="thinking"><span class="dot"></span>Olhando o seu prato... pode levar até 1 minuto.</div><button type="button" class="btn ghost" id="foto-stop">Cancelar</button>';
+    fotoCtl = new AbortController();
+    var prompt = "Você é uma nutricionista brasileira. Analise a foto de comida anexada e estime as calorias.\n" +
+      "Contexto: mulher de " + fmt(curWeight(), 1) + " kg e 1,50 m, amamentando, num plano de ~1.900 kcal/dia. Esta comida é o " + slotName + " (o plano prevê ~" + budget + " kcal).\n" +
+      (desc ? "Ela descreveu a comida assim: \"" + desc.slice(0, 300) + "\". Use isso para identificar os alimentos e a porção.\n" : "") +
+      "Liste cada alimento visível com a porção em medida caseira brasileira (colheres de sopa, fatias, unidades, conchas) e as calorias. Seja realista com óleo, açúcar e molhos.\n" +
+      "Responda SOMENTE com JSON neste formato:\n" +
+      '{"alimento_detectado": true, "itens": [{"nome": "Arroz branco", "porcao": "4 colheres de sopa", "kcal": 160}], "total_kcal": 160, "proteina_g": 3, "comentario": "1 ou 2 frases curtas, gentis e diretas, em português", "dica": "uma troca simples para deixar mais leve da próxima vez, ou string vazia"}\n' +
+      "Se a foto não mostrar comida, responda alimento_detectado false, itens vazio e total_kcal 0.";
+    sampleFn.json(prompt, { images: fotoFile, signal: fotoCtl.signal }).then(function (r) {
+      fotoData = r; renderResult(r, slot, budget);
+    }).catch(function (e) {
+      if (e && e.code === "cancelled") { box.hidden = true; return; }
+      box.innerHTML = '<p class="err">' + esc(errCopy(e && e.code)) + '</p>';
+    }).then(function () { btn.disabled = false; btn.textContent = "Calcular de novo"; });
+  });
+  document.addEventListener("click", function (e) {
+    if (e.target.id === "foto-stop" && fotoCtl) fotoCtl.abort();
+    if (e.target.id === "foto-ate" && fotoData) {
+      fotoLog.push({ n: fotoData._name, k: fotoData._total, t: pad(new Date().getHours()) + ":" + pad(new Date().getMinutes()) });
+      save(fotoKey(), fotoLog); renderFotoLog();
+      e.target.textContent = "Registrado ✓"; e.target.disabled = true;
+    }
+  });
+
+  function renderResult(r, slot, budget) {
+    var box = $("foto-result");
+    var items = Array.isArray(r && r.itens) ? r.itens : [];
+    if (!r || r.alimento_detectado === false || !items.length) {
+      box.innerHTML = '<p class="err">Não encontrei comida nessa foto. Tente tirar de cima, com o prato inteiro aparecendo.</p>'; return;
+    }
+    var total = Math.round(Number(r.total_kcal) || items.reduce(function (a, it) { return a + (Number(it.kcal) || 0); }, 0));
+    var excess = total - budget;
+    var cls = excess <= 100 ? "ok" : excess <= 300 ? "mid" : "high";
+    var label = excess <= 100 ? "Dentro do plano" : excess <= 300 ? "Um pouco acima" : "Bem acima do plano";
+    r._total = total; r._name = items.map(function (it) { return String(it.nome || ""); }).filter(Boolean).slice(0, 3).join(", ");
+    var html = '<div class="total"><div><p class="eyebrow">Estimativa</p><span class="k num">' + total + ' <small style="font-size:1rem">kcal</small></span></div>' +
+      '<span class="verdict ' + cls + '">' + label + '</span></div>' +
+      '<p class="muted num">O plano prevê ~' + budget + ' kcal para essa refeição' + (r.proteina_g ? ' · proteína ≈ ' + Math.round(Number(r.proteina_g)) + ' g' : '') + '.</p>' +
+      '<ul class="items num">' + items.map(function (it) {
+        return '<li><b>' + esc(it.nome || "Alimento") + '</b><span>' + Math.round(Number(it.kcal) || 0) + ' kcal</span><small>' + esc(it.porcao || "") + '</small></li>';
+      }).join("") + '</ul>';
+    if (r.comentario) html += '<p>' + esc(r.comentario) + '</p>';
+    if (r.dica) html += '<p class="muted"><b>Da próxima vez:</b> ' + esc(r.dica) + '</p>';
+    if (excess > 100) {
+      html += '<div style="display:grid;gap:8px"><h3>Para queimar os ~' + excess + ' kcal a mais</h3>' +
+        '<p class="muted" style="font-size:.9rem">Escolha <b>um</b>. Calculado para o seu peso (' + fmt(curWeight(), 1) + ' kg). Pode dividir em blocos de 10 minutos ao longo do dia.</p>' +
+        '<div class="exs">' + EXERCISES.map(function (x) {
+          var min = Math.max(5, Math.round(excess / kcalPerMin(x.met) / 5) * 5);
+          return '<div class="ex"><b class="num">' + min + '<small>minutos</small></b><span>' + x.n + '<em>' + x.how + '</em></span></div>';
+        }).join("") + '</div>' +
+        '<div class="note"><p><strong>Com calma:</strong> não precisa queimar tudo hoje e <b>não pule a próxima refeição</b>, isso diminui o leite. Beba 1 copo de água a mais durante o exercício. Se teve parto há menos de 6 semanas ou cesárea, fique só na caminhada até a médica liberar.</p></div></div>';
+    }
+    html += '<button type="button" class="btn" id="foto-ate">Comi isso</button>';
+    box.innerHTML = html;
+  }
+
+  function renderFotoLog() {
+    var tot = fotoLog.reduce(function (a, x) { return a + x.k; }, 0);
+    $("foto-log").innerHTML = fotoLog.map(function (x, i) {
+      return '<li><b>' + esc(x.t) + ' · ' + esc(x.n || "Refeição") + '</b><span>' + x.k + ' kcal</span><small><button type="button" class="del" data-fdel="' + i + '" style="border:0;background:none;color:inherit;text-decoration:underline;padding:0;font:inherit">apagar</button></small></li>';
+    }).join("");
+    $("foto-empty").hidden = fotoLog.length > 0;
+    $("foto-sum").textContent = fotoLog.length ? tot + " de ~1.900 kcal" : "";
+  }
+  $("foto-log").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-fdel]"); if (!b) return;
+    fotoLog.splice(+b.getAttribute("data-fdel"), 1); save(fotoKey(), fotoLog); renderFotoLog();
+  });
+  renderFotoLog();
+
+  (window.claude && window.claude.use ? window.claude.use("sample") : Promise.resolve(null)).then(function (fn) {
+    if (!fn) { $("shoot").hidden = true; $("foto-off").hidden = false; return; }
+    sampleFn = fn;
+    return fn.limits().then(function (l) {
+      if (!l || !l.images) { $("shoot").hidden = true; $("foto-off").hidden = false; }
+    }, function () {});
+  }, function () { $("shoot").hidden = true; $("foto-off").hidden = false; });
+
   // ---------- ABAS ----------
-  var TABS = ["cardapio", "fome", "agua", "compras", "dicas"];
+  var TABS = ["cardapio", "fome", "foto", "agua", "compras", "dicas"];
   function show(tab) {
     if (TABS.indexOf(tab) < 0) tab = "cardapio";
     document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });
