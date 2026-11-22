@@ -44,3 +44,7 @@ Botão **Lembretes** no topo do app:
 - **Avisos do app**: notificações na hora certa enquanto o app está aberto ou minimizado.
 
 Para regerar os `.ics` depois de mudar o cardápio, rode `window.__buildICS({meals: true, water: true})` no console do app.
+
+## Foto direto no app instalado (chave da API)
+
+Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela API (`ai.js` + SDK oficial empacotado em `vendor/anthropic-sdk.js`, `@anthropic-ai/sdk@1.6.0`). A usuária cola a própria chave (console.anthropic.com → API Keys), que fica salva só no celular. Modelo `claude-opus-5-5`, esforço `low`, com fallback automático do servidor em caso de recusa.

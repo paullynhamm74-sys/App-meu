@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-title" content="Meu Prato">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
+<script src="vendor/anthropic-sdk.js"></script>
+<script src="ai.js"></script>
 <!--APP-START-->
 <title>Pode ou Não Pode</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -86,6 +88,9 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--leaf); animation: pulse 1s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; transform: scale(.7); } }
 .err { color: var(--bad); font-weight: 700; }
+.keybox { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.how p { margin: 0; }
 .btn { border: 0; border-radius: 12px; padding: 10px 14px; font-weight: 800; background: var(--leaf-soft); color: var(--leaf); }
 
 .hist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
@@ -119,7 +124,20 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
       <input id="gal" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
     </label>
   </div>
-  <div id="off" hidden style="display:grid;gap:10px"><p class="muted">A análise da foto usa o Claude, então ela abre no Claude (precisa de internet e estar logada).</p><a class="big-cam" style="text-decoration:none" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener">Abrir Pode ou não pode</a></div>
+  <div id="off" hidden style="display:grid;gap:10px"><p class="muted">Para analisar a foto, abra no Claude (precisa estar logada) ou use direto aqui com uma chave.</p><a class="big-cam" style="text-decoration:none" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener">Abrir no Claude</a>
+    <div class="keybox">
+      <p><b>Ou use direto aqui no app</b></p>
+      <p class="muted" style="font-size:.9rem">Cole a sua chave da API do Claude. Ela fica salva só neste celular.</p>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
+        <label for="api-key" class="sr">Chave da API</label>
+        <input id="api-key" type="password" autocomplete="off" placeholder="sk-ant-..." style="flex:1 1 160px;min-width:0;font:inherit;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)">
+        <button type="button" class="btn" id="api-save">Salvar chave</button>
+      </div>
+      <p class="err" id="api-err" hidden></p>
+      <details class="how"><summary style="cursor:pointer;font-weight:800;color:var(--leaf)">Como conseguir a chave</summary>
+        <p style="margin-top:6px;font-size:.9rem">1. Entre em <b>console.anthropic.com</b> e crie a conta (pode ser com o mesmo e-mail do Claude).<br>2. Em <b>Billing</b>, adicione créditos (mínimo de US$ 5). É um pagamento separado da assinatura do Claude.<br>3. Em <b>API Keys</b>, toque em <b>Create Key</b>, copie e cole aqui.<br><br>Cada foto custa em média de 1 a 5 centavos de dólar (uns R$ 0,05 a R$ 0,30). Com US$ 5 dá para umas 150 fotos ou mais.</p>
+      </details>
+    </div></div>
 
   <div class="card" id="card" hidden>
     <img id="photo" alt="Foto da comida">
@@ -132,6 +150,7 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
     <p class="muted" id="empty" style="margin-top:8px">Nenhuma foto hoje ainda.</p>
   </div>
   <p class="muted" style="font-size:.85rem">Calorias por foto são estimativas e podem errar uns 20%. Plano de ~1.900 kcal por dia, para quem amamenta. "Não pode" quer dizer trocar por outra coisa, nunca ficar sem comer.</p>
+  <p class="muted" id="api-on" hidden style="font-size:.85rem">Usando a sua chave da API neste celular. <button type="button" id="api-remove" style="border:0;background:none;padding:0;color:inherit;text-decoration:underline;font:inherit">Remover chave</button></p>
 </div>
 
 <script>
@@ -175,9 +194,10 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
 
   var sample = null, busy = false;
   function off() { $("shoot").hidden = true; $("off").hidden = false; }
-  (window.claude && window.claude.use ? window.claude.use("sample") : Promise.resolve(null)).then(function (fn) {
+  (window.claude && window.claude.use ? window.claude.use("sample") : Promise.resolve(window.__apiSample ? window.__apiSample() : null)).then(function (fn) {
     if (!fn) { off(); return; }
     sample = fn;
+    if (fn.viaApi) $("api-on").hidden = false;
     return fn.limits().then(function (l) { if (!l || !l.images) off(); }, function () {});
   }, off);
 
@@ -186,6 +206,8 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
     if (code === "rate_limited") return "Muitas fotos seguidas. Espere alguns minutos.";
     if (code === "image_rejected") return "Não consegui abrir essa foto. Tente outra.";
     if (code === "session_expired") return "Sua sessão expirou. Entre de novo na conta Claude.";
+    if (code === "bad_key") return "A chave da API não funcionou. Confira se copiou inteira ou crie outra.";
+    if (code === "no_credit") return "Acabaram os créditos da API. Adicione em console.anthropic.com → Billing.";
     if (code === "invalid_json" || code === "empty_completion") return "Não entendi a foto. Tire outra, de cima, com a comida inteira aparecendo.";
     return "A conexão falhou. Tente de novo.";
   }
@@ -228,6 +250,18 @@ button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outlin
       $("out").innerHTML = '<p class="err">' + esc(errCopy(e && e.code)) + '</p>';
     }).then(function () { busy = false; });
   }
+
+  // chave da API (app instalado)
+  (function () {
+    var save = document.getElementById("api-save"); if (!save) return;
+    save.addEventListener("click", function () {
+      var v = document.getElementById("api-key").value.trim(), err = document.getElementById("api-err");
+      if (!/^sk-ant-/.test(v)) { err.textContent = "Essa chave não parece certa. Ela começa com sk-ant-"; err.hidden = false; return; }
+      window.__apiKey.set(v); location.reload();
+    });
+    var rm = document.getElementById("api-remove");
+    if (rm) rm.addEventListener("click", function () { window.__apiKey.clear(); location.reload(); });
+  })();
   $("cam").addEventListener("change", pick);
   $("gal").addEventListener("change", pick);
 })();

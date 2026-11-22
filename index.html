@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-title" content="Meu Prato">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
+<script src="vendor/anthropic-sdk.js"></script>
+<script src="ai.js"></script>
 <!--APP-START-->
 <title>Meu Prato da Semana</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -265,6 +267,8 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .toast { position: fixed; z-index: 30; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); top: calc(12px + env(safe-area-inset-top, 0px)); max-width: 616px; margin: 0 auto; background: var(--leaf); color: var(--bg); border-radius: 16px; padding: 12px 16px; display: grid; gap: 2px; box-shadow: 0 12px 30px -12px rgba(0,0,0,.45); }
 .toast b { font-family: var(--display); font-size: 1.05rem; }
 
+.keybox { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -375,7 +379,20 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
         <button type="submit" class="ibtn send" id="chat-send" aria-label="Enviar"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2-7z"/></svg></button>
       </form>
     </div>
-    <div class="note" id="chat-off" hidden><p>A Nutri usa o Claude, então ela abre no app do Claude (precisa de internet e estar logada). O registro de comidas fica lá.</p><a class="btn" style="text-decoration:none;text-align:center" href="https://claude.ai/artifact/8PFMgGrkkbn44Sb52k9MUZ#nutri" target="_blank" rel="noopener">Abrir a Nutri</a></div>
+    <div class="note" id="chat-off" hidden><p>Para mandar foto para a Nutri, você pode abrir no Claude (precisa estar logada) ou usar direto aqui com uma chave.</p><a class="btn" style="text-decoration:none;text-align:center" href="https://claude.ai/artifact/8PFMgGrkkbn44Sb52k9MUZ#nutri" target="_blank" rel="noopener">Abrir a Nutri no Claude</a>
+      <div class="keybox">
+      <p><b>Ou use direto aqui no app</b></p>
+      <p class="muted" style="font-size:.9rem">Cole a sua chave da API do Claude. Ela fica salva só neste celular.</p>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
+        <label for="api-key" class="sr">Chave da API</label>
+        <input id="api-key" type="password" autocomplete="off" placeholder="sk-ant-..." style="flex:1 1 160px;min-width:0;font:inherit;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)">
+        <button type="button" class="btn" id="api-save">Salvar chave</button>
+      </div>
+      <p class="err" id="api-err" hidden></p>
+      <details class="how"><summary style="cursor:pointer;font-weight:800;color:var(--leaf)">Como conseguir a chave</summary>
+        <p style="margin-top:6px;font-size:.9rem">1. Entre em <b>console.anthropic.com</b> e crie a conta (pode ser com o mesmo e-mail do Claude).<br>2. Em <b>Billing</b>, adicione créditos (mínimo de US$ 5). É um pagamento separado da assinatura do Claude.<br>3. Em <b>API Keys</b>, toque em <b>Create Key</b>, copie e cole aqui.<br><br>Cada foto custa em média de 1 a 5 centavos de dólar (uns R$ 0,05 a R$ 0,30). Com US$ 5 dá para umas 150 fotos ou mais.</p>
+      </details>
+    </div></div>
 
     <div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px">
@@ -386,6 +403,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     </div>
     <div class="note">
       <p><strong>Importante:</strong> calorias por foto são estimativas e podem errar uns 20%. Escrever o que é e o tamanho ajuda bastante.</p>
+      <p id="api-on" hidden>Usando a sua chave da API neste celular. <button type="button" id="api-remove" style="border:0;background:none;padding:0;color:inherit;text-decoration:underline;font:inherit">Remover chave</button></p>
     </div>
   </section>
 
@@ -989,6 +1007,8 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     if (code === "images_unavailable") return "Fotos não estão liberadas aqui. Escreva o que vai comer que eu calculo.";
     if (code === "session_expired") return "Sua sessão expirou. Entre de novo na sua conta Claude.";
     if (code === "refused") return "Não consegui responder isso. Tente escrever de outro jeito.";
+    if (code === "bad_key") return "A chave da API não funcionou. Confira se copiou inteira ou crie outra.";
+    if (code === "no_credit") return "Acabaram os créditos da API. Adicione créditos em console.anthropic.com → Billing.";
     return "A conexão falhou. Toque em enviar de novo.";
   }
 
@@ -1050,10 +1070,14 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   renderChat();
 
   function nutriOff() { $("composer").hidden = true; $("chips").hidden = true; $("chat").hidden = true; $("chat-new").hidden = true; $("chat-off").hidden = false; }
-  var useCap = function (n) { return window.claude && window.claude.use ? window.claude.use(n) : Promise.resolve(null); };
+  var useCap = function (n) {
+    if (window.claude && window.claude.use) return window.claude.use(n);
+    return Promise.resolve(n === "sample" && window.__apiSample ? window.__apiSample() : null);
+  };
   useCap("sample").then(function (fn) {
     if (!fn) { nutriOff(); return; }
     sampleFn = fn;
+    if (fn.viaApi) $("api-on").hidden = false;
     return fn.limits().then(function (l) {
       canImages = !!(l && l.images); canTools = !!(l && l.tools);
       if (!canImages) { document.querySelectorAll("#chat-form label.ibtn").forEach(function (x) { x.hidden = true; }); }
@@ -1222,6 +1246,19 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     L.push("END:VCALENDAR");
     return L.join("\r\n") + "\r\n";
   };
+
+
+  // chave da API (app instalado)
+  (function () {
+    var save = document.getElementById("api-save"); if (!save) return;
+    save.addEventListener("click", function () {
+      var v = document.getElementById("api-key").value.trim(), err = document.getElementById("api-err");
+      if (!/^sk-ant-/.test(v)) { err.textContent = "Essa chave não parece certa. Ela começa com sk-ant-"; err.hidden = false; return; }
+      window.__apiKey.set(v); location.reload();
+    });
+    var rm = document.getElementById("api-remove");
+    if (rm) rm.addEventListener("click", function () { window.__apiKey.clear(); location.reload(); });
+  })();
 
   // ---------- ABAS ----------
   var TABS = ["cardapio", "fome", "nutri", "agua", "compras", "dicas", "lembretes"];
