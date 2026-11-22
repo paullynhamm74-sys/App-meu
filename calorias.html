@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--APP-START-->
+<title>Pode ou Não Pode</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: uma tela só — botão de foto enorme, resultado com número grande e semáforo */
+:root {
+  --bg: #f4f7f2; --surface: #ffffff; --ink: #1d2a22; --muted: #5d6e63; --line: #dde6dc;
+  --leaf: #2f6b4f; --leaf-soft: #e1eee5;
+  --good: #2f8a55; --good-soft: #dff1e6;
+  --mid: #b7791f; --mid-soft: #fbefd6;
+  --bad: #c2452f; --bad-soft: #f8e1dc;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
+    --leaf: #7cc49c; --leaf-soft: #20352a;
+    --good: #6fcf97; --good-soft: #1d3527; --mid: #f0c060; --mid-soft: #3a2f17; --bad: #f08a76; --bad-soft: #3d221d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
+  --leaf: #7cc49c; --leaf-soft: #20352a;
+  --good: #6fcf97; --good-soft: #1d3527; --mid: #f0c060; --mid-soft: #3a2f17; --bad: #f08a76; --bad-soft: #3d221d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap {
+  max-width: 520px; margin: 0 auto; display: grid; gap: 18px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.1; text-wrap: balance; }
+h1 { font-size: 1.7rem; font-weight: 800; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.eyebrow { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, label:focus-within { outline: 3px solid var(--mid); outline-offset: 2px; }
+
+.legend { display: flex; gap: 6px; flex-wrap: wrap; }
+.legend span { padding: 4px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; }
+.g { background: var(--good-soft); color: var(--good); }
+.m { background: var(--mid-soft); color: var(--mid); }
+.b { background: var(--bad-soft); color: var(--bad); }
+
+.shoot { display: grid; gap: 8px; }
+.big-cam {
+  display: grid; justify-items: center; gap: 8px; padding: 34px 16px; border-radius: 24px;
+  background: var(--leaf); color: var(--bg); font-family: var(--display); font-weight: 800; font-size: 1.35rem; cursor: pointer; text-align: center;
+}
+.big-cam svg { width: 48px; height: 48px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.gal { justify-self: center; font-weight: 800; color: var(--leaf); cursor: pointer; padding: 6px 10px; text-decoration: underline; text-underline-offset: 3px; }
+.shoot input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: grid; }
+.card img { width: 100%; max-height: 260px; object-fit: cover; display: block; }
+.card .in { padding: 18px; display: grid; gap: 10px; }
+.kcal { font-family: var(--display); font-size: 3.6rem; font-weight: 800; line-height: .95; }
+.kcal small { font-size: 1.1rem; font-weight: 600; color: var(--muted); }
+.verdict { border-radius: 16px; padding: 14px 16px; display: grid; gap: 2px; }
+.verdict b { font-family: var(--display); font-size: 1.6rem; line-height: 1.1; }
+.verdict.g b { color: var(--good); } .verdict.m b { color: var(--mid); } .verdict.b b { color: var(--bad); }
+.verdict span { color: var(--ink); font-size: .95rem; }
+.thinking { display: flex; gap: 10px; align-items: center; color: var(--muted); font-weight: 700; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--leaf); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; transform: scale(.7); } }
+.err { color: var(--bad); font-weight: 700; }
+.btn { border: 0; border-radius: 12px; padding: 10px 14px; font-weight: 800; background: var(--leaf-soft); color: var(--leaf); }
+
+.hist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.hist li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.hist .t { color: var(--muted); font-size: .85rem; }
+.hist .n { min-width: 0; overflow-wrap: anywhere; font-weight: 700; }
+.hist .r { display: grid; justify-items: end; gap: 2px; }
+.hist .r span { padding: 2px 8px; border-radius: 999px; font-size: .7rem; font-weight: 800; }
+.sum { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+</style>
+<!--APP-HEAD-END-->
+</head>
+<body>
+<!--APP-BODY-START-->
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <p class="eyebrow">Agente de calorias</p>
+    <h1>Pode ou não pode?</h1>
+    <p class="muted">Tire foto do que vai comer. Eu digo as calorias e se é bom, médio ou ruim para o seu plano.</p>
+    <div class="legend"><span class="g">Bom · pode comer</span><span class="m">Médio · com moderação</span><span class="b">Ruim · não pode</span></div>
+  </header>
+
+  <div class="shoot" id="shoot">
+    <label class="big-cam" for="cam">
+      <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      Tirar foto da comida
+      <input id="cam" type="file" accept="image/*" capture="environment">
+    </label>
+    <label class="gal" for="gal">ou escolher da galeria
+      <input id="gal" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+    </label>
+  </div>
+  <p class="muted" id="off" hidden>Este agente funciona quando você abre pelo link do Claude, logada na sua conta.</p>
+
+  <div class="card" id="card" hidden>
+    <img id="photo" alt="Foto da comida">
+    <div class="in" id="out"></div>
+  </div>
+
+  <div>
+    <div class="sum"><h3 style="font-size:1.1rem">Hoje</h3><span class="muted num" id="total"></span></div>
+    <ul class="hist num" id="hist"></ul>
+    <p class="muted" id="empty" style="margin-top:8px">Nenhuma foto hoje ainda.</p>
+  </div>
+  <p class="muted" style="font-size:.85rem">Calorias por foto são estimativas e podem errar uns 20%. Plano de ~1.900 kcal por dia, para quem amamenta. "Não pode" quer dizer trocar por outra coisa, nunca ficar sem comer.</p>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function load(k, f) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  var VERDICT = {
+    bom:   { c: "g", label: "Bom", title: "Pode comer!", tag: "Bom" },
+    medio: { c: "m", label: "Médio", title: "Pode, com moderação", tag: "Médio" },
+    ruim:  { c: "b", label: "Ruim", title: "Não pode!", tag: "Ruim" }
+  };
+  // limites do plano de 1.900 kcal: refeição ~550, lanche ~250, bebida ~150
+  var LIMIT = { refeicao: 550, lanche: 250, bebida: 150 };
+  function judge(r) {
+    var kcal = Math.round(Number(r.kcal) || 0);
+    var lim = LIMIT[r.tipo] || LIMIT.lanche;
+    var junk = r.besteira === true;
+    if (!junk && kcal <= lim) return "bom";
+    if (kcal > lim * 1.4 || (junk && kcal > 200)) return "ruim";
+    return "medio";
+  }
+
+  var histKey = function () { return "pnp:" + today(); };
+  var hist = load(histKey(), []);
+  function renderHist() {
+    hist = load(histKey(), []);
+    $("hist").innerHTML = hist.map(function (h) {
+      var v = VERDICT[h.v] || VERDICT.medio;
+      return '<li><span class="t">' + esc(h.t) + '</span><span class="n">' + esc(h.n) + '</span><span class="r"><b>' + h.k + ' kcal</b><span class="' + v.c + '">' + v.tag + '</span></span></li>';
+    }).join("");
+    $("empty").hidden = hist.length > 0;
+    var tot = hist.reduce(function (a, h) { return a + h.k; }, 0);
+    $("total").textContent = hist.length ? tot + " de ~1.900 kcal" : "";
+  }
+  renderHist();
+
+  var sample = null, busy = false;
+  function off() { $("shoot").hidden = true; $("off").hidden = false; }
+  (window.claude && window.claude.use ? window.claude.use("sample") : Promise.resolve(null)).then(function (fn) {
+    if (!fn) { off(); return; }
+    sample = fn;
+    return fn.limits().then(function (l) { if (!l || !l.images) off(); }, function () {});
+  }, off);
+
+  function errCopy(code) {
+    if (code === "not_granted" || code === "sampling_disabled" || code === "images_unavailable" || code === "capability_disabled") return "O agente não foi liberado. Permita o uso do Claude no menu do app.";
+    if (code === "rate_limited") return "Muitas fotos seguidas. Espere alguns minutos.";
+    if (code === "image_rejected") return "Não consegui abrir essa foto. Tente outra.";
+    if (code === "session_expired") return "Sua sessão expirou. Entre de novo na conta Claude.";
+    if (code === "invalid_json" || code === "empty_completion") return "Não entendi a foto. Tire outra, de cima, com a comida inteira aparecendo.";
+    return "A conexão falhou. Tente de novo.";
+  }
+
+  var PROMPT = "Você é um agente que estima calorias por foto para uma mulher que amamenta e quer emagrecer (plano de ~1.900 kcal/dia).\n" +
+    "Olhe a foto e estime as calorias TOTAIS do que aparece, de forma realista (inclua óleo, açúcar, molho e o tamanho real da porção; assuma o tamanho comum quando não der para saber).\n" +
+    "Responda SOMENTE com JSON:\n" +
+    '{"comida": true, "nome": "nome curto em português, ex.: Prato de arroz, feijão e frango", "kcal": 450, "tipo": "refeicao", "besteira": false, "motivo": "até 10 palavras", "troca": "até 8 palavras"}\n' +
+    "tipo: \"refeicao\" (prato de almoço/jantar ou café da manhã completo), \"lanche\" (item ou porção pequena, doce, salgado, fruta) ou \"bebida\".\n" +
+    "besteira: true para doce, chocolate, bolo, sorvete, salgadinho, fritura, salgado de festa, refrigerante, fast food, pizza ou bebida alcoólica.\n" +
+    "motivo: por que é bom ou ruim para emagrecer. troca: uma alternativa mais leve (frango, ovo, fruta, iogurte, pão integral...).\n" +
+    "Se não houver comida na foto, responda {\"comida\": false}.";
+
+  function pick(e) {
+    var f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f || !sample || busy) return;
+    busy = true;
+    var r = new FileReader();
+    r.onload = function () { $("photo").src = r.result; };
+    r.readAsDataURL(f);
+    $("card").hidden = false;
+    $("out").innerHTML = '<div class="thinking"><span class="dot"></span>Calculando as calorias...</div>';
+    $("card").scrollIntoView({ behavior: "smooth", block: "start" });
+    sample.json(PROMPT, { images: f, effort: "low" }).then(function (res) {
+      if (!res || res.comida === false || !(Number(res.kcal) > 0)) {
+        $("out").innerHTML = '<p class="err">Não encontrei comida nessa foto. Tente de novo, de cima.</p>'; return;
+      }
+      var kcal = Math.round(Number(res.kcal));
+      var vk = judge(res), v = VERDICT[vk];
+      var html = '<p class="eyebrow">' + esc(res.nome || "Comida") + '</p>' +
+        '<p class="kcal num">' + kcal + ' <small>kcal</small></p>' +
+        '<div class="verdict ' + v.c + '"><b>' + v.label + ' · ' + v.title + '</b>' +
+        (res.motivo ? '<span>' + esc(res.motivo) + '</span>' : '') + '</div>';
+      if (vk === "ruim" && res.troca) html += '<p><b>Troque por:</b> ' + esc(res.troca) + '</p>';
+      $("out").innerHTML = html;
+      hist = load(histKey(), []);
+      hist.push({ t: pad(new Date().getHours()) + ":" + pad(new Date().getMinutes()), n: String(res.nome || "Comida").slice(0, 60), k: kcal, v: vk });
+      save(histKey(), hist); renderHist();
+    }).catch(function (e) {
+      $("out").innerHTML = '<p class="err">' + esc(errCopy(e && e.code)) + '</p>';
+    }).then(function () { busy = false; });
+  }
+  $("cam").addEventListener("change", pick);
+  $("gal").addEventListener("change", pick);
+})();
+</script>
+<!--APP-END-->
+</body>
+</html>

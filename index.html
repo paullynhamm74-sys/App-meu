@@ -236,6 +236,10 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .attach button { position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; border: 0; background: var(--ink); color: var(--bg); font-weight: 800; line-height: 1; }
 .del { border: 0; background: none; color: var(--muted); font-size: .8rem; text-decoration: underline; padding: 0; }
 
+.shortcut { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: var(--leaf-soft); color: var(--ink); text-decoration: none; border: 1px solid var(--line); }
+.shortcut b { font-family: var(--display); color: var(--leaf); }
+.shortcut span { font-size: .88rem; color: var(--muted); }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -315,6 +319,9 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <button class="btn ghost" id="chat-new" type="button" style="padding:8px 12px;font-size:.85rem">Nova conversa</button>
     </div>
 
+    <a class="shortcut" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener">
+      <b>Pode ou não pode?</b><span>Só quer saber as calorias e se pode comer? Abra o agente da foto.</span>
+    </a>
     <div class="chat" id="chat" aria-live="polite"></div>
 
     <div class="chips" id="chips">
