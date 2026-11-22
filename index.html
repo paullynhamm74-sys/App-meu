@@ -296,7 +296,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <img class="preview" id="foto-preview" alt="Foto do prato">
       <div class="field">
         <label for="foto-desc">O que é? (opcional, ajuda a acertar)</label>
-        <input id="foto-desc" type="text" placeholder="Ex.: 1 fatia de bolo de chocolate, prato raso">
+        <input id="foto-desc" type="text" placeholder="Ex.: 1 paçoca de rolha, ou prato raso de arroz e frango">
       </div>
       <div class="field">
         <label for="foto-slot">Essa comida é no lugar de qual refeição?</label>
@@ -759,10 +759,11 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     var m = WEEK[todayIdx].meals;
     $("foto-slot").innerHTML = SLOTS.map(function (s) {
       return '<option value="' + s.id + '">' + s.name + ' (' + s.time + ') · plano ≈ ' + m[s.id].k + ' kcal</option>';
-    }).join("") + '<option value="extra">Lanche extra de fome · até 200 kcal</option>';
+    }).join("") + '<option value="extra">Lanche extra de fome · até 200 kcal</option>' +
+      '<option value="fora">Fora do plano: doce, salgadinho, besteira</option>';
     $("foto-slot").value = slotForNow();
   }
-  function budgetFor(slot) { return slot === "extra" ? 200 : WEEK[todayIdx].meals[slot].k; }
+  function budgetFor(slot) { return slot === "fora" ? 0 : slot === "extra" ? 200 : WEEK[todayIdx].meals[slot].k; }
 
   function onPick(e) {
     var f = e.target.files && e.target.files[0]; e.target.value = "";
@@ -791,7 +792,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     if (!fotoFile || !sampleFn) return;
     var btn = this, box = $("foto-result");
     var slot = $("foto-slot").value, budget = budgetFor(slot);
-    var slotName = slot === "extra" ? "lanche extra" : SLOTS.filter(function (s) { return s.id === slot; })[0].name;
+    var slotName = slot === "fora" ? "algo fora do plano" : slot === "extra" ? "lanche extra" : SLOTS.filter(function (s) { return s.id === slot; })[0].name;
     var desc = $("foto-desc").value.trim();
     btn.disabled = true; btn.textContent = "Calculando...";
     box.hidden = false;
@@ -799,10 +800,12 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     fotoCtl = new AbortController();
     var prompt = "Você é uma nutricionista brasileira. Analise a foto de comida anexada e estime as calorias.\n" +
       "Contexto: mulher de " + fmt(curWeight(), 1) + " kg e 1,50 m, amamentando, num plano de ~1.900 kcal/dia. Esta comida é o " + slotName + " (o plano prevê ~" + budget + " kcal).\n" +
+      "Pode ser uma refeição ou um item pequeno, como uma paçoca, um bombom ou um salgado: identifique a marca/tipo e o tamanho se der.\n" +
       (desc ? "Ela descreveu a comida assim: \"" + desc.slice(0, 300) + "\". Use isso para identificar os alimentos e a porção.\n" : "") +
       "Liste cada alimento visível com a porção em medida caseira brasileira (colheres de sopa, fatias, unidades, conchas) e as calorias. Seja realista com óleo, açúcar e molhos.\n" +
       "Responda SOMENTE com JSON neste formato:\n" +
-      '{"alimento_detectado": true, "itens": [{"nome": "Arroz branco", "porcao": "4 colheres de sopa", "kcal": 160}], "total_kcal": 160, "proteina_g": 3, "comentario": "1 ou 2 frases curtas, gentis e diretas, em português", "dica": "uma troca simples para deixar mais leve da próxima vez, ou string vazia"}\n' +
+      '{"alimento_detectado": true, "itens": [{"nome": "Arroz branco", "porcao": "4 colheres de sopa", "kcal": 160}], "total_kcal": 160, "proteina_g": 3, "guloseima": false, "comentario": "1 ou 2 frases curtas, gentis e diretas, em português", "dica": "uma troca simples para deixar mais leve da próxima vez, ou string vazia"}\n' +
+      "guloseima = true se for doce, chocolate, salgadinho, fritura, refrigerante, fast food ou sobremesa.\n" +
       "Se a foto não mostrar comida, responda alimento_detectado false, itens vazio e total_kcal 0.";
     sampleFn.json(prompt, { images: fotoFile, signal: fotoCtl.signal }).then(function (r) {
       fotoData = r; renderResult(r, slot, budget);
@@ -827,26 +830,36 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       box.innerHTML = '<p class="err">Não encontrei comida nessa foto. Tente tirar de cima, com o prato inteiro aparecendo.</p>'; return;
     }
     var total = Math.round(Number(r.total_kcal) || items.reduce(function (a, it) { return a + (Number(it.kcal) || 0); }, 0));
+    var treat = r.guloseima === true || slot === "fora";
     var excess = total - budget;
-    var cls = excess <= 100 ? "ok" : excess <= 300 ? "mid" : "high";
-    var label = excess <= 100 ? "Dentro do plano" : excess <= 300 ? "Um pouco acima" : "Bem acima do plano";
+    // guloseima: queimar tudo; refeição do plano: queimar só o que passou
+    var burn = treat ? total : Math.max(0, excess);
+    var cls = treat ? (total <= 150 ? "mid" : "high") : excess <= 100 ? "ok" : excess <= 300 ? "mid" : "high";
+    var label = treat ? "Fora do plano" : excess <= 100 ? "Dentro do plano" : excess <= 300 ? "Um pouco acima" : "Bem acima do plano";
     r._total = total; r._name = items.map(function (it) { return String(it.nome || ""); }).filter(Boolean).slice(0, 3).join(", ");
     var html = '<div class="total"><div><p class="eyebrow">Estimativa</p><span class="k num">' + total + ' <small style="font-size:1rem">kcal</small></span></div>' +
       '<span class="verdict ' + cls + '">' + label + '</span></div>' +
-      '<p class="muted num">O plano prevê ~' + budget + ' kcal para essa refeição' + (r.proteina_g ? ' · proteína ≈ ' + Math.round(Number(r.proteina_g)) + ' g' : '') + '.</p>' +
+      '<p class="muted num">' + (slot === "fora" ? 'Não está no seu cardápio' : 'O plano prevê ~' + budget + ' kcal para essa refeição') + (r.proteina_g ? ' · proteína ≈ ' + Math.round(Number(r.proteina_g)) + ' g' : '') + '.</p>' +
       '<ul class="items num">' + items.map(function (it) {
         return '<li><b>' + esc(it.nome || "Alimento") + '</b><span>' + Math.round(Number(it.kcal) || 0) + ' kcal</span><small>' + esc(it.porcao || "") + '</small></li>';
       }).join("") + '</ul>';
     if (r.comentario) html += '<p>' + esc(r.comentario) + '</p>';
     if (r.dica) html += '<p class="muted"><b>Da próxima vez:</b> ' + esc(r.dica) + '</p>';
-    if (excess > 100) {
-      html += '<div style="display:grid;gap:8px"><h3>Para queimar os ~' + excess + ' kcal a mais</h3>' +
+    function exList(amount) {
+      return '<div class="exs">' + EXERCISES.map(function (x) {
+        var raw = amount / kcalPerMin(x.met);
+        var min = raw < 15 ? Math.max(3, Math.round(raw)) : Math.round(raw / 5) * 5;
+        return '<div class="ex"><b class="num">' + min + '<small>minutos</small></b><span>' + x.n + '<em>' + x.how + '</em></span></div>';
+      }).join('') + '</div>';
+    }
+    if (burn >= 30) {
+      html += '<div style="display:grid;gap:8px"><h3>' + (treat ? 'Para queimar ' + (items.length === 1 ? 'essa ' + esc(String(items[0].nome || 'comida').toLowerCase()) : 'isso') + ' (' + burn + ' kcal)' : 'Para queimar os ~' + burn + ' kcal a mais') + '</h3>' +
         '<p class="muted" style="font-size:.9rem">Escolha <b>um</b>. Calculado para o seu peso (' + fmt(curWeight(), 1) + ' kg). Pode dividir em blocos de 10 minutos ao longo do dia.</p>' +
-        '<div class="exs">' + EXERCISES.map(function (x) {
-          var min = Math.max(5, Math.round(excess / kcalPerMin(x.met) / 5) * 5);
-          return '<div class="ex"><b class="num">' + min + '<small>minutos</small></b><span>' + x.n + '<em>' + x.how + '</em></span></div>';
-        }).join("") + '</div>' +
+        exList(burn) +
         '<div class="note"><p><strong>Com calma:</strong> não precisa queimar tudo hoje e <b>não pule a próxima refeição</b>, isso diminui o leite. Beba 1 copo de água a mais durante o exercício. Se teve parto há menos de 6 semanas ou cesárea, fique só na caminhada até a médica liberar.</p></div></div>';
+    } else {
+      html += '<p class="muted">Isso já está dentro do seu plano, não precisa compensar.</p>' +
+        '<details><summary style="cursor:pointer;font-weight:700">Mesmo assim, quanto exercício queima ' + total + ' kcal?</summary><div style="margin-top:8px">' + exList(total) + '</div></details>';
     }
     html += '<button type="button" class="btn" id="foto-ate">Comi isso</button>';
     box.innerHTML = html;
