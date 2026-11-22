@@ -248,6 +248,23 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .shortcut b { font-family: var(--display); color: var(--leaf); }
 .shortcut span { font-size: .88rem; color: var(--muted); }
 
+/* lembretes */
+.bell { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--leaf); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .82rem; }
+.bell svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ics a { text-decoration: none; text-align: center; }
+.ics a:first-child { grid-column: 1 / -1; }
+.how { border-top: 1px solid var(--line); padding-top: 8px; }
+.how summary { cursor: pointer; font-weight: 800; color: var(--leaf); }
+.how p { margin-top: 6px; font-size: .92rem; }
+.tog { display: flex; gap: 10px; align-items: center; font-weight: 700; cursor: pointer; }
+.tog input { width: 22px; height: 22px; accent-color: var(--leaf); }
+.wtime.water { background: var(--water-soft); }
+.wtime:not(.water) { background: var(--leaf-soft); }
+.wtime:not(.water) b { color: var(--leaf); }
+.toast { position: fixed; z-index: 30; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); top: calc(12px + env(safe-area-inset-top, 0px)); max-width: 616px; margin: 0 auto; background: var(--leaf); color: var(--bg); border-radius: 16px; padding: 12px 16px; display: grid; gap: 2px; box-shadow: 0 12px 30px -12px rgba(0,0,0,.45); }
+.toast b { font-family: var(--display); font-size: 1.05rem; }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -274,7 +291,10 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 <!--APP-BODY-START-->
 <div class="wrap">
   <header class="top">
-    <p class="eyebrow" id="today-label">Hoje</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <p class="eyebrow" id="today-label">Hoje</p>
+      <button type="button" class="bell" id="bell" aria-label="Lembretes"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Lembretes</button>
+    </div>
     <h1 id="greet">Olá, mamãe</h1>
     <div class="stats">
       <span class="pill num">~1.900 kcal/dia</span>
@@ -412,6 +432,56 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     </div>
   </section>
 
+  <!-- LEMBRETES -->
+  <section data-view="lembretes" hidden>
+    <div>
+      <p class="eyebrow">Para não esquecer</p>
+      <h2>Lembretes de comida e água</h2>
+    </div>
+
+    <div class="next">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap">
+        <h3>1. No calendário do celular</h3><span class="pill">Recomendado</span>
+      </div>
+      <p class="muted">Avisa <b>mesmo com o app fechado</b>. O aviso de cada refeição já mostra o que comer naquele dia. Faça isso uma vez só.</p>
+      <div class="ics">
+        <a class="btn" id="ics-all" href="lembretes.ics">Refeições + água</a>
+        <a class="btn ghost" id="ics-meals" href="lembretes-refeicoes.ics">Só refeições</a>
+        <a class="btn ghost" id="ics-water" href="lembretes-agua.ics">Só água</a>
+      </div>
+      <details class="how">
+        <summary>Como fazer no iPhone</summary>
+        <p>Toque em <b>Refeições + água</b>. Vai abrir uma tela com os lembretes: toque em <b>Adicionar Tudo</b> e escolha o calendário. Pronto.</p>
+      </details>
+      <details class="how">
+        <summary>Como fazer no Android (Samsung, Motorola, Xiaomi…)</summary>
+        <p>Toque em <b>Refeições + água</b>. O arquivo vai para os downloads. Toque na notificação do download (ou abra <b>Arquivos → Downloads</b>) e abra com o <b>Calendário</b> do celular. Toque em <b>Salvar</b> ou <b>Importar</b>.</p>
+        <p>Se o seu celular só tiver o <b>Google Agenda</b> e ele não abrir o arquivo: entre em <b>calendar.google.com</b> no navegador (modo computador), vá em <b>Configurações → Importar e exportar → Importar</b> e escolha o arquivo baixado. Depois, em Configurações do calendário, coloque a notificação padrão em <b>0 minutos</b>.</p>
+      </details>
+      <details class="how">
+        <summary>Quero tirar os lembretes</summary>
+        <p>No calendário, abra um dos lembretes e escolha <b>Apagar → Todos os eventos futuros</b>. Faça isso uma vez para cada horário.</p>
+      </details>
+    </div>
+
+    <div class="next">
+      <h3>2. Avisos do app</h3>
+      <p class="muted">O app avisa na hora certa <b>enquanto estiver aberto ou minimizado</b>. Se você fechar o app, use o calendário acima.</p>
+      <label class="tog"><input type="checkbox" id="n-meals" checked> <span>Avisar as refeições</span></label>
+      <label class="tog"><input type="checkbox" id="n-water" checked> <span>Avisar para beber água</span></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="n-on" type="button">Ativar avisos</button>
+        <button class="btn ghost" id="n-test" type="button">Testar aviso</button>
+      </div>
+      <p class="num" id="n-status" style="font-weight:700"></p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:8px">Horários dos lembretes</h3>
+      <div class="wtimes" id="n-times"></div>
+    </div>
+  </section>
+
   <!-- DICAS -->
   <section data-view="dicas" hidden>
     <div>
@@ -461,6 +531,8 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     </div>
   </section>
 </div>
+
+<div class="toast" id="toast" hidden role="status"></div>
 
 <nav class="tabs" aria-label="Seções">
   <div class="in">
@@ -1003,8 +1075,156 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     });
   }, function () {});
 
+  // ---------- LEMBRETES ----------
+  var PAGES_URL = "https://paullynhamm74-sys.github.io/App-meu/";
+  var inClaude = !!(window.claude && window.claude.use) || /claude\.ai|claudeusercontent/.test(location.hostname);
+  if (inClaude || location.protocol === "file:") {
+    // dentro do Claude não dá para baixar arquivos: abre a versão do site
+    ["ics-all", "ics-meals", "ics-water"].forEach(function (id) {
+      var a = $(id); a.href = PAGES_URL + a.getAttribute("href"); a.target = "_blank"; a.rel = "noopener";
+    });
+  }
+  function shortMeal(items) {
+    return items.slice(0, 3).map(function (x) { return x.replace(/\s*\(.*?\)/g, ""); }).join(" + ");
+  }
+  function reminderList() {
+    var list = [], cfg = load("mp:notif", { meals: true, water: true });
+    if (cfg.meals) SLOTS.forEach(function (s) {
+      list.push({ id: "m-" + s.id, t: s.time, kind: "meal", title: s.name + " (" + s.time + ")", body: function () { return shortMeal(WEEK[todayIdx].meals[s.id].items); } });
+    });
+    if (cfg.water) WATER.forEach(function (w) {
+      if (!/^\d\d:\d\d$/.test(w.t)) return;
+      list.push({ id: "w-" + w.t, t: w.t, kind: "water", title: "Hora da água 💧", body: function () { return "Beba 1 copo (250 ml) · " + w.w; } });
+    });
+    return list.sort(function (a, b) { return a.t < b.t ? -1 : 1; });
+  }
+  function renderTimes() {
+    var all = [];
+    SLOTS.forEach(function (s) { all.push({ t: s.time, w: s.name, c: "" }); });
+    WATER.forEach(function (w) { if (/^\d\d:\d\d$/.test(w.t)) all.push({ t: w.t, w: "Água", c: " water" }); });
+    all.sort(function (a, b) { return a.t < b.t ? -1 : 1; });
+    $("n-times").innerHTML = all.map(function (x) {
+      return '<div class="wtime' + x.c + '"><b class="num">' + x.t + '</b><small>' + x.w + '</small></div>';
+    }).join("");
+  }
+  renderTimes();
+
+  var cfgN = load("mp:notif", { meals: true, water: true, on: false });
+  $("n-meals").checked = cfgN.meals !== false; $("n-water").checked = cfgN.water !== false;
+  function saveCfg() { cfgN.meals = $("n-meals").checked; cfgN.water = $("n-water").checked; save("mp:notif", cfgN); nStatus(); }
+  $("n-meals").addEventListener("change", saveCfg); $("n-water").addEventListener("change", saveCfg);
+
+  var canNotify = "Notification" in window && !inClaude;
+  function nStatus() {
+    var el = $("n-status");
+    if (!canNotify) { el.textContent = inClaude ? "Os avisos do app só funcionam no app instalado no celular." : "Este navegador não permite avisos."; $("n-on").hidden = true; return; }
+    var p = Notification.permission;
+    if (p === "granted" && cfgN.on) {
+      var next = nextReminder();
+      el.textContent = "Avisos ligados." + (next ? " Próximo: " + next.t + " · " + next.title.replace(/ \(.*\)/, "") : "");
+      $("n-on").textContent = "Desligar avisos";
+    } else if (p === "denied") {
+      el.textContent = "Os avisos estão bloqueados. Libere em Configurações do celular → Apps → Meu Prato → Notificações.";
+      $("n-on").textContent = "Ativar avisos";
+    } else { el.textContent = "Avisos desligados."; $("n-on").textContent = "Ativar avisos"; }
+  }
+  function nextReminder() {
+    var m = new Date().getHours() * 60 + new Date().getMinutes();
+    var list = reminderList();
+    for (var i = 0; i < list.length; i++) if (minutes(list[i].t) > m) return list[i];
+    return list[0] || null;
+  }
+  function notify(title, body, tag) {
+    var opts = { body: body, icon: "icons/icon-192.png", badge: "icons/icon-192.png", tag: tag, vibrate: [200, 100, 200], renotify: true };
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+      return navigator.serviceWorker.getRegistration().then(function (reg) {
+        if (reg) return reg.showNotification(title, opts);
+        new Notification(title, opts);
+      }).catch(function () { try { new Notification(title, opts); } catch (e) {} });
+    }
+    try { new Notification(title, opts); } catch (e) {}
+    return Promise.resolve();
+  }
+  $("n-on").addEventListener("click", function () {
+    if (!canNotify) return;
+    if (Notification.permission === "granted" && cfgN.on) { cfgN.on = false; save("mp:notif", cfgN); nStatus(); return; }
+    Notification.requestPermission().then(function (p) {
+      cfgN.on = p === "granted"; save("mp:notif", cfgN); nStatus();
+      if (cfgN.on) notify("Avisos ligados ✓", "Vou te lembrar das refeições e da água enquanto o app estiver aberto.", "mp-on");
+    });
+  });
+  $("n-test").addEventListener("click", function () {
+    var s = SLOTS[Math.max(0, nextSlotIdx())];
+    var title = s.name + " (" + s.time + ")", body = shortMeal(WEEK[todayIdx].meals[s.id].items);
+    if (canNotify && Notification.permission === "granted") notify(title, body, "mp-test");
+    toast(title, body);
+  });
+
+  // aviso dentro da tela também
+  function toast(title, body) {
+    var t = $("toast"); if (!t) return;
+    t.innerHTML = "<b>" + esc(title) + "</b><span>" + esc(body) + "</span>";
+    t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 8000);
+  }
+  function checkReminders() {
+    var d = new Date(), hm = pad(d.getHours()) + ":" + pad(d.getMinutes());
+    var sentKey = "mp:sent:" + key(d), sent = load(sentKey, {});
+    reminderList().forEach(function (r) {
+      var diff = d.getHours() * 60 + d.getMinutes() - minutes(r.t);
+      if (diff >= 0 && diff <= 2 && !sent[r.id]) {
+        sent[r.id] = true; save(sentKey, sent);
+        var body = r.body();
+        if (canNotify && cfgN.on && Notification.permission === "granted") notify(r.title, body, r.id);
+        if (document.visibilityState === "visible") toast(r.title, body);
+      }
+    });
+  }
+  nStatus();
+  checkReminders();
+  setInterval(function () { checkReminders(); nStatus(); }, 20000);
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") checkReminders(); });
+
+  // ---------- CALENDÁRIO (.ics) ----------
+  window.__buildICS = function (opts) {
+    function esci(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\n/g, "\\n"); }
+    function fold(line) {
+      var out = [], cur = "", bytes = 0;
+      for (var ch of line) {
+        var b = new TextEncoder().encode(ch).length;
+        if (bytes + b > 73) { out.push(cur); cur = " "; bytes = 1; }
+        cur += ch; bytes += b;
+      }
+      out.push(cur); return out.join("\r\n");
+    }
+    var L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Meu Prato da Semana//PT-BR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:Meu Prato"];
+    var stamp = "20261122T120000Z", start = new Date(2026, 10, 23); // segunda-feira
+    function ymd(d) { return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()); }
+    function ev(uid, date, time, dur, rrule, summary, desc) {
+      var hm = time.replace(":", "");
+      L.push("BEGIN:VEVENT", "UID:" + uid + "@meu-prato", "DTSTAMP:" + stamp,
+        "DTSTART:" + ymd(date) + "T" + hm + "00", "DURATION:" + dur, "RRULE:" + rrule,
+        fold("SUMMARY:" + esci(summary)), fold("DESCRIPTION:" + esci(desc)), "TRANSP:TRANSPARENT",
+        "BEGIN:VALARM", "ACTION:DISPLAY", fold("DESCRIPTION:" + esci(summary)), "TRIGGER:PT0M", "END:VALARM", "END:VEVENT");
+    }
+    var BYDAY = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"];
+    if (opts.meals) WEEK.forEach(function (d, i) {
+      var date = new Date(start); date.setDate(start.getDate() + i);
+      SLOTS.forEach(function (s) {
+        var m = d.meals[s.id];
+        ev("meal-" + BYDAY[i] + "-" + s.id, date, s.time, "PT20M", "FREQ=WEEKLY;BYDAY=" + BYDAY[i],
+          s.name + ": " + shortMeal(m.items), m.items.map(function (x) { return "- " + x; }).join("\n") + "\n\n≈ " + m.k + " kcal · Beba 1 copo de água junto.");
+      });
+    });
+    if (opts.water) WATER.forEach(function (w) {
+      if (!/^\d\d:\d\d$/.test(w.t)) return;
+      ev("water-" + w.t.replace(":", ""), start, w.t, "PT5M", "FREQ=DAILY", "Beber água: 1 copo (250 ml)", "Meta do dia: 12 copos (3 litros). " + w.w + ". Em cada mamada, mais 1 copo.");
+    });
+    L.push("END:VCALENDAR");
+    return L.join("\r\n") + "\r\n";
+  };
+
   // ---------- ABAS ----------
-  var TABS = ["cardapio", "fome", "nutri", "agua", "compras", "dicas"];
+  var TABS = ["cardapio", "fome", "nutri", "agua", "compras", "dicas", "lembretes"];
   function show(tab) {
     if (TABS.indexOf(tab) < 0) tab = "cardapio";
     document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });
@@ -1014,6 +1234,8 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     save("mp:tab", tab);
     window.scrollTo(0, 0);
   }
+  $("bell").addEventListener("click", function () { show("lembretes"); });
+  window.addEventListener("hashchange", function () { show((location.hash || "").slice(1)); });
   document.querySelector("nav.tabs").addEventListener("click", function (e) {
     var b = e.target.closest("[data-tab]"); if (b) show(b.getAttribute("data-tab"));
   });

@@ -35,3 +35,12 @@ O app é um PWA: instala pelo navegador, ganha ícone na tela inicial, abre em t
    **iPhone (Safari):** botão **Compartilhar** → **Adicionar à Tela de Início**.
 
 A Nutri e o Pode ou Não Pode usam o Claude: no app instalado, os botões abrem essas telas no Claude (precisa de internet e estar logada).
+
+## Lembretes (refeições e água)
+
+Botão **Lembretes** no topo do app:
+
+- **Calendário do celular** (`lembretes.ics`, `lembretes-refeicoes.ics`, `lembretes-agua.ics`): avisa mesmo com o app fechado. 42 lembretes semanais de refeição (cada um com o cardápio daquele dia) + 11 lembretes diários de água.
+- **Avisos do app**: notificações na hora certa enquanto o app está aberto ou minimizado.
+
+Para regerar os `.ics` depois de mudar o cardápio, rode `window.__buildICS({meals: true, water: true})` no console do app.

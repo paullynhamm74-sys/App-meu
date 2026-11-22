@@ -1,0 +1,939 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Meu Prato da Semana//PT-BR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Meu Prato
+BEGIN:VEVENT
+UID:meal-MO-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Café da manhã: 2 ovos mexidos + 2 fatias de pão integral + 1 c
+ opo de leite\, puro ou morno com canela
+DESCRIPTION:- 2 ovos mexidos (1 fio de azeite)\n- 2 fatias de pão integr
+ al\n- 1 copo de leite (200 ml)\, puro ou morno com canela\n- 1 banana\n\
+ n≈ 420 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: 2 ovos mexidos + 2 fatias de pão integral +
+  1 copo de leite\, puro ou morno com canela
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-MO-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Lanche da manhã: 1 pote de iogurte natural + 1 cs de aveia
+DESCRIPTION:- 1 pote de iogurte natural (170 g)\n- 1 cs de aveia\n\n≈ 1
+ 80 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 pote de iogurte natural + 1 cs de aveia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-MO-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + 1 filé de frango 
+ grelhado
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- 1 filé de frango g
+ relhado (120 g)\n- 3 cs de cenoura cozida\n- Salada de alface e tomate 
+ à vontade + 1 col. chá de azeite\n\n≈ 520 kcal · Beba 1 copo de ág
+ ua junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + 1 filé de fra
+ ngo grelhado
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-MO-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Lanche da tarde: 1 fatia de pão integral + 1 fatia de queijo bra
+ nco + 1 copo de leite
+DESCRIPTION:- 1 fatia de pão integral\n- 1 fatia de queijo branco (30 g)
+ \n- 1 copo de leite (200 ml)\n\n≈ 230 kcal · Beba 1 copo de água jun
+ to.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 1 fatia de pão integral + 1 fatia de queijo
+  branco + 1 copo de leite
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-MO-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Jantar: Omelete de 2 ovos com tomate e cebola + 3 cs de arroz + S
+ alada verde à vontade
+DESCRIPTION:- Omelete de 2 ovos com tomate e cebola\n- 3 cs de arroz\n- S
+ alada verde à vontade\n\n≈ 400 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Omelete de 2 ovos com tomate e cebola + 3 cs de arroz
+  + Salada verde à vontade
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-MO-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Ceia: 1 copo de leite morno + 1/2 maçã
+DESCRIPTION:- 1 copo de leite morno (200 ml)\n- 1/2 maçã\n\n≈ 150 kca
+ l · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 copo de leite morno + 1/2 maçã
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Café da manhã: 1 tapioca média + Recheio: 1 ovo mexido + 1 fat
+ ia de queijo branco + 1 copo de leite\, puro ou morno com canela
+DESCRIPTION:- 1 tapioca média (3 cs de goma)\n- Recheio: 1 ovo mexido + 
+ 1 fatia de queijo branco\n- 1 copo de leite (200 ml)\, puro ou morno com
+  canela\n\n≈ 400 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: 1 tapioca média + Recheio: 1 ovo mexido + 1
+  fatia de queijo branco + 1 copo de leite\, puro ou morno com canela
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Lanche da manhã: 1 maçã + 1 fatia de queijo branco
+DESCRIPTION:- 1 maçã\n- 1 fatia de queijo branco (30 g)\n\n≈ 160 kcal
+  · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 maçã + 1 fatia de queijo branco
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + 4 cs de frango des
+ fiado refogado com tomate
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- 4 cs de frango desf
+ iado refogado com tomate\n- Abobrinha refogada (3 cs)\n- Salada de pepin
+ o e tomate à vontade\n\n≈ 530 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + 4 cs de frango
+  desfiado refogado com tomate
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Lanche da tarde: 1 pote de iogurte natural + 1 banana picada + 1 
+ cs de aveia
+DESCRIPTION:- 1 pote de iogurte natural (170 g)\n- 1 banana picada\n- 1 c
+ s de aveia\n\n≈ 220 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 1 pote de iogurte natural + 1 banana picada 
+ + 1 cs de aveia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Jantar: Sanduíche: 2 fatias de pão integral + 3 cs de frango de
+ sfiado + alface\, tomate e cenoura ralada + 1 cs de requeijão light
+DESCRIPTION:- Sanduíche: 2 fatias de pão integral + 3 cs de frango desf
+ iado + alface\, tomate e cenoura ralada\n- 1 cs de requeijão light\n\n
+ ≈ 420 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Sanduíche: 2 fatias de pão integral + 3 cs de frang
+ o desfiado + alface\, tomate e cenoura ralada + 1 cs de requeijão light
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TU-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261124T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:Ceia: 1 copo de leite + 2 castanhas-do-pará
+DESCRIPTION:- 1 copo de leite (200 ml)\n- 2 castanhas-do-pará\n\n≈ 150
+  kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 copo de leite + 2 castanhas-do-pará
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Café da manhã: Panqueca de banana: 1 banana + 2 ovos + 2 cs de 
+ aveia + 1 copo de leite\, puro ou morno com canela
+DESCRIPTION:- Panqueca de banana: 1 banana + 2 ovos + 2 cs de aveia (frig
+ ideira antiaderente)\n- 1 copo de leite (200 ml)\, puro ou morno com can
+ ela\n\n≈ 410 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: Panqueca de banana: 1 banana + 2 ovos + 2 cs
+  de aveia + 1 copo de leite\, puro ou morno com canela
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Lanche da manhã: 1 pera ou 2 tangerinas + 1 ovo cozido
+DESCRIPTION:- 1 pera ou 2 tangerinas\n- 1 ovo cozido\n\n≈ 170 kcal · B
+ eba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 pera ou 2 tangerinas + 1 ovo cozido
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + 1 coxa ou sobrecox
+ a de frango assada sem pele
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- 1 coxa ou sobrecoxa
+  de frango assada sem pele\n- Brócolis no vapor (4 ramos)\n- Salada de 
+ alface e cenoura ralada\n\n≈ 520 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + 1 coxa ou sobr
+ ecoxa de frango assada sem pele
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Lanche da tarde: 1 fatia de pão integral com 1 ovo mexido + 1 co
+ po de suco natural de laranja
+DESCRIPTION:- 1 fatia de pão integral com 1 ovo mexido\n- 1 copo de suco
+  natural de laranja (200 ml)\n\n≈ 230 kcal · Beba 1 copo de água jun
+ to.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 1 fatia de pão integral com 1 ovo mexido + 
+ 1 copo de suco natural de laranja
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Jantar: 1 prato raso de macarrão integral + 3 cs de frango desfi
+ ado ao molho de tomate caseiro + Salada verde à vontade
+DESCRIPTION:- 1 prato raso de macarrão integral (1 xícara cozido)\n- 3 
+ cs de frango desfiado ao molho de tomate caseiro\n- Salada verde à vont
+ ade\n\n≈ 450 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: 1 prato raso de macarrão integral + 3 cs de frango d
+ esfiado ao molho de tomate caseiro + Salada verde à vontade
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-WE-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261125T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Ceia: 1 pote de iogurte natural
+DESCRIPTION:- 1 pote de iogurte natural (170 g)\n\n≈ 140 kcal · Beba 1
+  copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 pote de iogurte natural
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Café da manhã: 2 fatias de pão integral + 1 fatia de queijo br
+ anco + 1 ovo cozido
+DESCRIPTION:- 2 fatias de pão integral\n- 1 fatia de queijo branco (30 g
+ )\n- 1 ovo cozido\n- 1 copo de leite (200 ml)\, puro ou morno com canela
+ \n\n≈ 400 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: 2 fatias de pão integral + 1 fatia de queij
+ o branco + 1 ovo cozido
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Lanche da manhã: 1 banana + 1 col. sopa de pasta de amendoim
+DESCRIPTION:- 1 banana\n- 1 col. sopa de pasta de amendoim\n\n≈ 180 kca
+ l · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 banana + 1 col. sopa de pasta de amendoim
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + Strogonoff light: 
+ 4 cs de frango em cubos + molho de tomate + 2 cs de iogurte natural
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- Strogonoff light: 4
+  cs de frango em cubos + molho de tomate + 2 cs de iogurte natural\n- Sa
+ lada de tomate e pepino à vontade\n\n≈ 530 kcal · Beba 1 copo de ág
+ ua junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + Strogonoff lig
+ ht: 4 cs de frango em cubos + molho de tomate + 2 cs de iogurte natural
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Lanche da tarde: 1 copo de vitamina: 200 ml de leite + 1/2 mamão
+  papaia + 1 cs de aveia
+DESCRIPTION:- 1 copo de vitamina: 200 ml de leite + 1/2 mamão papaia\n- 
+ 1 cs de aveia\n\n≈ 210 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 1 copo de vitamina: 200 ml de leite + 1/2 ma
+ mão papaia + 1 cs de aveia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Jantar: Sopa de legumes com frango: 1 prato fundo + 1 fatia de p
+ ão integral
+DESCRIPTION:- Sopa de legumes com frango: 1 prato fundo (batata\, cenoura
+ \, chuchu\, abobrinha e frango desfiado)\n- 1 fatia de pão integral\n\n
+ ≈ 400 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Sopa de legumes com frango: 1 prato fundo + 1 fatia d
+ e pão integral
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-TH-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261126T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:Ceia: 1 copo de leite morno + 1/2 banana
+DESCRIPTION:- 1 copo de leite morno (200 ml)\n- 1/2 banana\n\n≈ 150 kca
+ l · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 copo de leite morno + 1/2 banana
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Café da manhã: Cuscuz de milho: 1 fatia média + 2 ovos mexidos
+  + 1 copo de leite\, puro ou morno com canela
+DESCRIPTION:- Cuscuz de milho: 1 fatia média (4 cs de flocão)\n- 2 ovos
+  mexidos\n- 1 copo de leite (200 ml)\, puro ou morno com canela\n\n≈ 4
+ 30 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: Cuscuz de milho: 1 fatia média + 2 ovos mex
+ idos + 1 copo de leite\, puro ou morno com canela
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Lanche da manhã: 1 xícara de melão ou melancia picados + 1 fat
+ ia de queijo branco
+DESCRIPTION:- 1 xícara de melão ou melancia picados\n- 1 fatia de queij
+ o branco (30 g)\n\n≈ 160 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 xícara de melão ou melancia picados + 1
+  fatia de queijo branco
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + 1 filé de frango 
+ acebolado
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- 1 filé de frango a
+ cebolado (120 g)\n- Purê de abóbora (3 cs)\n- Salada verde à vontade\
+ n\n≈ 520 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + 1 filé de fra
+ ngo acebolado
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Lanche da tarde: 1 pote de iogurte natural + 1 maçã picada + 1 
+ cs de aveia
+DESCRIPTION:- 1 pote de iogurte natural (170 g)\n- 1 maçã picada\n- 1 c
+ s de aveia\n\n≈ 220 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 1 pote de iogurte natural + 1 maçã picada 
+ + 1 cs de aveia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Jantar: Wrap: 1 pão sírio integral + 3 cs de frango desfiado + 
+ alface\, tomate e cenoura ralada + 1 cs de requeijão light
+DESCRIPTION:- Wrap: 1 pão sírio integral + 3 cs de frango desfiado + al
+ face\, tomate e cenoura ralada\n- 1 cs de requeijão light\n\n≈ 430 kc
+ al · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Wrap: 1 pão sírio integral + 3 cs de frango desfiad
+ o + alface\, tomate e cenoura ralada + 1 cs de requeijão light
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-FR-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261127T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:Ceia: 1 copo de leite + 1 kiwi ou 1/2 maçã
+DESCRIPTION:- 1 copo de leite (200 ml)\n- 1 kiwi ou 1/2 maçã\n\n≈ 140
+  kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 copo de leite + 1 kiwi ou 1/2 maçã
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Café da manhã: 2 fatias de pão integral + 1 ovo mexido + 1 fat
+ ia de queijo branco + 1 copo de suco natural de laranja
+DESCRIPTION:- 2 fatias de pão integral\n- 1 ovo mexido + 1 fatia de quei
+ jo branco\n- 1 copo de suco natural de laranja (200 ml)\n\n≈ 420 kcal 
+ · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: 2 fatias de pão integral + 1 ovo mexido + 1
+  fatia de queijo branco + 1 copo de suco natural de laranja
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Lanche da manhã: 1 banana + 1 copo de leite
+DESCRIPTION:- 1 banana\n- 1 copo de leite (200 ml)\n\n≈ 170 kcal · Beb
+ a 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 banana + 1 copo de leite
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Almoço: Escondidinho: 4 cs de purê de batata + 4 cs de frango d
+ esfiado + 1 col. sopa de queijo ralado + Arroz 2 cs + Salada de alface\,
+  tomate e cenoura à vontade
+DESCRIPTION:- Escondidinho: 4 cs de purê de batata + 4 cs de frango desf
+ iado + 1 col. sopa de queijo ralado\n- Arroz 2 cs\n- Salada de alface\, 
+ tomate e cenoura à vontade\n\n≈ 550 kcal · Beba 1 copo de água junt
+ o.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: Escondidinho: 4 cs de purê de batata + 4 cs de fran
+ go desfiado + 1 col. sopa de queijo ralado + Arroz 2 cs + Salada de alfa
+ ce\, tomate e cenoura à vontade
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Lanche da tarde: 2 ovos cozidos + 1 tangerina
+DESCRIPTION:- 2 ovos cozidos\n- 1 tangerina\n\n≈ 200 kcal · Beba 1 cop
+ o de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: 2 ovos cozidos + 1 tangerina
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Jantar: Pizza de frigideira: 2 ovos + 2 cs de aveia + Cobertura: 
+ molho de tomate\, 2 cs de frango desfiado\, 1 fatia de queijo\, orégano
+  + Salada verde
+DESCRIPTION:- Pizza de frigideira: 2 ovos + 2 cs de aveia (massa)\n- Cobe
+ rtura: molho de tomate\, 2 cs de frango desfiado\, 1 fatia de queijo\, o
+ régano\n- Salada verde\n\n≈ 430 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Pizza de frigideira: 2 ovos + 2 cs de aveia + Cobertu
+ ra: molho de tomate\, 2 cs de frango desfiado\, 1 fatia de queijo\, oré
+ gano + Salada verde
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SA-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261128T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:Ceia: 1 pote de iogurte natural
+DESCRIPTION:- 1 pote de iogurte natural (170 g)\n\n≈ 140 kcal · Beba 1
+  copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 pote de iogurte natural
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-cafe@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T070000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Café da manhã: 1 tapioca média com 1 ovo e tomate + 1 copo de 
+ leite\, puro ou morno com canela + 1/2 mamão papaia
+DESCRIPTION:- 1 tapioca média (3 cs de goma) com 1 ovo e tomate\n- 1 cop
+ o de leite (200 ml)\, puro ou morno com canela\n- 1/2 mamão papaia\n\n
+ ≈ 410 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Café da manhã: 1 tapioca média com 1 ovo e tomate + 1 copo
+  de leite\, puro ou morno com canela + 1/2 mamão papaia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-lanche1@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T100000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Lanche da manhã: 1 maçã + 1 copo de leite
+DESCRIPTION:- 1 maçã\n- 1 copo de leite (200 ml)\n\n≈ 170 kcal · Beb
+ a 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da manhã: 1 maçã + 1 copo de leite
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-almoco@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T123000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Almoço: 4 cs de arroz + 1 concha de feijão + 1 coxa de frango a
+ ssada com batatas
+DESCRIPTION:- 4 cs de arroz\n- 1 concha de feijão\n- 1 coxa de frango as
+ sada com batatas (2 batatas pequenas)\n- Salada de alface e tomate à vo
+ ntade\n\n≈ 560 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almoço: 4 cs de arroz + 1 concha de feijão + 1 coxa de fran
+ go assada com batatas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-lanche2@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T153000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Lanche da tarde: Vitamina: 200 ml de leite + 1 banana + 1 cs de a
+ veia
+DESCRIPTION:- Vitamina: 200 ml de leite + 1 banana\n- 1 cs de aveia\n\n
+ ≈ 220 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lanche da tarde: Vitamina: 200 ml de leite + 1 banana + 1 cs 
+ de aveia
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-jantar@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T190000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Jantar: Arroz com legumes e frango: 1 prato raso + Salada verde 
+ à vontade
+DESCRIPTION:- Arroz com legumes e frango (estilo risoto): 1 prato raso\n-
+  Salada verde à vontade\n\n≈ 400 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jantar: Arroz com legumes e frango: 1 prato raso + Salada ver
+ de à vontade
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:meal-SU-ceia@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261129T213000
+DURATION:PT20M
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Ceia: 1 copo de leite morno + 2 castanhas-do-pará
+DESCRIPTION:- 1 copo de leite morno (200 ml)\n- 2 castanhas-do-pará\n\n
+ ≈ 150 kcal · Beba 1 copo de água junto.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ceia: 1 copo de leite morno + 2 castanhas-do-pará
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-0630@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T063000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). ao acordar. Em cada mamada\
+ , mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-0800@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T080000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). depois do café da manhã. 
+ Em cada mamada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-0900@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T090000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). meio da manhã. Em cada mam
+ ada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1100@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T110000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). antes do almoço. Em cada m
+ amada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1200@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T120000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). 30 min antes de comer. Em c
+ ada mamada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1400@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T140000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). depois do almoço. Em cada 
+ mamada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1500@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T150000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). com o lanche. Em cada mamad
+ a\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1630@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T163000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). fim da tarde. Em cada mamad
+ a\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-1800@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T180000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). antes do jantar. Em cada ma
+ mada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-2000@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T200000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). depois do jantar. Em cada m
+ amada\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:water-2100@meu-prato
+DTSTAMP:20261122T120000Z
+DTSTART:20261123T210000
+DURATION:PT5M
+RRULE:FREQ=DAILY
+SUMMARY:Beber água: 1 copo (250 ml)
+DESCRIPTION:Meta do dia: 12 copos (3 litros). antes da ceia. Em cada mama
+ da\, mais 1 copo.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Beber água: 1 copo (250 ml)
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
