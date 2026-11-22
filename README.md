@@ -24,3 +24,14 @@ Agente separado e simples: tire foto do que vai comer e ele mostra só as calori
 - **Ruim**: não pode (passa 40% do limite, ou besteira acima de 200 kcal), com uma troca mais leve.
 
 Guarda as fotos do dia com o total de calorias.
+
+## Instalar no celular (app)
+
+O app é um PWA: instala pelo navegador, ganha ícone na tela inicial, abre em tela cheia e o cardápio funciona sem internet.
+
+1. Ative o GitHub Pages uma vez: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `claude/healthy-meal-planner-nursing-uopqym` / `(root)` → Save**.
+2. Abra no celular: `https://paullynhamm74-sys.github.io/App-meu/`
+3. **Android (Chrome):** toque em **Instalar** no aviso, ou menu ⋮ → **Instalar app**.
+   **iPhone (Safari):** botão **Compartilhar** → **Adicionar à Tela de Início**.
+
+A Nutri e o Pode ou Não Pode usam o Claude: no app instalado, os botões abrem essas telas no Claude (precisa de internet e estar logada).

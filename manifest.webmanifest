@@ -1,0 +1,22 @@
+{
+  "name": "Meu Prato da Semana",
+  "short_name": "Meu Prato",
+  "description": "Cardápio da semana, água, lanches e calorias para mãe que amamenta e quer emagrecer.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7f2",
+  "theme_color": "#2f6b4f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Fome agora", "url": "./index.html#fome", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Água", "url": "./index.html#agua", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Pode ou não pode", "url": "./calorias.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
