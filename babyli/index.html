@@ -12,6 +12,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <script src="receitas.js"></script>
+<script src="ilustra.js"></script>
 <!--APP-START-->
 <title>BabyLi Papinha</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -136,6 +137,20 @@ section.view { display: grid; gap: 20px; padding-top: 6px; }
 .list { display: grid; gap: 10px; }
 .rcard { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 14px; display: grid; grid-template-columns: 46px 1fr auto; gap: 12px; align-items: center; width: 100%; }
 .rcard .emo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; }
+.rcard { grid-template-columns: 72px 1fr auto; }
+.thumb { width: 72px; height: 56px; border-radius: 14px; overflow: hidden; display: block; background: var(--bg); }
+.thumb svg, .thumb img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.mini .thumb { width: 100%; height: 104px; }
+.recimg { margin: 0; border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; background: var(--bg); position: relative; }
+.recimg svg, .recimg img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.imgbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+.cuts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.cut { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; }
+.cut svg { width: 100%; height: auto; display: block; background: var(--bg); aspect-ratio: 4 / 3; }
+.cut figcaption { padding: 10px 12px 12px; display: grid; gap: 3px; font-size: .86rem; line-height: 1.35; }
+.cut figcaption b { font-size: .92rem; }
+.cut figcaption span { color: var(--muted); }
+.cut.novo { border-color: var(--beet); }
 .rcard .emo svg { width: 24px; height: 24px; }
 .rcard b { font-family: var(--display); font-weight: 600; font-size: 1.05rem; line-height: 1.25; display: block; }
 .rcard small { color: var(--muted); font-size: .84rem; }
@@ -1146,11 +1161,20 @@ var TABS = ["inicio", "semana", "receitas", "pode", "fases", "notas"];
 
 function ic(id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; }
 
+function fotoDe(id) { try { return localStorage.getItem("babyli:foto:" + id); } catch (e) { return null; } }
+function imgReceita(r) { var f = fotoDe(r.id); return f ? '<img src="' + f + '" alt="Sua foto: ' + esc(r.n) + '">' : (typeof IL !== "undefined" ? IL.receita(r) : ic(TIPO_IC[r.t])); }
+function cortesHTML(lista, m, ant) {
+  return '<div class="cuts">' + lista.map(function (c) {
+    var e = IL.etapa(c, Math.min(m, 12)), nv = ant != null && m > 6 && c.e.some(function (x) { return x[0] > ant && x[0] <= m; });
+    return '<figure class="cut' + (nv ? ' novo' : '') + '">' + IL.corteSVG(c, Math.min(m, 12)) + '<figcaption><b>' + c.nome + (nv ? ' <span class="tag age">novo</span>' : '') + '</b><span>' + e[2] + '</span></figcaption></figure>';
+  }).join("") + '</div>';
+}
+
 function rcard(r) {
   var m = idadeMeses(), fav = favs.indexOf(r.id) >= 0;
   var idadeTag = r.f > m ? '<span class="tag no">a partir de ' + aPartir(r.f) + '</span>' : '<span class="tag age">' + aPartir(r.f) + '+</span>';
   return '<button class="rcard" type="button" data-rec="' + r.id + '">' +
-    '<span class="emo t-' + r.t + '">' + ic(TIPO_IC[r.t]) + '</span>' +
+    '<span class="thumb" aria-hidden="true">' + imgReceita(r) + '</span>' +
     '<span style="min-width:0"><b>' + r.n + '</b><small>' + TIPOS[r.t] + ' · ' + r.tp + '</small><br>' + idadeTag + '</span>' +
     (fav ? '<svg class="heart" aria-label="Salva"><use href="#i-heart-f"/></svg>' : '<span></span>') + '</button>';
 }
@@ -1179,7 +1203,7 @@ function viewInicio() {
     }).join("") + '</ul>' + (m < 12 ? '<p class="muted" style="margin:0;font-size:.9rem">E leite materno em livre demanda, com água no copinho entre as refeições.</p>' : '') + '</section>';
   h += '<section class="block"><header><h2>Receitas desta fase</h2><button class="link" type="button" data-go="receitas">Ver todas</button></header>' +
     '<div class="scroller">' + desta.map(function (r) {
-      return '<button class="mini" type="button" data-rec="' + r.id + '"><span class="tag ' + (r.t === "bebida" ? "ok" : "age") + '">' + TIPOS[r.t] + '</span><b>' + r.n + '</b><small class="muted">' + r.tp + '</small></button>';
+      return '<button class="mini" type="button" data-rec="' + r.id + '"><span class="thumb" aria-hidden="true">' + imgReceita(r) + '</span><span class="tag ' + (r.t === "bebida" ? "ok" : "age") + '">' + TIPOS[r.t] + '</span><b>' + r.n + '</b><small class="muted">' + r.tp + '</small></button>';
     }).join("") + '</div></section>';
   h += '<section class="block"><h2>O que muda agora</h2><ul class="news">' + f.novidades.map(function (n) { return '<li>' + n + '</li>'; }).join("") + '</ul>' +
     '<div class="tip"><b>Dica:</b> ' + f.dica + '</div></section>';
@@ -1359,6 +1383,7 @@ function viewFases() {
     return '<button class="chip phase" type="button" data-como="' + x + '" aria-pressed="' + (cm === x) + '">' + (x < 12 ? x + "m" : x === 18 ? "1a e meio" : (x / 12) + (x === 12 ? " ano" : " anos")) + (x === marcoAtual(m) ? '<span class="dot" aria-label="agora"></span>' : '') + '</button>';
   }).join("") + '</div>' +
   '<span class="fmt">' + ic("i-spoon").replace('<svg', '<svg width="18" height="18"') + fm[0] + '</span><p style="margin:0">' + fm[1] + '</p>' +
+  (cm <= 12 && typeof IL !== "undefined" ? '<h3 style="font-size:1.05rem;margin-top:4px">Como cortar para o bebê</h3>' + cortesHTML(IL.CORTE, cm, MARCOS[Math.max(0, MARCOS.indexOf(cm) - 1)]) + '<h3 style="font-size:1.05rem;margin-top:8px">Todos os alimentos</h3>' : '') +
   '<table class="ftable"><tbody>' + COMO_SERVIR.map(function (row) {
     var ci = MARCOS.indexOf(cm), ca = ci > 0 ? MARCOS[ci - 1] : 0;
     var v = servirEm(row, cm), mudou = cm > 6 && row[1].some(function (x) { return x[0] > ca && x[0] <= cm; });
@@ -1425,6 +1450,11 @@ function openRec(id) {
   var h = '<div class="wrap top"><button class="iconbtn" type="button" data-close aria-label="Voltar">' + ic("i-back") + '</button>' +
     '<button class="iconbtn' + (fav ? ' on' : '') + '" type="button" data-fav="' + r.id + '" aria-pressed="' + fav + '" aria-label="Salvar receita">' + ic(fav ? "i-heart-f" : "i-heart") + '</button></div>';
   h += '<div class="wrap" style="display:grid;gap:20px">';
+  var temFoto = !!fotoDe(r.id);
+  h += '<figure class="recimg">' + imgReceita(r) + '</figure><div class="imgbar"><span>' + (temFoto ? 'Sua foto' : 'Ilustração do prato, na textura de ' + (r.f < 12 ? aPartir(r.f) : 'comida da família')) + '</span><span class="mact" style="margin:0">' +
+    '<label class="pill" for="fotoIn">' + ic("i-plus") + (temFoto ? 'Trocar foto' : 'Usar minha foto') + '</label>' + (temFoto ? '<button class="pill" type="button" data-semfoto="' + r.id + '">Tirar foto</button>' : '') +
+    '<input type="file" id="fotoIn" accept="image/*" hidden data-fotoid="' + r.id + '"></span></div>' + (ui.fotoErr ? '<p class="warnbox" style="margin:0">' + ui.fotoErr + '</p>' : '');
+  ui.fotoErr = "";
   h += '<div class="rhead"><span class="tag age" style="justify-self:start">' + TIPOS[r.t] + ' · a partir de ' + aPartir(r.f) + '</span><h1>' + r.n + '</h1>' +
     '<div class="meta"><span>' + r.tp + '</span>' + (r.r !== "—" ? '<span>Rende ' + r.r + '</span>' : '') + '<span>Textura: ' + (f.de < 12 ? f.nome : "comida da família") + '</span></div></div>';
   if (r.f > m) h += '<p class="warnbox" style="margin:0">Esta receita é para a partir de ' + aPartir(r.f) + '. ' + nomeBebe().charAt(0).toUpperCase() + nomeBebe().slice(1) + ' está com ' + idadeTxt(m) + '.</p>';
@@ -1437,6 +1467,10 @@ function openRec(id) {
   h += '<section class="block"><h2>Ingredientes</h2><ul class="ings">' + r.i.map(function (x, k) { return '<li><label><input type="checkbox" id="ing-' + r.id + '-' + k + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul></section>';
   h += '<section class="block"><h2>Modo de preparo</h2><ol class="steps">' + r.p.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join("") + '</ol></section>';
   if (r.d) h += '<div class="tip"><b>Dica:</b> ' + r.d + '</div>';
+  if (r.f < 12 && typeof IL !== "undefined") {
+    var vistosC = {}, cs = IL.achar(r).map(function (x) { return x.c; }).filter(function (c) { if (vistosC[c.k]) return false; vistosC[c.k] = 1; return true; });
+    if (cs.length) h += '<section class="block"><h2>Como cortar para ' + aPartir(r.f) + '</h2>' + cortesHTML(cs, r.f) + '</section>';
+  }
   h += '</div>';
   sheet.innerHTML = h; sheet.hidden = false; sheet.scrollTop = 0;
   document.body.style.overflow = "hidden";
@@ -1538,6 +1572,7 @@ function festa(x) {
     '<p class="age2">' + (x === 6 ? 'Chegou a hora das primeiras comidinhas' : 'Completou ' + marcoNome(x)) + (n ? ' em ' + fmtData(addMeses(n, x)) : '') + '</p>' +
     (c && c.dias > 1 && x > 6 ? '<p class="muted" style="margin:0">Já são ' + diasEntre(c.inicio, addMeses(n, x)) + ' dias de introdução alimentar. Que conquista!</p>' : '') +
     '<section class="block"><h2>Como ela come agora</h2><span class="fmt">' + fm[0] + '</span><p style="margin:0">' + fm[1] + '</p>' +
+    (x <= 12 && typeof IL !== "undefined" ? cortesHTML(IL.CORTE, x, ant) : '') +
     '<table class="ftable"><tbody>' + COMO_SERVIR.map(function (row) {
       var nv = x > 6 && row[1].some(function (y) { return y[0] > ant && y[0] <= x; });
       return '<tr><th>' + row[0] + '</th><td' + (nv ? ' class="novo"' : '') + '>' + servirEm(row, x).txt + (nv ? ' <span class="tag age">novo</span>' : '') + '</td></tr>';
@@ -1623,6 +1658,7 @@ document.addEventListener("click", function (e) {
   if (d.verfase && !sheet.hidden) { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; }
   if (d.verfase) { var fx = FASES.filter(function (x) { return x.id === d.verfase; })[0]; ui.fase = fx ? faseLivro(fx.de).id : d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (d.semfoto) { try { localStorage.removeItem("babyli:foto:" + d.semfoto); } catch (e) {} var y0 = sheet.scrollTop; openRec(d.semfoto); sheet.scrollTop = y0; render(); return; }
   if (d.festa) return festa(parseInt(d.festa, 10));
   if (d.como) { ui.comoMes = parseInt(d.como, 10); return render(); }
   if (d.modo) { ui.modoSemana = d.modo; return render(); }
@@ -1647,6 +1683,24 @@ document.addEventListener("click", function (e) {
   if (t.id === "installBtn") return doInstall();
 });
 document.addEventListener("change", function (e) {
+  if (e.target.id === "fotoIn" && e.target.files && e.target.files[0]) {
+    var id = e.target.dataset.fotoid, rd = new FileReader();
+    rd.onload = function () {
+      var im = new Image();
+      im.onload = function () {
+        var k = Math.min(1, 640 / Math.max(im.width, im.height)), cv = document.createElement("canvas");
+        cv.width = Math.round(im.width * k); cv.height = Math.round(im.height * k);
+        cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+        try { localStorage.setItem("babyli:foto:" + id, cv.toDataURL("image/jpeg", 0.75)); }
+        catch (err) { ui.fotoErr = "Não coube mais foto no celular. Tire a foto de outra receita e tente de novo."; }
+        openRec(id); render();
+      };
+      im.onerror = function () { ui.fotoErr = "Não consegui abrir essa imagem. Tente uma foto JPG ou PNG."; openRec(id); };
+      im.src = rd.result;
+    };
+    rd.readAsDataURL(e.target.files[0]);
+    return;
+  }
   var k = e.target.dataset && e.target.dataset.done;
   if (k) { marcar(k); keepRender(); }
 });
