@@ -1,0 +1,21 @@
+{
+  "name": "BabyLi Papinha",
+  "short_name": "BabyLi",
+  "description": "Receitas, modo de preparo e o que o bebê pode ou não comer, de 6 meses a 6 anos.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f4fb",
+  "theme_color": "#b03a6f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Receitas", "url": "./index.html#receitas", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Pode ou não pode", "url": "./index.html#pode", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

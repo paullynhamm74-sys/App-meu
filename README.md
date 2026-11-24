@@ -48,3 +48,15 @@ Para regerar os `.ics` depois de mudar o cardápio, rode `window.__buildICS({mea
 ## Foto direto no app instalado (chave da API)
 
 Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela API (`ai.js` + SDK oficial empacotado em `vendor/anthropic-sdk.js`, `@anthropic-ai/sdk@1.6.0`). A usuária cola a própria chave (console.anthropic.com → API Keys), que fica salva só no celular. Modelo `claude-opus-5-5`, esforço `low`, com fallback automático do servidor em caso de recusa.
+
+## BabyLi Papinha (`babyli/`)
+
+App separado de receitas para bebês e crianças, de 6 meses a 6 anos. Abra `babyli/index.html` (no GitHub Pages: `https://paullynhamm74-sys.github.io/App-meu/babyli/`) e instale na tela inicial como o Meu Prato.
+
+- **Início**: fase atual da bebê (textura, refeições, quantidade, leite, água), o que muda agora, rotina de exemplo e regras de ouro (sal, açúcar, mel, leite de vaca, suco, ultraprocessados).
+- **Receitas**: 80 receitas com ingredientes e modo de preparo, separadas por idade (6, 7, 8, 9, 10 e 11 meses, 1 ano, 1 ano e meio, 2, 3, 4 e 5 a 6 anos) e por tipo: almoço e jantar, café da manhã, lanche, fruta, bebida e sobremesa. Busca por ingrediente e favoritas.
+- **Pode?**: 89 alimentos e bebidas com semáforo para a idade escolhida (Pode / Com cuidado / Ainda não ou evitar), como oferecer, aviso de risco de engasgo e "já provou".
+- **Fases**: guia completo de cada fase.
+- **Salvas**: receitas favoritas e alimentos já provados.
+
+Nome e data de nascimento ficam salvos só no aparelho; com a data, a fase muda sozinha a cada mês. Baseado no Guia Alimentar para Crianças Brasileiras Menores de 2 Anos (Ministério da Saúde) e na SBP. Confirme sempre com o pediatra.

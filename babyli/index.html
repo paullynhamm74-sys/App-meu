@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b03a6f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BabyLi">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<!--APP-START-->
+<title>BabyLi Papinha</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: app de celular em uma coluna, navegação fixa embaixo; a fase atual da bebê abre o app */
+:root {
+  --bg: #f7f4fb;
+  --surface: #ffffff;
+  --ink: #2b2540;
+  --muted: #696283;
+  --line: #e7e1f0;
+  --beet: #b03a6f;
+  --beet-soft: #f8e4ee;
+  --pumpkin: #d97c1e;
+  --pumpkin-soft: #fdeedd;
+  --ok: #2c8556;
+  --ok-soft: #e0f2e7;
+  --warn: #a96a0c;
+  --warn-soft: #fbf0d8;
+  --no: #c23a3a;
+  --no-soft: #fbe3e1;
+  --display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17141f; --surface: #221d2d; --ink: #f0ebf7; --muted: #aaa2c0; --line: #352e44;
+    --beet: #ec85b0; --beet-soft: #3d2032; --pumpkin: #f1a65a; --pumpkin-soft: #3a2a19;
+    --ok: #6fcf98; --ok-soft: #1c3427; --warn: #e7b65a; --warn-soft: #3a2f17; --no: #f08b85; --no-soft: #3e1f1f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17141f; --surface: #221d2d; --ink: #f0ebf7; --muted: #aaa2c0; --line: #352e44;
+  --beet: #ec85b0; --beet-soft: #3d2032; --pumpkin: #f1a65a; --pumpkin-soft: #3a2a19;
+  --ok: #6fcf98; --ok-soft: #1c3427; --warn: #e7b65a; --warn-soft: #3a2f17; --no: #f08b85; --no-soft: #3e1f1f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); }
+body { margin: 0; color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--beet); outline-offset: 2px; border-radius: 8px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.2; text-wrap: balance; margin: 0; }
+.wrap { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 112px; }
+
+/* topo */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand svg { flex: none; }
+.brand b { font-family: var(--display); font-size: 1.35rem; font-weight: 700; color: var(--beet); letter-spacing: -0.01em; }
+.brand span { font-family: var(--display); font-weight: 500; color: var(--pumpkin); font-size: 1.35rem; }
+.agebtn { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .9rem; white-space: nowrap; }
+.agebtn svg { width: 14px; height: 14px; }
+
+/* navegação */
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.nav div { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+.nav button { border: 0; background: none; padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .72rem; font-weight: 800; color: var(--muted); }
+.nav button svg { width: 24px; height: 24px; }
+.nav button[aria-current="page"] { color: var(--beet); }
+
+section.view { display: grid; gap: 20px; padding-top: 6px; }
+.eyebrow { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); margin: 0; }
+.muted { color: var(--muted); }
+
+/* fase atual */
+.hero { background: var(--beet-soft); border-radius: 24px; padding: 20px; display: grid; gap: 14px; }
+.hero h1 { font-size: 1.7rem; }
+.hero h1 em { font-style: normal; color: var(--beet); }
+.facts { display: grid; gap: 10px; }
+.fact { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+.fact .ic { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); display: grid; place-items: center; color: var(--beet); }
+.fact .ic svg { width: 18px; height: 18px; }
+.fact b { display: block; font-size: .8rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.fact p { margin: 0; }
+
+.block { display: grid; gap: 10px; }
+.block > header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.block h2 { font-size: 1.25rem; }
+.link { border: 0; background: none; color: var(--beet); font-weight: 800; padding: 4px 0; font-size: .9rem; white-space: nowrap; }
+
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: grid; gap: 4px; }
+.rule b { font-family: var(--display); font-weight: 600; font-size: 1.05rem; }
+.rule small { color: var(--muted); font-size: .82rem; line-height: 1.35; }
+.rule .tag { justify-self: start; }
+
+.routine { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.routine li { display: grid; grid-template-columns: 62px 1fr; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--line); }
+.routine li:first-child { border-top: 0; }
+.routine time { font-weight: 800; color: var(--beet); font-variant-numeric: tabular-nums; }
+
+.scroller { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; margin-inline: -4px; padding-inline: 4px; scrollbar-width: none; }
+.scroller::-webkit-scrollbar { display: none; }
+.mini { flex: 0 0 200px; scroll-snap-align: start; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 14px; display: grid; gap: 6px; align-content: start; }
+.mini b { font-family: var(--display); font-weight: 600; font-size: 1.02rem; line-height: 1.25; }
+
+.news { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+
+/* chips e busca */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; margin-inline: -4px; padding-inline: 4px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 13px; font-weight: 700; font-size: .88rem; white-space: nowrap; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.chip.phase[aria-pressed="true"] { background: var(--beet); border-color: var(--beet); color: #fff; }
+.chip .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--pumpkin); margin-left: 6px; vertical-align: middle; }
+.search { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 0 12px; }
+.search svg { width: 18px; height: 18px; color: var(--muted); flex: none; }
+.search input { border: 0; background: none; padding: 11px 0; width: 100%; outline: none; }
+.filters { display: grid; gap: 10px; }
+
+/* lista de receitas */
+.list { display: grid; gap: 10px; }
+.rcard { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 14px; display: grid; grid-template-columns: 46px 1fr auto; gap: 12px; align-items: center; width: 100%; }
+.rcard .emo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; }
+.rcard .emo svg { width: 24px; height: 24px; }
+.rcard b { font-family: var(--display); font-weight: 600; font-size: 1.05rem; line-height: 1.25; display: block; }
+.rcard small { color: var(--muted); font-size: .84rem; }
+.rcard .heart { width: 20px; height: 20px; color: var(--beet); }
+.empty { text-align: center; color: var(--muted); padding: 30px 10px; background: var(--surface); border: 1px dashed var(--line); border-radius: 18px; }
+
+.t-almoco { background: var(--pumpkin-soft); color: var(--pumpkin); }
+.t-cafe { background: var(--warn-soft); color: var(--warn); }
+.t-lanche { background: var(--ok-soft); color: var(--ok); }
+.t-fruta { background: var(--beet-soft); color: var(--beet); }
+.t-bebida { background: color-mix(in srgb, var(--ok) 12%, var(--surface)); color: var(--ok); }
+.t-sobremesa { background: var(--beet-soft); color: var(--beet); }
+
+.tag { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 9px; font-size: .74rem; font-weight: 800; white-space: nowrap; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+.tag.no { background: var(--no-soft); color: var(--no); }
+.tag.age { background: var(--beet-soft); color: var(--beet); }
+
+/* pode ou não pode */
+.agebar { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px; }
+.agebar label { font-weight: 800; font-size: .9rem; }
+.agebar select { border: 1.5px solid var(--line); background: var(--bg); border-radius: 10px; padding: 6px 8px; font-weight: 700; }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; }
+.food { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.food > button { width: 100%; border: 0; background: none; text-align: left; padding: 12px 14px; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.food .fname { font-weight: 800; }
+.food .fname small { display: block; font-weight: 600; color: var(--muted); font-size: .8rem; }
+.food .more { padding: 0 14px 14px; display: grid; gap: 8px; font-size: .94rem; }
+.food .more p { margin: 0; }
+.tried { justify-self: start; display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 5px 12px; font-weight: 800; font-size: .84rem; }
+.tried[aria-pressed="true"] { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.grouph { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin-top: 6px; }
+.choke { color: var(--no); font-weight: 800; font-size: .84rem; }
+
+/* fases */
+.phase { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.phase.current { border-color: var(--beet); box-shadow: 0 0 0 1px var(--beet); }
+.phase > button { width: 100%; border: 0; background: none; text-align: left; padding: 14px; display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; }
+.phase .age { width: 54px; height: 54px; border-radius: 16px; background: var(--beet-soft); color: var(--beet); display: grid; place-items: center; text-align: center; font-family: var(--display); font-weight: 700; line-height: 1; font-size: 1.25rem; }
+.phase .age small { display: block; font-size: .62rem; font-family: var(--body); font-weight: 800; text-transform: uppercase; }
+.phase h3 { font-size: 1.08rem; }
+.phase .body { padding: 0 14px 16px; display: grid; gap: 12px; }
+.chev { width: 20px; height: 20px; color: var(--muted); transition: transform .2s; }
+[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+/* detalhe da receita */
+.sheet { position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow-y: auto; overscroll-behavior: contain; }
+.sheet .wrap { padding-block: 0 40px; }
+.sheet .top { padding-block: 12px 10px; }
+.iconbtn { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); display: grid; place-items: center; flex: none; }
+.iconbtn svg { width: 20px; height: 20px; }
+.iconbtn.on { color: var(--beet); border-color: var(--beet); background: var(--beet-soft); }
+.rhead { display: grid; gap: 10px; }
+.rhead h1 { font-size: 1.75rem; }
+.meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.meta span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-size: .84rem; font-weight: 700; }
+.warnbox { background: var(--no-soft); color: var(--no); border-radius: 14px; padding: 10px 14px; font-weight: 700; font-size: .92rem; }
+.ings { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+.ings li { border-top: 1px solid var(--line); }
+.ings li:first-child { border-top: 0; }
+.ings label { display: flex; gap: 12px; align-items: flex-start; padding: 11px 14px; cursor: pointer; }
+.ings input { width: 20px; height: 20px; accent-color: var(--beet); margin: 2px 0 0; flex: none; }
+.ings input:checked + span { text-decoration: line-through; color: var(--muted); }
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 12px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; }
+.steps li::before { content: counter(s); width: 32px; height: 32px; border-radius: 50%; background: var(--beet); color: #fff; font-family: var(--display); font-weight: 600; display: grid; place-items: center; }
+.tip { background: var(--pumpkin-soft); border-radius: 16px; padding: 12px 14px; }
+.tip b { color: var(--pumpkin); }
+
+/* perfil */
+.modal { position: fixed; inset: 0; z-index: 30; background: color-mix(in srgb, #000 45%, transparent); display: grid; align-items: end; }
+.modal .card { background: var(--surface); border-radius: 24px 24px 0 0; max-width: 640px; width: 100%; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 800; font-size: .9rem; }
+.field input, .field select { border: 1.5px solid var(--line); background: var(--bg); border-radius: 12px; padding: 11px 12px; width: 100%; }
+.field small { color: var(--muted); }
+.btn { border: 0; border-radius: 14px; padding: 13px 16px; font-weight: 800; background: var(--beet); color: #fff; }
+.btn.ghost { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.note { font-size: .84rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+.note b { color: var(--ink); }
+.install { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 12px 14px; }
+.install button { border: 0; border-radius: 10px; background: var(--beet); color: #fff; padding: 8px 12px; font-weight: 800; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+.stat b { font-family: var(--display); font-size: 1.6rem; color: var(--beet); display: block; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+@media (max-width: 360px) { .rules { grid-template-columns: 1fr; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-bowl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1.5 1-2 1-3.5M12 7c0-1.5 1-2 1-3.5M16 7c0-1.5 1-2 1-3.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.5L16 9.5"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4v-5h4v-5h4V5h4"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+    <symbol id="i-heart-f" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-spoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="4" ry="4.5"/><path d="M12 11v10"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-apple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7c-2-1.5-7-1.5-7 4.5 0 4 2.5 9 5 9 1 0 1.3-.5 2-.5s1 .5 2 .5c2.5 0 5-5 5-9C19 5.5 14 5.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/></symbol>
+    <symbol id="i-cookie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r=".8" fill="currentColor"/><circle cx="15" cy="11" r=".8" fill="currentColor"/><circle cx="10" cy="15" r=".8" fill="currentColor"/></symbol>
+    <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l-1.5 16a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1z"/><path d="M6.5 9h11"/><path d="M14 4l2-2"/></symbol>
+    <symbol id="i-cake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V12a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9"/><path d="M4 15c2 1 3 1 4 0s3-1 4 0 3 1 4 0 3-1 4 0"/><path d="M3 21h18M12 11V7"/><path d="M12 4.5c.6.6.6 1.4 0 2-.6-.6-.6-1.4 0-2z"/></symbol>
+    <symbol id="i-milk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v3l2 3v13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8l2-3z"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M7 8h10M9 16h6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  </defs>
+</svg>
+
+<header class="wrap top" style="padding-bottom:10px">
+  <div class="brand">
+    <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--beet-soft)"/><path d="M12 32h40a20 20 0 0 1-40 0z" fill="var(--beet)"/><ellipse cx="44" cy="20" rx="6" ry="7" fill="var(--pumpkin)" transform="rotate(30 44 20)"/><path d="M40 26l-7 9" stroke="var(--pumpkin)" stroke-width="4" stroke-linecap="round"/></svg>
+    <div><b>BabyLi</b> <span>Papinha</span></div>
+  </div>
+  <button class="agebtn" id="ageBtn" type="button" aria-label="Mudar nome e idade"><span id="ageLabel">10 meses</span><svg><use href="#i-edit"/></svg></button>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<nav class="nav" aria-label="Seções">
+  <div>
+    <button type="button" data-tab="inicio"><svg><use href="#i-home"/></svg>Início</button>
+    <button type="button" data-tab="receitas"><svg><use href="#i-bowl"/></svg>Receitas</button>
+    <button type="button" data-tab="pode"><svg><use href="#i-check"/></svg>Pode?</button>
+    <button type="button" data-tab="fases"><svg><use href="#i-steps"/></svg>Fases</button>
+    <button type="button" data-tab="salvas"><svg><use href="#i-heart"/></svg>Salvas</button>
+  </div>
+</nav>
+
+<div class="sheet" id="sheet" hidden></div>
+<div class="modal" id="modal" hidden></div>
+
+<script>
+/* =================== DADOS =================== */
+var FASES = [
+  { id: "m6", de: 6, curto: "6m", nome: "6 meses", titulo: "Primeiras papinhas",
+    textura: "Tudo amassado com garfo, bem macio. Nunca bata no liquidificador nem peneire: o bebê precisa aprender a mastigar. Pedaços grandes e moles para segurar também valem.",
+    refeicoes: "Leite materno em livre demanda + 1 papa salgada (almoço) + 2 lanches de fruta.",
+    quantidade: "Comece com 2 a 3 colheres de sopa e aumente conforme a aceitação.",
+    leite: "Leite materno em livre demanda (ou fórmula infantil, se não amamenta).",
+    agua: "Água filtrada ou fervida, em pequenos goles no copinho, entre as refeições.",
+    novidades: ["Frutas amassadas ou raspadas", "Papa salgada com cereal ou tubérculo, feijão, uma carne ou ovo e legumes", "Ovo inteiro (gema e clara) bem cozido já pode", "Temperos naturais: cebola, alho, salsinha, cebolinha e azeite"],
+    dica: "Recusar no começo é normal. Ofereça o mesmo alimento de 8 a 10 vezes, em dias diferentes, antes de concluir que ela não gosta.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta amassada"], ["11:30", "Almoço (papa salgada) + água"], ["15:00", "Fruta amassada"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "m7", de: 7, curto: "7m", nome: "7 meses", titulo: "Chega o jantar",
+    textura: "Amassada com garfo, agora com pequenos pedacinhos macios. Carnes bem desfiadas ou moídas.",
+    refeicoes: "Leite materno + almoço + jantar + 2 lanches de fruta.",
+    quantidade: "Cerca de 2/3 de uma xícara (tigela de 250 ml) por refeição salgada.",
+    leite: "Leite materno em livre demanda.",
+    agua: "Ofereça água várias vezes ao dia, sem esperar ela pedir.",
+    novidades: ["Segunda papa salgada: o jantar", "Peixe sem espinhas e bem cozido", "Lentilha, grão-de-bico e ervilha amassados", "Macarrão pequeno bem cozido"],
+    dica: "O jantar pode ser igual ao almoço. Varie a cor do prato ao longo da semana.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Fruta"], ["18:00", "Jantar + água"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "m8", de: 8, curto: "8m", nome: "8 meses", titulo: "Comendo com as mãos",
+    textura: "Amassado grosso, desfiado e pedaços macios do tamanho de um dedo, que ela consiga pegar sozinha.",
+    refeicoes: "Leite materno + almoço + jantar + 2 lanches de fruta.",
+    quantidade: "Cerca de 2/3 de uma xícara por refeição salgada.",
+    leite: "Leite materno em livre demanda.",
+    agua: "Água no copinho aberto ou de canudo, em todas as refeições.",
+    novidades: ["Bolinhos e omelete em tirinhas para pegar", "Fígado 1 vez por semana (ferro)", "Legumes em palitos cozidos no vapor", "Mingau de aveia feito com água ou leite materno"],
+    dica: "Deixe ela se sujar e explorar. Comer com as mãos treina a coordenação e a mastigação.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Fruta"], ["18:00", "Jantar + água"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "m9", de: 9, curto: "9m", nome: "9 meses", titulo: "Picadinho",
+    textura: "Picadinho em pedaços pequenos e macios. Já não precisa amassar tudo.",
+    refeicoes: "Leite materno + almoço + jantar + 2 lanches (fruta ou iogurte natural).",
+    quantidade: "Cerca de 3/4 de uma xícara por refeição salgada.",
+    leite: "Leite materno em livre demanda.",
+    agua: "Água em copo aberto, com ajuda.",
+    novidades: ["Iogurte natural integral sem açúcar", "Ricota e queijo fresco em pouca quantidade", "Risotos e almôndegas macias", "Panquecas de fruta com ovo e aveia"],
+    dica: "Ofereça a colher para ela segurar enquanto você usa outra. Ela vai querer comer sozinha.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Fruta ou iogurte natural"], ["18:00", "Jantar + água"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "m10", de: 10, curto: "10m", nome: "10 meses", titulo: "Quase a comida da família",
+    textura: "Picadinho e pedaços macios para pegar com a mão. Pode comer a comida da casa, separada antes de pôr o sal.",
+    refeicoes: "Leite materno + almoço + jantar + 2 lanches.",
+    quantidade: "Cerca de 3/4 de uma xícara por refeição salgada.",
+    leite: "Leite materno em livre demanda.",
+    agua: "Água em copo aberto em todas as refeições e nos intervalos.",
+    novidades: ["Comer à mesa com a família", "Massas com molho de tomate caseiro", "Muffins e bolinhos salgados sem sal", "Picolé de fruta natural para aliviar a gengiva quando os dentes nascem"],
+    dica: "Separe a porção dela antes de colocar sal na comida de todos. Assim ela come o mesmo que a família.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta em pedaços"], ["11:30", "Almoço com a família + água"], ["15:00", "Lanche: fruta, iogurte natural ou bolinho"], ["18:00", "Jantar + água"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "m11", de: 11, curto: "11m", nome: "11 meses", titulo: "Pedaços maiores",
+    textura: "Pedaços maiores e macios, comida da família sem sal. Ela já mastiga bem com a gengiva.",
+    refeicoes: "Leite materno + almoço + jantar + 2 lanches.",
+    quantidade: "Cerca de 3/4 a 1 xícara por refeição salgada.",
+    leite: "Leite materno em livre demanda.",
+    agua: "Água em copo aberto.",
+    novidades: ["Hambúrguer e almôndega caseiros", "Polenta, cuscuz e sopas grossas com pedaços", "Ovos mexidos bem cozidos", "Frutas em pedaços maiores"],
+    dica: "Falta pouco para 1 ano. Ainda nada de sal, açúcar, mel ou leite de vaca como bebida.",
+    rotina: [["07:00", "Leite materno"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Lanche"], ["18:00", "Jantar + água"], ["O dia todo", "Leite materno em livre demanda"]] },
+  { id: "a1", de: 12, curto: "1 ano", nome: "1 ano (12 a 17 meses)", titulo: "Comida da família",
+    textura: "Comida da família, cortada em pedaços pequenos. Pouco sal.",
+    refeicoes: "Café da manhã, lanche da manhã, almoço, lanche da tarde, jantar e leite antes de dormir.",
+    quantidade: "Cerca de 1 xícara por refeição salgada. Ela regula a fome: não force.",
+    leite: "Leite materno até 2 anos ou mais. Se não mama, leite de vaca integral: até 2 copos (cerca de 400 a 500 ml) por dia.",
+    agua: "Cerca de 4 a 5 copos de líquidos por dia, a maior parte água.",
+    novidades: ["Leite de vaca integral como bebida", "Pouco sal na comida", "Suco natural sem açúcar, no máximo 120 ml por dia", "Pão, queijos e água de coco"],
+    dica: "Açúcar e mel ainda não: o Guia Alimentar recomenda esperar até os 2 anos.",
+    rotina: [["07:00", "Café: leite, fruta e pão ou mingau"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Lanche"], ["18:00", "Jantar + água"], ["20:30", "Leite"]] },
+  { id: "a15", de: 18, curto: "1a e meio", nome: "1 ano e meio (18 a 23 meses)", titulo: "Come sozinha",
+    textura: "Comida da família. Ela já usa colher e garfo.",
+    refeicoes: "5 a 6 refeições por dia.",
+    quantidade: "Cerca de 1 xícara por refeição salgada.",
+    leite: "Leite materno ou leite de vaca integral (até 2 copos por dia).",
+    agua: "Cerca de 4 a 5 copos de líquidos por dia.",
+    novidades: ["Vitaminas e smoothies sem açúcar", "Tortas e gratinados", "Biscoitos caseiros adoçados com fruta"],
+    dica: "É comum começar a recusar comidas. Ofereça sem pressão e coma junto: ela imita você.",
+    rotina: [["07:00", "Café da manhã"], ["09:30", "Fruta"], ["11:30", "Almoço + água"], ["15:00", "Lanche"], ["18:00", "Jantar + água"], ["20:30", "Leite"]] },
+  { id: "a2", de: 24, curto: "2 anos", nome: "2 anos", titulo: "Pequena cozinheira",
+    textura: "Comida da família.",
+    refeicoes: "Café, lanche, almoço, lanche, jantar e ceia opcional.",
+    quantidade: "Monte o prato assim: metade legumes e verduras, um quarto arroz, massa ou batata, um quarto feijão e carne ou ovo.",
+    leite: "2 a 3 porções de leite, iogurte ou queijo por dia.",
+    agua: "Cerca de 5 copos de líquidos por dia.",
+    novidades: ["Açúcar pode aparecer, pouco e de vez em quando", "Lanches caseiros como pizza e nuggets assados", "Ela pode ajudar a lavar frutas e mexer massas"],
+    dica: "Doce não é prêmio nem castigo. Sirva junto com a refeição, em porção pequena, de vez em quando.",
+    rotina: [["07:00", "Café da manhã"], ["09:30", "Lanche"], ["12:00", "Almoço + água"], ["15:30", "Lanche"], ["19:00", "Jantar + água"], ["21:00", "Leite (opcional)"]] },
+  { id: "a3", de: 36, curto: "3 anos", nome: "3 anos", titulo: "Autonomia",
+    textura: "Comida da família.",
+    refeicoes: "5 refeições por dia.",
+    quantidade: "Prato colorido. Ela decide quanto come do que você serve.",
+    leite: "2 a 3 porções de leite, iogurte ou queijo por dia.",
+    agua: "Cerca de 5 copos de líquidos por dia.",
+    novidades: ["Wraps, almôndegas e massas que ela monta", "Chocolate quente de cacau com banana", "Receitas para fazer junto"],
+    dica: "Deixe ela escolher entre duas opções saudáveis: dá autonomia sem virar briga.",
+    rotina: [["07:00", "Café da manhã"], ["09:30", "Lanche"], ["12:00", "Almoço + água"], ["15:30", "Lanche"], ["19:00", "Jantar + água"]] },
+  { id: "a4", de: 48, curto: "4 anos", nome: "4 anos", titulo: "Escola e lancheira",
+    textura: "Comida da família. Uva inteira e pipoca já podem, sempre com ela sentada.",
+    refeicoes: "5 refeições por dia.",
+    quantidade: "Prato colorido, sem forçar a raspar.",
+    leite: "2 a 3 porções de leite, iogurte ou queijo por dia.",
+    agua: "Cerca de 5 a 6 copos de líquidos por dia. Garrafinha na mochila.",
+    novidades: ["Pipoca de panela", "Sanduíches naturais", "Shakes de fruta com leite"],
+    dica: "Lancheira boa: uma fruta, um alimento de verdade (sanduíche, bolo caseiro) e água.",
+    rotina: [["07:00", "Café da manhã"], ["09:30", "Lanche da escola"], ["12:00", "Almoço + água"], ["15:30", "Lanche"], ["19:00", "Jantar + água"]] },
+  { id: "a5", de: 60, curto: "5 a 6 anos", nome: "5 a 6 anos", titulo: "Come de tudo",
+    textura: "Comida da família. Castanhas inteiras com cuidado e supervisão.",
+    refeicoes: "5 refeições por dia.",
+    quantidade: "Prato colorido.",
+    leite: "3 porções de leite, iogurte ou queijo por dia.",
+    agua: "Cerca de 6 copos de líquidos por dia.",
+    novidades: ["Receitas do mundo: tacos, yakisoba", "Lanches de lancheira", "Ela já ajuda a montar o prato"],
+    dica: "Refrigerante, suco de caixinha, salgadinho e biscoito recheado continuam fora do dia a dia.",
+    rotina: [["07:00", "Café da manhã"], ["09:30", "Lanche da escola"], ["12:00", "Almoço + água"], ["15:30", "Lanche"], ["19:00", "Jantar + água"]] }
+];
+
+var TIPOS = { almoco: "Almoço e jantar", cafe: "Café da manhã", lanche: "Lanche", fruta: "Fruta", bebida: "Bebida", sobremesa: "Sobremesa" };
+var TIPO_IC = { almoco: "i-bowl", cafe: "i-sun", lanche: "i-cookie", fruta: "i-apple", bebida: "i-cup", sobremesa: "i-cake" };
+
+// n nome, f idade mínima (meses), t tipo, tp tempo, r rende, i ingredientes, p preparo, d dica
+var RECEITAS = [
+/* 6 meses */
+{n:"Papinha de mandioquinha, frango e cenoura",f:6,t:"almoco",tp:"35 min",r:"3 porções",
+ i:["1 mandioquinha média","1 cenoura pequena","2 colheres (sopa) de peito de frango picado","2 colheres (sopa) de feijão cozido com caldo","1 fio de azeite","Cebola e salsinha a gosto (sem sal)"],
+ p:["Refogue a cebola no azeite e junte o frango até dourar.","Acrescente a mandioquinha e a cenoura em cubos e cubra com água filtrada.","Cozinhe em fogo baixo por 20 a 25 minutos, até tudo ficar bem macio e o frango cozido.","Desfie o frango bem fininho e amasse os legumes com garfo. Não use liquidificador.","Sirva cada alimento separado no prato, com o feijão amassado ao lado, para ela conhecer cada sabor."],
+ d:"Congele porções em forminhas de gelo com tampa por até 30 dias."},
+{n:"Papinha de abóbora, carne moída e arroz",f:6,t:"almoco",tp:"30 min",r:"3 porções",
+ i:["1 fatia de abóbora cabotiá (150 g)","2 colheres (sopa) de carne moída magra (patinho)","2 colheres (sopa) de arroz","2 colheres (sopa) de feijão cozido","Azeite, alho e cheiro-verde"],
+ p:["Cozinhe o arroz com bastante água até ficar bem molinho.","Refogue o alho e a carne no azeite. Junte meia xícara de água e cozinhe até a carne ficar macia.","Cozinhe a abóbora no vapor por 15 minutos.","Amasse a abóbora e o feijão com garfo e deixe a carne bem soltinha.","Monte o prato com cada alimento separado e finalize com um fio de azeite."],
+ d:"Carne vermelha é a melhor fonte de ferro nessa idade."},
+{n:"Papinha de batata-doce, ovo e brócolis",f:6,t:"almoco",tp:"25 min",r:"2 porções",
+ i:["1 batata-doce pequena","1 ovo","3 floretes de brócolis","2 colheres (sopa) de lentilha cozida","Azeite"],
+ p:["Cozinhe o ovo por 10 a 12 minutos, até a gema ficar bem firme.","Cozinhe a batata-doce e o brócolis no vapor até ficarem macios.","Amasse a batata-doce e a lentilha e pique o brócolis bem miudinho.","Amasse o ovo inteiro (gema e clara) com garfo e um fio de azeite.","Sirva os alimentos separados."],
+ d:"O ovo inteiro pode desde os 6 meses, sempre bem cozido. Nunca ofereça ovo mole ou cru."},
+{n:"Feijão amassado com caldo",f:6,t:"almoco",tp:"40 min (+ molho)",r:"8 porções",
+ i:["1 xícara de feijão carioca ou preto","1 folha de louro","1 dente de alho","1/2 cebola picada","1 colher (sopa) de azeite"],
+ p:["Deixe o feijão de molho por 12 horas e descarte essa água.","Cozinhe na panela de pressão com água nova e o louro por 25 minutos após pegar pressão.","Refogue o alho e a cebola no azeite e junte o feijão cozido.","Amasse os grãos com garfo e sirva grãos e caldo juntos."],
+ d:"Nunca ofereça só o caldo: o ferro e as fibras estão nos grãos. Congela bem por 30 dias."},
+{n:"Banana amassada",f:6,t:"fruta",tp:"2 min",r:"1 porção",
+ i:["1 banana-prata ou nanica bem madura"],
+ p:["Lave e descasque a banana.","Amasse com garfo até virar um creme com pedacinhos macios.","Ofereça logo. Se preferir comer com a mão, dê metade da banana com um pouco da casca embaixo para ela segurar."],
+ d:"Não precisa adoçar nem misturar com outras frutas."},
+{n:"Mamão papaia raspado",f:6,t:"fruta",tp:"3 min",r:"1 porção",
+ i:["1/2 mamão papaia maduro"],
+ p:["Lave o mamão, corte ao meio e retire as sementes.","Raspe a polpa com uma colher pequena.","Ofereça na colher ou deixe ela pegar pedaços maiores e macios."],
+ d:"Ajuda o intestino a funcionar."},
+{n:"Maçã cozida amassada",f:6,t:"fruta",tp:"12 min",r:"2 porções",
+ i:["1 maçã","3 colheres (sopa) de água","1 pitada de canela (opcional)"],
+ p:["Descasque a maçã e corte em cubos.","Cozinhe com a água em panela tampada por 8 a 10 minutos, até amolecer.","Amasse com garfo, polvilhe a canela e espere esfriar."],
+ d:"Maçã crua e dura em pedaços causa engasgo. Crua, só raspada com colher."},
+{n:"Água para o bebê",f:6,t:"bebida",tp:"—",r:"—",
+ i:["Água filtrada, ou fervida por 5 minutos e fria","Copinho aberto ou de transição (de canudo ou bico rígido)"],
+ p:["Comece a oferecer água junto com a comida, aos 6 meses.","Ofereça pequenos goles várias vezes ao dia: entre as refeições e depois das papinhas.","Use copinho em vez de mamadeira. Ajuda na mastigação e na fala.","Não adoce e não troque a água por suco, chá ou água de coco antes de 1 ano."],
+ d:"Até 1 ano, as únicas bebidas são leite materno (ou fórmula) e água."},
+/* 7 meses */
+{n:"Papinha de inhame, peixe e espinafre",f:7,t:"almoco",tp:"30 min",r:"2 porções",
+ i:["1 filé pequeno de tilápia ou pescada (80 g)","1 inhame médio","1 punhado de folhas de espinafre","2 colheres (sopa) de ervilha cozida","Cebola e azeite"],
+ p:["Cozinhe o inhame descascado em água até ficar macio.","Refogue a cebola no azeite, junte o peixe e meia xícara de água e cozinhe por 8 minutos.","Desfie o peixe e confira cada lasca com os dedos para tirar todas as espinhas.","Refogue o espinafre picado por 2 minutos.","Amasse o inhame e a ervilha e sirva com o peixe e o espinafre ao lado."],
+ d:"Prefira tilápia, pescada, merluza, sardinha ou salmão. Evite cação e peixe-espada (mercúrio)."},
+{n:"Macarrãozinho com carne e abobrinha",f:7,t:"almoco",tp:"25 min",r:"2 porções",
+ i:["3 colheres (sopa) de macarrão pequeno (letrinha ou ave-maria)","2 colheres (sopa) de carne moída","1/2 abobrinha","1 tomate sem pele e sem sementes","2 colheres (sopa) de feijão cozido","Alho e azeite"],
+ p:["Cozinhe o macarrão em água até ficar bem macio.","Refogue o alho e a carne no azeite, junte o tomate picado e um pouco de água e cozinhe até formar um molhinho.","Junte a abobrinha ralada e cozinhe por mais 5 minutos.","Misture o macarrão ao molho e amasse levemente com garfo.","Sirva com o feijão amassado ao lado."],
+ d:"Massa pode desde os 6 meses. O glúten não precisa ser adiado."},
+{n:"Arroz com lentilha e cenoura",f:7,t:"almoco",tp:"30 min",r:"3 porções",
+ i:["3 colheres (sopa) de arroz","3 colheres (sopa) de lentilha","1 cenoura","1 ovo cozido","Cebola, alho e azeite"],
+ p:["Refogue a cebola e o alho no azeite.","Junte o arroz, a lentilha lavada e a cenoura ralada.","Cubra com água (cerca de 1 e 1/2 xícara) e cozinhe em fogo baixo por 20 minutos, até ficar bem macio.","Amasse levemente com garfo e sirva com o ovo cozido amassado."],
+ d:"Lentilha tem ferro. Sirva com uma fruta rica em vitamina C, como laranja, logo depois."},
+{n:"Papa de chuchu, batata e frango desfiado",f:7,t:"almoco",tp:"30 min",r:"2 porções",
+ i:["1/2 chuchu","1 batata pequena","2 colheres (sopa) de frango picado","2 colheres (sopa) de feijão cozido","Cebolinha e azeite"],
+ p:["Refogue o frango no azeite até dourar.","Junte o chuchu e a batata em cubos e cubra com água.","Cozinhe por 20 minutos, até tudo amolecer.","Desfie o frango, amasse a batata e o chuchu com garfo e salpique cebolinha.","Sirva grosso, como papa, nunca como sopa rala."],
+ d:"Uma boa opção leve para o jantar."},
+{n:"Abacate amassado",f:7,t:"fruta",tp:"3 min",r:"1 porção",
+ i:["1/4 de abacate maduro"],
+ p:["Retire a polpa com uma colher.","Amasse com garfo até ficar cremoso.","Ofereça puro, sem açúcar e sem leite."],
+ d:"Gordura boa para o cérebro. Pode misturar com banana amassada."},
+{n:"Manga com banana amassadas",f:7,t:"fruta",tp:"4 min",r:"1 porção",
+ i:["1/4 de manga madura (palmer ou tommy)","1/2 banana"],
+ p:["Lave a manga, descasque e corte a polpa.","Amasse a manga e a banana com garfo.","Sirva logo depois de preparar."],
+ d:"Manga em tira grande, sem casca, também é ótima para ela segurar."},
+/* 8 meses */
+{n:"Bolinho de batata e frango",f:8,t:"almoco",tp:"35 min",r:"10 bolinhos",
+ i:["2 batatas cozidas","3 colheres (sopa) de frango cozido e desfiado","1 ovo","1 colher (sopa) de cheiro-verde picado","Azeite para untar"],
+ p:["Amasse as batatas ainda quentes.","Misture o frango, o ovo e o cheiro-verde.","Modele bolinhos alongados do tamanho de um dedo.","Coloque em assadeira untada e asse a 200 °C por 20 minutos, virando na metade.","Espere amornar antes de servir."],
+ d:"O formato alongado facilita para ela pegar com a mão."},
+{n:"Omelete de legumes em tirinhas",f:8,t:"almoco",tp:"12 min",r:"2 porções",
+ i:["2 ovos","2 colheres (sopa) de cenoura ralada","2 colheres (sopa) de espinafre picado","1 colher (chá) de azeite"],
+ p:["Bata os ovos com garfo e misture os legumes.","Aqueça uma frigideira antiaderente com o azeite em fogo baixo.","Despeje, tampe e cozinhe por 4 minutos de cada lado, até ficar firme por dentro.","Corte em tiras do tamanho de um dedo."],
+ d:"O ovo deve ficar totalmente cozido, sem parte mole."},
+{n:"Fígado com purê de batata e couve",f:8,t:"almoco",tp:"30 min",r:"2 porções",
+ i:["50 g de fígado bovino","1 batata","2 folhas de couve","1/2 cebola","Azeite"],
+ p:["Cozinhe a batata e amasse com um fio de azeite.","Corte o fígado em tiras e refogue com a cebola no azeite por 8 a 10 minutos, até ficar bem cozido por dentro.","Pique o fígado bem miudinho.","Refogue a couve picadinha por 2 minutos.","Sirva o purê com o fígado e a couve ao lado."],
+ d:"Fígado 1 vez por semana ajuda a prevenir anemia."},
+{n:"Palitos de legumes no vapor",f:8,t:"lanche",tp:"15 min",r:"2 porções",
+ i:["1 cenoura","1/2 abobrinha","1 batata-doce pequena","3 floretes de brócolis"],
+ p:["Corte os legumes em palitos do tamanho de um dedo adulto.","Cozinhe no vapor por 10 a 12 minutos.","Teste: o palito deve amassar fácil entre seus dedos.","Sirva morno para ela pegar com a mão."],
+ d:"Mantenha ela sentada e fique sempre perto enquanto come."},
+{n:"Papinha de aveia com banana",f:8,t:"cafe",tp:"6 min",r:"1 porção",
+ i:["2 colheres (sopa) de aveia em flocos finos","1/2 xícara de água","1/2 banana madura","1 pitada de canela (opcional)"],
+ p:["Cozinhe a aveia na água por 3 minutos, mexendo.","Desligue o fogo e junte a banana amassada.","Se quiser, misture um pouco de leite materno já com o fogo desligado.","Polvilhe canela e espere amornar."],
+ d:"Não ofereça mingau na mamadeira: na colher ela treina a mastigação."},
+/* 9 meses */
+{n:"Iogurte natural com fruta",f:9,t:"lanche",tp:"3 min",r:"1 porção",
+ i:["3 colheres (sopa) de iogurte natural integral sem açúcar","2 morangos ou 1/2 banana"],
+ p:["Lave bem a fruta.","Amasse ou pique bem miudinho.","Misture ao iogurte e sirva."],
+ d:"Iogurte com sabor, tipo petit suisse, tem açúcar e corantes: fica para depois dos 2 anos."},
+{n:"Risoto de frango com legumes",f:9,t:"almoco",tp:"35 min",r:"3 porções",
+ i:["1/2 xícara de arroz","100 g de frango em cubinhos","1/2 cenoura picadinha","2 colheres (sopa) de ervilha","1/2 abobrinha picadinha","1 colher (sopa) de ricota","Cebola e azeite","2 xícaras de água quente"],
+ p:["Refogue a cebola e o frango no azeite.","Junte o arroz e mexa por 1 minuto.","Acrescente a água quente aos poucos, mexendo, por 20 minutos.","Nos últimos 8 minutos, junte cenoura, ervilha e abobrinha.","Desligue e misture a ricota para dar cremosidade."],
+ d:"Para adultos, separe a porção dela e só depois tempere com sal."},
+{n:"Panqueca de banana e aveia",f:9,t:"cafe",tp:"10 min",r:"4 panquecas pequenas",
+ i:["1 banana madura","1 ovo","2 colheres (sopa) de aveia"],
+ p:["Amasse a banana e misture o ovo e a aveia.","Aqueça uma frigideira antiaderente em fogo baixo.","Despeje colheradas da massa e doure 2 minutos de cada lado, até firmar por dentro.","Corte em tiras."],
+ d:"Já é doce pela banana: não precisa de açúcar nem mel."},
+{n:"Almôndegas macias de forno",f:9,t:"almoco",tp:"35 min",r:"15 almôndegas",
+ i:["250 g de carne moída (patinho)","1/2 cenoura ralada fininho","1 ovo","2 colheres (sopa) de aveia","1/2 cebola ralada","Salsinha picada","Molho de tomate caseiro (opcional)"],
+ p:["Misture todos os ingredientes com as mãos.","Faça bolinhas do tamanho de uma uva grande.","Asse em forma untada a 200 °C por 20 minutos.","Sirva amassadas ou partidas ao meio, com molho de tomate caseiro se quiser."],
+ d:"Congela muito bem já assadas por até 2 meses."},
+{n:"Picadinho de carne com chuchu, arroz e feijão",f:9,t:"almoco",tp:"40 min",r:"3 porções",
+ i:["150 g de patinho em cubinhos","1 chuchu","Arroz cozido","Feijão cozido","Tomate, cebola, alho e azeite"],
+ p:["Refogue a carne no azeite com cebola e alho.","Junte o tomate picado e água até cobrir e cozinhe até a carne ficar macia (na pressão, 15 minutos).","Junte o chuchu em cubinhos e cozinhe mais 10 minutos.","Pique a carne bem pequena e sirva com arroz e feijão com grãos levemente amassados."],
+ d:"O clássico prato brasileiro já é completo para ela."},
+/* 10 meses */
+{n:"Arroz, feijão, frango e cenoura da família",f:10,t:"almoco",tp:"30 min",r:"1 porção",
+ i:["2 colheres (sopa) de arroz","2 colheres (sopa) de feijão com grãos","2 colheres (sopa) de frango desfiado","2 colheres (sopa) de cenoura cozida em cubinhos","1 colher (sopa) de couve refogada"],
+ p:["Prepare a comida da família normalmente, mas sem sal.","Separe a porção dela.","Só depois tempere com sal a panela dos adultos.","Sirva os alimentos lado a lado, com o frango desfiado e a cenoura em cubinhos macios."],
+ d:"Comer junto à mesa ensina mais do que qualquer truque."},
+{n:"Macarrão parafuso ao molho de tomate com carne",f:10,t:"almoco",tp:"30 min",r:"4 porções",
+ i:["1 xícara de macarrão parafuso","200 g de carne moída","3 tomates maduros","1/2 cebola","1 dente de alho","Manjericão e azeite","Abobrinha ralada (opcional)"],
+ p:["Cozinhe o macarrão até ficar bem macio.","Refogue a cebola, o alho e a carne no azeite.","Junte os tomates picados sem pele e um pouco de água e cozinhe por 15 minutos, até virar molho.","Misture a abobrinha ralada e o manjericão.","Junte o macarrão e corte os parafusos ao meio para ela."],
+ d:"Molho de tomate pronto tem sal e açúcar. O caseiro congela bem."},
+{n:"Escondidinho de mandioca com carne",f:10,t:"almoco",tp:"45 min",r:"4 porções",
+ i:["300 g de mandioca","200 g de carne moída","1 tomate","Cebola, alho e cheiro-verde","2 colheres (sopa) de leite materno ou água do cozimento","Azeite"],
+ p:["Cozinhe a mandioca até desmanchar e retire o fio do meio.","Amasse com o líquido e um fio de azeite até virar purê.","Refogue a carne com cebola, alho e tomate até ficar bem cozida.","Em um refratário, coloque metade do purê, a carne e cubra com o resto do purê.","Leve ao forno a 200 °C por 15 minutos."],
+ d:"Porções individuais congelam bem."},
+{n:"Bolinho assado de abóbora e ricota",f:10,t:"lanche",tp:"35 min",r:"12 bolinhos",
+ i:["1 xícara de abóbora cozida e amassada","1/2 xícara de ricota","1 ovo","4 colheres (sopa) de aveia","Salsinha"],
+ p:["Misture todos os ingredientes até formar uma massa que dê para moldar.","Faça bolinhos achatados.","Asse a 200 °C por 25 minutos, virando na metade.","Espere amornar."],
+ d:"Bom para levar em passeios."},
+{n:"Peixe assado com purê de batata e ervilha",f:10,t:"almoco",tp:"30 min",r:"2 porções",
+ i:["1 filé de tilápia ou merluza","2 batatas","3 colheres (sopa) de ervilha","Limão, azeite e salsinha"],
+ p:["Tempere o peixe com gotas de limão, azeite e salsinha.","Asse em papel-manteiga a 200 °C por 15 a 18 minutos.","Cozinhe as batatas e amasse com azeite.","Cozinhe a ervilha e amasse levemente.","Desfie o peixe conferindo as espinhas com os dedos."],
+ d:"Peixe 1 a 2 vezes por semana."},
+{n:"Muffin salgado de legumes",f:10,t:"lanche",tp:"30 min",r:"8 muffins",
+ i:["2 ovos","3 colheres (sopa) de aveia","1/2 cenoura ralada","1/2 abobrinha ralada","2 colheres (sopa) de ricota","1 colher (sopa) de azeite","1 colher (chá) de fermento químico"],
+ p:["Misture os ovos, a ricota e o azeite.","Junte a aveia, os legumes e por último o fermento.","Distribua em forminhas de silicone untadas.","Asse a 180 °C por 20 minutos, até dourar."],
+ d:"Corte em pedaços. Congela por até 1 mês."},
+{n:"Frutas em tiras para pegar com a mão",f:10,t:"fruta",tp:"5 min",r:"1 porção",
+ i:["Banana em tiras","Manga madura em tiras","Melancia sem sementes em palitos","Abacate em fatias","Uvas cortadas em 4 no comprimento"],
+ p:["Lave bem as frutas.","Corte em tiras do tamanho de um dedo, macias.","Uvas e tomatinhos: sempre em 4 partes no comprimento.","Ofereça com ela sentada, sem distrações."],
+ d:"Fruta é lanche, não sobremesa obrigatória."},
+{n:"Picolé de fruta para a gengiva",f:10,t:"sobremesa",tp:"10 min + congelar",r:"6 picolés",
+ i:["1 manga madura","1 banana","5 morangos"],
+ p:["Bata as frutas no liquidificador, sem água e sem açúcar.","Distribua em forminhas de picolé pequenas.","Congele por pelo menos 4 horas.","Ofereça com ela sentada, para aliviar a coceira dos dentes nascendo."],
+ d:"Aqui pode bater no liquidificador: é sobremesa gelada, não a papinha do dia."},
+/* 11 meses */
+{n:"Sopa grossa de legumes com frango e macarrão",f:11,t:"almoco",tp:"35 min",r:"4 porções",
+ i:["100 g de frango em cubinhos","1 batata","1 cenoura","1/2 abobrinha","1/2 xícara de macarrão pequeno","Cebola, alho e salsinha","Azeite"],
+ p:["Refogue a cebola, o alho e o frango no azeite.","Junte a batata e a cenoura em cubinhos e água para cobrir.","Cozinhe por 15 minutos e acrescente a abobrinha e o macarrão.","Cozinhe até tudo ficar macio e o caldo engrossar.","Sirva com pedaços, mais grossa do que rala."],
+ d:"Sopa rala enche a barriga e alimenta pouco. Prefira grossa."},
+{n:"Hambúrguer caseiro de frango",f:11,t:"almoco",tp:"25 min",r:"6 hambúrgueres",
+ i:["250 g de frango moído","1/2 cenoura ralada","1 colher (sopa) de cebola ralada","2 colheres (sopa) de aveia","Cheiro-verde"],
+ p:["Misture tudo com as mãos.","Modele hambúrgueres finos.","Doure em frigideira antiaderente com um fio de azeite, 5 minutos de cada lado, até cozinhar por dentro.","Corte em tiras."],
+ d:"Congele crus, separados por papel-manteiga."},
+{n:"Polenta mole com molho de carne",f:11,t:"almoco",tp:"30 min",r:"3 porções",
+ i:["1/2 xícara de fubá","2 xícaras de água","150 g de carne moída","1 tomate","Cebola e azeite"],
+ p:["Dissolva o fubá na água fria e leve ao fogo, mexendo sem parar, por 15 minutos.","Refogue a carne com cebola e tomate e um pouco de água até virar molho.","Sirva a polenta com o molho por cima.","Acompanhe com um legume cozido."],
+ d:"Polenta firme e fria pode ser cortada em palitos para ela pegar."},
+{n:"Panqueca de espinafre com frango",f:11,t:"almoco",tp:"30 min",r:"4 panquecas",
+ i:["1 ovo","1/2 xícara de farinha de trigo","1/2 xícara de água","1 punhado de espinafre","Frango desfiado refogado com tomate"],
+ p:["Bata o ovo, a farinha, a água e o espinafre no liquidificador.","Faça discos finos em frigideira antiaderente.","Recheie com o frango e enrole.","Corte em rodelas grossas."],
+ d:"Massa sem leite e sem sal, ideal antes de 1 ano."},
+{n:"Ovos mexidos com tomate e cuscuz",f:11,t:"cafe",tp:"15 min",r:"1 porção",
+ i:["1 ovo","1/2 tomate sem sementes","3 colheres (sopa) de flocão de milho","Água e azeite"],
+ p:["Hidrate o flocão com água e cozinhe no vapor (cuscuzeira) por 10 minutos.","Mexa o ovo com o tomate picadinho na frigideira até ficar bem firme.","Sirva junto com o cuscuz soltinho."],
+ d:"Cuscuz de milho é ótimo café da manhã a partir dessa idade."},
+{n:"Pera assada com canela",f:11,t:"sobremesa",tp:"25 min",r:"2 porções",
+ i:["1 pera","1 pitada de canela"],
+ p:["Corte a pera ao meio e retire as sementes.","Polvilhe canela.","Asse a 180 °C por 20 minutos, até ficar macia.","Sirva em pedaços mornos."],
+ d:"Doce de verdade, sem açúcar."},
+/* 1 ano */
+{n:"Vitamina de banana",f:12,t:"bebida",tp:"3 min",r:"1 copo",
+ i:["150 ml de leite integral","1/2 banana","1 colher (sopa) de aveia"],
+ p:["Bata tudo no liquidificador.","Sirva no copo, sem açúcar.","Ofereça na hora para não escurecer."],
+ d:"Conta como uma das porções de leite do dia."},
+{n:"Suco natural de laranja",f:12,t:"bebida",tp:"5 min",r:"1 copo pequeno",
+ i:["2 laranjas-lima ou pera","Água filtrada (opcional)"],
+ p:["Lave as laranjas e esprema.","Se quiser, complete com um pouco de água.","Sirva na hora, sem açúcar, no copo.","Limite: até 120 ml por dia de 1 a 3 anos."],
+ d:"A fruta inteira é sempre melhor que o suco, porque tem fibra."},
+{n:"Água de coco natural",f:12,t:"bebida",tp:"2 min",r:"1 copo",
+ i:["Água de coco verde (ou de garrafa, sem açúcar)"],
+ p:["Sirva gelada ou natural, em copo.","Ofereça no máximo 1 copo pequeno (150 ml) por dia.","Não substitui a água do dia a dia."],
+ d:"Boa para dias quentes e depois de brincar."},
+{n:"Água saborizada com frutas",f:12,t:"bebida",tp:"5 min + 1 h",r:"500 ml",
+ i:["500 ml de água filtrada","3 rodelas de laranja","3 morangos em fatias","Folhas de hortelã"],
+ p:["Coloque as frutas e a hortelã na jarra com a água.","Leve à geladeira por 1 hora.","Coe ou retire os pedaços antes de servir para ela."],
+ d:"Ajuda quem não quer beber água pura. Sem açúcar."},
+{n:"Mingau de aveia com leite e canela",f:12,t:"cafe",tp:"6 min",r:"1 porção",
+ i:["1 xícara de leite integral","2 colheres (sopa) de aveia","1/2 banana","Canela"],
+ p:["Leve o leite e a aveia ao fogo, mexendo, por 4 minutos.","Desligue e misture a banana amassada.","Polvilhe canela e espere amornar."],
+ d:"Adoçado só pela banana."},
+{n:"Pão com ovo mexido e queijo",f:12,t:"cafe",tp:"8 min",r:"1 porção",
+ i:["1 fatia de pão integral ou 1/2 pão francês","1 ovo","1 fatia de queijo branco ou muçarela"],
+ p:["Mexa o ovo na frigideira até ficar bem firme.","Coloque sobre o pão com o queijo.","Corte em tiras ou quadradinhos."],
+ d:"Queijos têm sal: uma fatia fina basta."},
+{n:"Bolo de banana e aveia sem açúcar",f:12,t:"lanche",tp:"45 min",r:"12 fatias",
+ i:["3 bananas maduras","2 ovos","1 xícara de aveia","1/4 xícara de óleo","1 colher (sopa) de fermento","Canela"],
+ p:["Bata as bananas, os ovos e o óleo no liquidificador.","Misture a aveia e a canela e, por último, o fermento.","Despeje em forma untada.","Asse a 180 °C por 30 a 35 minutos."],
+ d:"Quanto mais madura a banana, mais doce o bolo."},
+{n:"Carne de panela com batata e cenoura",f:12,t:"almoco",tp:"50 min",r:"5 porções",
+ i:["400 g de músculo ou acém em cubos","2 batatas","2 cenouras","1 tomate","Cebola, alho, louro","Sal, pouco"],
+ p:["Doure a carne no azeite com cebola e alho.","Junte o tomate, o louro e água para cobrir.","Cozinhe na pressão por 25 minutos.","Junte batata e cenoura em cubos e cozinhe mais 10 minutos.","Desfie a carne para ela e sirva com arroz e feijão."],
+ d:"Depois de 1 ano a comida pode ter sal, mas pouco: o mesmo da família, se a família usar pouco."},
+{n:"Sopa de feijão com macarrão",f:12,t:"almoco",tp:"20 min",r:"3 porções",
+ i:["2 xícaras de feijão cozido com caldo","1/2 xícara de macarrão pequeno","1 cenoura ralada","Couve picada","Cebola e alho"],
+ p:["Refogue cebola e alho e junte o feijão com caldo.","Amasse parte dos grãos para engrossar.","Junte a cenoura e o macarrão e cozinhe até ficar macio.","Acrescente a couve no final."],
+ d:"Jantar rápido com sobras de feijão."},
+/* 1 ano e meio */
+{n:"Strogonoff de frango com iogurte",f:18,t:"almoco",tp:"30 min",r:"4 porções",
+ i:["300 g de frango em cubos","2 tomates","1/2 cebola","1 pote de iogurte natural integral (170 g)","1 colher (chá) de amido de milho","Cogumelos (opcional)"],
+ p:["Refogue a cebola e o frango até dourar.","Junte os tomates picados e cozinhe até desmanchar.","Misture o iogurte com o amido e junte com o fogo baixo, mexendo, sem ferver.","Sirva com arroz e batata cozida."],
+ d:"Versão sem creme de leite de caixinha e sem catchup."},
+{n:"Purê de abóbora gratinado com carne",f:18,t:"almoco",tp:"40 min",r:"4 porções",
+ i:["500 g de abóbora cabotiá","250 g de carne moída","1 tomate","Cebola e alho","3 colheres (sopa) de muçarela ralada"],
+ p:["Cozinhe a abóbora e amasse.","Refogue a carne com cebola, alho e tomate.","Monte em refratário: carne embaixo, purê por cima.","Polvilhe a muçarela e gratine a 200 °C por 15 minutos."],
+ d:"Fica bom com frango desfiado também."},
+{n:"Biscoito de aveia e banana",f:18,t:"lanche",tp:"25 min",r:"15 biscoitos",
+ i:["2 bananas maduras","1 xícara de aveia","Canela","Uva-passa picada (opcional)"],
+ p:["Amasse as bananas e misture a aveia e a canela.","Faça bolinhas e achate na assadeira com papel-manteiga.","Asse a 180 °C por 15 a 18 minutos."],
+ d:"Dois ingredientes principais e zero açúcar."},
+{n:"Smoothie de morango com iogurte",f:18,t:"bebida",tp:"3 min",r:"1 copo",
+ i:["1 pote de iogurte natural (170 g)","5 morangos","1/2 banana"],
+ p:["Lave bem os morangos e retire as folhas.","Bata tudo no liquidificador.","Sirva no copo, sem açúcar."],
+ d:"Congele a banana antes para ficar cremoso como sorvete."},
+{n:"Suco de melancia com hortelã",f:18,t:"bebida",tp:"4 min",r:"2 copos pequenos",
+ i:["2 fatias de melancia sem sementes","Folhas de hortelã","Gelo (opcional)"],
+ p:["Bata a melancia com a hortelã.","Não precisa coar nem adoçar.","Sirva até 120 ml por dia."],
+ d:"Refrescante para o verão."},
+{n:"Torta de liquidificador de frango e legumes",f:18,t:"almoco",tp:"50 min",r:"8 pedaços",
+ i:["2 ovos","1 xícara de leite","1/3 xícara de óleo","1 xícara de farinha de trigo","1 colher (sopa) de fermento","Recheio: frango desfiado, milho, ervilha, cenoura e tomate refogados","Sal, pouco"],
+ p:["Bata ovos, leite, óleo e farinha no liquidificador.","Misture o fermento com uma colher.","Coloque metade da massa na forma, o recheio e o resto da massa.","Asse a 200 °C por 35 a 40 minutos."],
+ d:"Milho e ervilha amassados ou cortados até os 2 anos."},
+/* 2 anos */
+{n:"Pizza de frigideira",f:24,t:"almoco",tp:"20 min",r:"1 pizza pequena",
+ i:["1 ovo","3 colheres (sopa) de iogurte natural","4 colheres (sopa) de farinha de trigo integral","1 colher (chá) de fermento","Molho de tomate caseiro","Muçarela, tomate e orégano"],
+ p:["Misture o ovo, o iogurte, a farinha e o fermento até virar massa mole.","Espalhe em frigideira antiaderente untada e tampe, em fogo baixo, por 5 minutos.","Vire, cubra com molho, queijo e tomate e tampe até derreter.","Corte em triângulos."],
+ d:"Deixe ela escolher e colocar a cobertura."},
+{n:"Nuggets de frango assados",f:24,t:"almoco",tp:"35 min",r:"20 nuggets",
+ i:["400 g de peito de frango","1 ovo","1/2 cenoura ralada","Farinha de milho flocada ou farinha de rosca integral","Alho e pouco sal"],
+ p:["Bata o frango no processador com alho, cenoura e uma pitada de sal.","Modele os nuggets.","Passe no ovo batido e depois na farinha.","Asse a 200 °C por 20 minutos, virando na metade."],
+ d:"Muito mais saudável que o nugget pronto, que é ultraprocessado."},
+{n:"Hambúrguer caseiro no pão",f:24,t:"almoco",tp:"25 min",r:"4 lanches",
+ i:["300 g de carne moída","1/2 cebola ralada","1 cenoura ralada","4 pães de hambúrguer integrais","Alface, tomate e queijo"],
+ p:["Misture a carne, a cebola, a cenoura e pouco sal.","Modele 4 hambúrgueres e grelhe até ficarem bem passados.","Monte com alface, tomate e queijo."],
+ d:"Batata assada no forno no lugar da batata frita."},
+{n:"Suco verde de couve, maçã e limão",f:24,t:"bebida",tp:"5 min",r:"2 copos pequenos",
+ i:["1 folha de couve","1 maçã","Suco de 1/2 limão","1 copo de água","Hortelã"],
+ p:["Lave bem a couve e a maçã.","Bata tudo no liquidificador.","Sirva sem coar e sem açúcar."],
+ d:"Se achar azedo, junte meia banana ou um pedaço de abacaxi."},
+{n:"Limonada suave com maçã",f:24,t:"bebida",tp:"5 min",r:"3 copos pequenos",
+ i:["1 limão-taiti","1 maçã","500 ml de água gelada"],
+ p:["Bata a maçã com a água.","Junte o suco do limão (não bata o limão com casca para não amargar).","Coe se preferir e sirva sem açúcar."],
+ d:"A maçã adoça naturalmente."},
+{n:"Bolo de cenoura com cobertura de cacau",f:24,t:"sobremesa",tp:"50 min",r:"12 fatias",
+ i:["3 cenouras","3 ovos","1/2 xícara de óleo","1/2 xícara de açúcar mascavo","2 xícaras de farinha de trigo","1 colher (sopa) de fermento","Cobertura: 2 bananas maduras + 2 colheres (sopa) de cacau em pó 100%"],
+ p:["Bata cenoura, ovos, óleo e açúcar no liquidificador.","Misture a farinha e, por último, o fermento.","Asse a 180 °C por 35 a 40 minutos.","Para a cobertura, amasse as bananas com o cacau e espalhe no bolo frio."],
+ d:"Doce de festa e de fim de semana: pouco açúcar e de vez em quando."},
+{n:"Picolé de iogurte com frutas",f:24,t:"sobremesa",tp:"10 min + congelar",r:"6 picolés",
+ i:["2 potes de iogurte natural","1 xícara de frutas vermelhas ou manga","1 banana"],
+ p:["Bata o iogurte com a banana.","Coloque pedacinhos de fruta nas forminhas.","Complete com o creme e congele por 6 horas."],
+ d:"Troca boa para o sorvete industrializado."},
+/* 3 anos */
+{n:"Espaguete com almôndegas",f:36,t:"almoco",tp:"40 min",r:"4 porções",
+ i:["250 g de espaguete","Almôndegas (300 g de carne, 1 ovo, aveia, cebola ralada)","Molho de tomate caseiro","Queijo ralado"],
+ p:["Faça e asse as almôndegas a 200 °C por 20 minutos.","Aqueça o molho de tomate e junte as almôndegas.","Cozinhe o espaguete al dente e misture.","Sirva com queijo ralado por cima."],
+ d:"Quebre o espaguete ao meio se ela tiver dificuldade."},
+{n:"Wrap de frango com legumes",f:36,t:"lanche",tp:"15 min",r:"2 wraps",
+ i:["2 discos de pão folha ou tortilha integral","Frango desfiado","Cenoura ralada","Alface picada","Requeijão caseiro ou iogurte natural"],
+ p:["Espalhe uma camada fina de iogurte no pão.","Coloque frango, cenoura e alface.","Enrole bem apertado e corte ao meio."],
+ d:"Ela pode montar o próprio wrap."},
+{n:"Chocolate quente de cacau e banana",f:36,t:"bebida",tp:"6 min",r:"1 caneca",
+ i:["1 xícara de leite","1 colher (sopa) de cacau em pó 100%","1/2 banana madura","Canela"],
+ p:["Bata o leite, o cacau e a banana no liquidificador.","Aqueça em fogo baixo, mexendo, sem ferver.","Polvilhe canela e confira a temperatura antes de servir."],
+ d:"Sem achocolatado: o cacau puro não tem açúcar."},
+{n:"Coxinha de batata assada",f:36,t:"lanche",tp:"50 min",r:"12 coxinhas",
+ i:["3 batatas cozidas e amassadas","1 xícara de farinha de trigo","Frango desfiado refogado com tomate","1 ovo batido","Farinha de rosca integral","Sal, pouco"],
+ p:["Misture a batata com a farinha até a massa soltar das mãos.","Abra pequenas porções, recheie com o frango e modele as coxinhas.","Passe no ovo e na farinha de rosca.","Asse a 200 °C por 25 minutos, até dourar."],
+ d:"Para festinhas sem fritura."},
+{n:"Salada de frutas com iogurte e aveia",f:36,t:"sobremesa",tp:"10 min",r:"2 porções",
+ i:["1 banana","1 maçã","1 fatia de mamão","Uvas cortadas ao meio","Suco de 1 laranja","Iogurte natural e aveia"],
+ p:["Corte as frutas em cubinhos.","Regue com o suco de laranja.","Sirva com uma colher de iogurte e aveia por cima."],
+ d:"Uvas ainda cortadas até os 4 anos."},
+{n:"Panqueca americana integral",f:36,t:"cafe",tp:"20 min",r:"8 panquecas",
+ i:["1 xícara de farinha integral","1 ovo","3/4 xícara de leite","1 banana amassada","1 colher (chá) de fermento","Frutas para servir"],
+ p:["Misture ovo, leite e banana.","Junte a farinha e o fermento.","Doure colheradas em frigideira antiaderente, 2 minutos de cada lado.","Sirva com frutas picadas."],
+ d:"Sem mel e sem calda: a fruta já adoça."},
+{n:"Cookie de aveia com chocolate",f:36,t:"sobremesa",tp:"25 min",r:"15 cookies",
+ i:["1 xícara de aveia","2 bananas maduras","2 colheres (sopa) de pasta de amendoim pura","2 colheres (sopa) de chocolate 70% picado"],
+ p:["Amasse as bananas com a pasta de amendoim.","Misture a aveia e o chocolate.","Modele e asse a 180 °C por 15 minutos."],
+ d:"Doce de vez em quando, sem açúcar refinado."},
+/* 4 anos */
+{n:"Pipoca de panela",f:48,t:"lanche",tp:"8 min",r:"1 tigela",
+ i:["3 colheres (sopa) de milho de pipoca","1 colher (sopa) de óleo ou azeite","Pitada de sal ou orégano"],
+ p:["Aqueça o óleo com o milho em panela tampada.","Quando começar a estourar, chacoalhe a panela.","Desligue quando os estouros espaçarem.","Tempere com pouco sal e sirva com ela sentada."],
+ d:"Pipoca só a partir dos 4 anos, pelo risco de engasgo. A de micro-ondas é ultraprocessada."},
+{n:"Sanduíche natural de atum",f:48,t:"lanche",tp:"10 min",r:"2 sanduíches",
+ i:["4 fatias de pão integral","1 lata pequena de atum em água","2 colheres (sopa) de iogurte natural","Cenoura ralada","Alface"],
+ p:["Escorra o atum e misture com o iogurte e a cenoura.","Recheie o pão com a pasta e a alface.","Corte em quadradinhos ou triângulos."],
+ d:"Atum até 1 vez por semana (mercúrio)."},
+{n:"Shake de banana com cacau",f:48,t:"bebida",tp:"3 min",r:"1 copo",
+ i:["200 ml de leite gelado","1 banana congelada","1 colher (chá) de cacau 100%","1 colher (sopa) de aveia"],
+ p:["Bata tudo no liquidificador até ficar cremoso.","Sirva na hora."],
+ d:"Milk-shake sem sorvete e sem açúcar."},
+{n:"Arroz de forno com frango e legumes",f:48,t:"almoco",tp:"40 min",r:"5 porções",
+ i:["3 xícaras de arroz cozido","Frango desfiado","Cenoura, ervilha e milho","Molho de tomate caseiro","Muçarela ralada","1 ovo"],
+ p:["Misture o arroz com o frango, os legumes, o molho e o ovo.","Coloque em refratário e cubra com queijo.","Asse a 200 °C por 20 minutos."],
+ d:"Aproveita sobras de arroz do dia anterior."},
+{n:"Espetinho de frutas com iogurte",f:48,t:"sobremesa",tp:"10 min",r:"4 espetinhos",
+ i:["Morango, uva, banana, manga e kiwi","Palitos de churrasco sem ponta","Iogurte natural com canela"],
+ p:["Corte as frutas em cubos.","Monte os espetinhos (corte a ponta do palito).","Sirva com iogurte para mergulhar.","Fique de olho: espeto só com ela sentada."],
+ d:"Montar o espeto é uma ótima brincadeira na cozinha."},
+{n:"Quibe de forno com abobrinha",f:48,t:"almoco",tp:"50 min",r:"8 pedaços",
+ i:["1 xícara de trigo para quibe","400 g de carne moída","1 abobrinha ralada","1 cebola","Hortelã","Sal, pouco"],
+ p:["Hidrate o trigo em água por 30 minutos e esprema.","Misture com a carne, a abobrinha, a cebola e a hortelã.","Espalhe em assadeira untada e corte em losangos.","Asse a 200 °C por 30 minutos."],
+ d:"Sirva com salada de tomate e pepino."},
+/* 5 a 6 anos */
+{n:"Muffin de banana para a lancheira",f:60,t:"lanche",tp:"30 min",r:"10 muffins",
+ i:["2 bananas","2 ovos","1 xícara de farinha integral","1/2 xícara de aveia","1/4 xícara de óleo","1 colher (sopa) de fermento","Canela"],
+ p:["Bata bananas, ovos e óleo.","Misture as farinhas, a canela e o fermento.","Distribua em forminhas e asse a 180 °C por 20 minutos."],
+ d:"Lancheira: muffin + fruta + garrafinha de água."},
+{n:"Tacos de carne moída e feijão",f:60,t:"almoco",tp:"25 min",r:"6 tacos",
+ i:["6 tortilhas pequenas","250 g de carne moída","1 xícara de feijão cozido","Tomate, alface e queijo ralado","Cominho e páprica doce"],
+ p:["Refogue a carne com cominho e páprica.","Junte o feijão levemente amassado.","Aqueça as tortilhas.","Cada um monta o seu com tomate, alface e queijo."],
+ d:"Jantar divertido em família."},
+{n:"Yakisoba caseiro de frango",f:60,t:"almoco",tp:"30 min",r:"4 porções",
+ i:["250 g de macarrão para yakisoba ou espaguete","250 g de frango em tiras","Brócolis, cenoura, repolho e pimentão","2 colheres (sopa) de shoyu com menos sódio","1 colher (chá) de amido de milho"],
+ p:["Cozinhe o macarrão.","Doure o frango e junte os legumes por 5 minutos.","Dissolva o amido no shoyu com 1/2 xícara de água e junte.","Misture o macarrão e sirva."],
+ d:"Shoyu é muito salgado: use pouco e o de baixo sódio."},
+{n:"Suco de uva integral com água",f:60,t:"bebida",tp:"2 min",r:"1 copo",
+ i:["100 ml de suco de uva integral (sem açúcar)","100 ml de água gelada"],
+ p:["Misture o suco com a água em partes iguais.","Sirva no copo.","Limite de 120 a 180 ml de suco por dia de 4 a 6 anos."],
+ d:"Suco integral não é o mesmo que néctar ou refresco, que têm açúcar."},
+{n:"Suco de abacaxi com hortelã",f:60,t:"bebida",tp:"5 min",r:"2 copos",
+ i:["2 fatias de abacaxi","Folhas de hortelã","300 ml de água gelada"],
+ p:["Bata tudo no liquidificador.","Coe se preferir.","Sirva sem açúcar."],
+ d:"Abacaxi bem maduro dispensa açúcar."},
+{n:"Pão de queijo caseiro",f:60,t:"lanche",tp:"40 min",r:"20 unidades",
+ i:["2 xícaras de polvilho azedo","1 xícara de leite","1/2 xícara de óleo","2 ovos","1 xícara de queijo minas meia-cura ralado","1 pitada de sal"],
+ p:["Ferva o leite com o óleo e o sal e escalde o polvilho, mexendo.","Espere amornar e junte os ovos, um a um.","Misture o queijo e modele bolinhas com as mãos untadas.","Asse a 200 °C por 25 minutos."],
+ d:"Congele cru e asse quando quiser."},
+{n:"Enroladinho de arroz com legumes",f:60,t:"almoco",tp:"30 min",r:"16 pedaços",
+ i:["2 xícaras de arroz japonês cozido","2 folhas de alga nori","Cenoura e pepino em palitos","Manga em tiras","Omelete fino em tiras"],
+ p:["Espalhe o arroz sobre a alga, deixando 2 cm livres em cima.","Coloque os recheios em linha.","Enrole com a ajuda de um pano ou esteira.","Corte com faca molhada."],
+ d:"Sushi de peixe cru fica para depois dos 5 anos e de lugar confiável. Esta versão não leva peixe cru."}
+];
+
+// [nome, grupo, desde (meses), cuidado até (meses; 999 = sempre com moderação), como oferecer, risco de engasgo]
+var ALIMENTOS = [
+["Banana","Frutas",6,0,"Amassada ou em tiras grandes para segurar."],
+["Mamão","Frutas",6,0,"Raspado ou em pedaços macios."],
+["Manga","Frutas",6,0,"Amassada ou em tiras grandes, madura."],
+["Abacate","Frutas",6,0,"Amassado, puro, sem açúcar."],
+["Melancia","Frutas",6,0,"Sem sementes, em palitos."],
+["Pera","Frutas",6,12,"Madura e macia, ou cozida. Crua e dura só raspada."],
+["Maçã","Frutas",6,48,"Cozida ou raspada. Crua em pedaços duros causa engasgo: até os 4 anos ofereça ralada, cozida ou em fatias bem finas.",1],
+["Laranja e tangerina","Frutas",6,12,"Em gomos sem sementes e sem a pele grossa, ou chupando um pedaço."],
+["Morango","Frutas",6,12,"Bem lavado, amassado ou em pedaços."],
+["Abacaxi","Frutas",6,12,"Bem maduro, em pedaços finos (é fibroso)."],
+["Kiwi","Frutas",6,0,"Sem casca, em pedaços ou amassado."],
+["Uva","Frutas",6,48,"Sempre cortada em 4 no comprimento e sem sementes até os 4 anos. Inteira é um dos maiores riscos de engasgo.",1],
+["Uva-passa","Frutas",12,48,"Picada e misturada em preparações. Inteira gruda e pode engasgar.",1],
+["Abóbora","Legumes e verduras",6,0,"Cozida e amassada ou em pedaços macios."],
+["Cenoura","Legumes e verduras",6,48,"Cozida. Crua, só ralada fininho até os 4 anos.",1],
+["Batata e batata-doce","Legumes e verduras",6,0,"Cozidas e amassadas ou em palitos."],
+["Mandioquinha, inhame e mandioca","Legumes e verduras",6,0,"Bem cozidos. Retire o fio da mandioca."],
+["Chuchu e abobrinha","Legumes e verduras",6,0,"Cozidos, amassados ou picadinhos."],
+["Brócolis e couve-flor","Legumes e verduras",6,0,"No vapor, em floretes macios para segurar."],
+["Espinafre, couve e folhas","Legumes e verduras",6,0,"Refogados e picadinhos."],
+["Beterraba","Legumes e verduras",6,0,"Cozida. Pode deixar o cocô e o xixi avermelhados, é normal."],
+["Tomate","Legumes e verduras",6,0,"Sem pele e sem sementes no começo."],
+["Tomate-cereja","Legumes e verduras",6,48,"Cortado em 4 até os 4 anos.",1],
+["Ervilha e milho","Legumes e verduras",6,24,"Amassados até os 2 anos. Grão inteiro pode escorregar para a garganta.",1],
+["Cebola, alho e ervas","Legumes e verduras",6,0,"Use à vontade para dar sabor no lugar do sal."],
+["Ovo (gema e clara)","Proteínas",6,0,"Sempre bem cozido. Nunca cru, mole ou em gemada."],
+["Frango","Proteínas",6,0,"Bem cozido, desfiado ou moído."],
+["Carne bovina","Proteínas",6,0,"Moída, desfiada ou picadinha, bem cozida."],
+["Fígado","Proteínas",6,0,"Bem cozido, 1 vez por semana. Fonte de ferro."],
+["Peixe","Proteínas",6,0,"Bem cozido e sem espinhas. Prefira tilápia, pescada, merluza, sardinha e salmão. Evite cação e peixe-espada e limite atum."],
+["Carne de porco","Proteínas",6,0,"Lombo ou pernil magros, sempre bem cozidos."],
+["Camarão e frutos do mar","Proteínas",6,0,"Bem cozidos e picados. São alergênicos: ofereça em casa e observe."],
+["Feijão, lentilha e grão-de-bico","Proteínas",6,0,"Grãos amassados com o caldo. Todos os dias."],
+["Carne mal passada","Proteínas",60,0,"Até os 5 anos, sempre bem passada."],
+["Peixe cru (sushi, sashimi)","Proteínas",60,999,"Evite até cerca de 5 anos e, depois, só em lugar de confiança."],
+["Embutidos (salsicha, presunto, salame, mortadela)","Proteínas",999,0,"Ultraprocessados, cheios de sal e conservantes. Se aparecer em festa, salsicha nunca em rodelas: corte no comprimento.",1],
+["Arroz","Cereais e grãos",6,0,"Bem cozido."],
+["Macarrão","Cereais e grãos",6,0,"Bem cozido, formatos pequenos no começo."],
+["Aveia","Cereais e grãos",6,0,"Em papinhas, panquecas e bolos."],
+["Glúten (trigo, cevada, centeio)","Cereais e grãos",6,0,"Pode desde os 6 meses, não precisa adiar."],
+["Milho, fubá, cuscuz e polenta","Cereais e grãos",6,0,"Polenta mole ou cuscuz bem hidratado."],
+["Quinoa","Cereais e grãos",6,0,"Lave bem e cozinhe até ficar macia."],
+["Pão","Cereais e grãos",12,0,"Tem sal: a partir de 1 ano. Prefira integral."],
+["Tapioca","Cereais e grãos",12,0,"Fina e macia, com recheio úmido."],
+["Pasta de amendoim e castanhas trituradas","Cereais e grãos",6,0,"Pasta pura, sem açúcar, em camada fina ou misturada na papinha. Nunca às colheradas: gruda no céu da boca."],
+["Amendoim e castanhas inteiros","Cereais e grãos",60,72,"Só depois dos 5 anos, com ela sentada e supervisão. Antes disso, triturados.",1],
+["Pipoca","Cereais e grãos",48,72,"A partir de 4 anos, com ela sentada. Prefira a de panela; a de micro-ondas é ultraprocessada.",1],
+["Biscoito de pacote, granola e cereal açucarado","Doces e industrializados",24,999,"Têm açúcar e sal. De vez em quando, prefira versões caseiras."],
+["Leite materno","Leite e derivados",0,0,"Exclusivo até 6 meses e até 2 anos ou mais junto com a comida."],
+["Fórmula infantil","Leite e derivados",0,0,"Para quem não mama no peito, na quantidade orientada pelo pediatra."],
+["Iogurte natural integral","Leite e derivados",9,0,"Sem açúcar, puro ou com fruta."],
+["Ricota e queijo fresco","Leite e derivados",9,12,"Pouca quantidade: queijos têm sal."],
+["Leite de vaca integral (bebida)","Leite e derivados",12,0,"Até 2 copos (400 a 500 ml) por dia. Mais que isso atrapalha a absorção de ferro."],
+["Queijos amarelos e parmesão","Leite e derivados",12,999,"Mais salgados: pouca quantidade."],
+["Leite desnatado ou semidesnatado","Leite e derivados",24,0,"Até 2 anos, só leite integral."],
+["Requeijão e creme de leite","Leite e derivados",24,999,"Industrializados: de vez em quando."],
+["Iogurte com sabor e petit suisse","Leite e derivados",24,999,"Têm açúcar e corantes. Prefira natural com fruta."],
+["Bebidas vegetais (aveia, amêndoa, arroz)","Leite e derivados",24,999,"Não substituem o leite. Bebida de arroz não é indicada para crianças pequenas."],
+["Água","Bebidas",6,0,"Filtrada ou fervida, várias vezes ao dia, no copo."],
+["Suco natural de fruta","Bebidas",12,999,"Sem açúcar, no copo. Até 120 ml por dia (1 a 3 anos) e 120 a 180 ml (4 a 6 anos). Fruta inteira é melhor."],
+["Água de coco","Bebidas",12,999,"Até 1 copo pequeno por dia. Não substitui a água."],
+["Chá de ervas (camomila, erva-doce)","Bebidas",12,999,"Fraco, sem açúcar e de vez em quando. Não substitui a água."],
+["Suco de caixinha, néctar e refresco em pó","Bebidas",999,0,"Têm açúcar e corantes. Não contam como fruta."],
+["Refrigerante","Bebidas",999,0,"Açúcar, cafeína em alguns e nenhum nutriente."],
+["Café, chá preto, mate e chá verde","Bebidas",999,0,"Têm cafeína. Não são para crianças."],
+["Energético e isotônico","Bebidas",999,0,"Não são para crianças."],
+["Achocolatado em pó","Bebidas",24,999,"Muito açúcar. Prefira cacau 100% batido com banana."],
+["Leite fermentado (tipo Yakult)","Bebidas",24,999,"Tem bastante açúcar. De vez em quando."],
+["Sal","Doces e industrializados",12,999,"Nenhum até 1 ano. Depois, pouco."],
+["Açúcar (branco, mascavo, demerara)","Doces e industrializados",24,999,"Nada até 2 anos. Depois, pouco e de vez em quando."],
+["Mel","Doces e industrializados",24,999,"Nunca antes de 1 ano (risco de botulismo). Como é açúcar, o Guia Alimentar recomenda esperar até os 2 anos."],
+["Chocolate e doces","Doces e industrializados",24,999,"Depois de 2 anos, porção pequena e de vez em quando."],
+["Sorvete","Doces e industrializados",24,999,"De vez em quando. Picolé de fruta caseiro é ótima troca."],
+["Gelatina pronta","Doces e industrializados",24,999,"Tem corantes e açúcar. De vez em quando."],
+["Frituras","Doces e industrializados",24,999,"De vez em quando. Prefira assado."],
+["Adoçante","Doces e industrializados",999,0,"Não é indicado para crianças."],
+["Bala, pirulito e chiclete","Doces e industrializados",999,0,"Açúcar e alto risco de engasgo.",1],
+["Salgadinho de pacote e biscoito recheado","Doces e industrializados",999,0,"Ultraprocessados: muito sal, açúcar e gordura."],
+["Macarrão instantâneo","Doces e industrializados",999,0,"Tempero cheio de sal. Faça macarrão comum."],
+["Nugget, lasanha e comida congelada pronta","Doces e industrializados",999,0,"Ultraprocessados. Faça versões caseiras."],
+["Caldo em cubo e tempero pronto","Doces e industrializados",999,0,"Muito sal e realçador de sabor. Use ervas frescas."],
+["Papinha industrializada","Doces e industrializados",6,999,"Só em emergência. A comida feita em casa ensina sabores e texturas de verdade."],
+["Azeitona","Doces e industrializados",12,72,"Sem caroço, picada e pouca (é salgada).",1]
+];
+
+/* =================== ESTADO =================== */
+function load(k, d) { try { var v = localStorage.getItem("babyli:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function save(k, v) { try { localStorage.setItem("babyli:" + k, JSON.stringify(v)); } catch (e) {} }
+var perfil = load("perfil", { nome: "", meses: 10, nasc: "" });
+var favs = load("favs", []);
+var provou = load("provou", []);
+var ui = { fase: null, tipo: "todas", busca: "", grupo: "Todos", buscaA: "", verMeses: null, abertoA: null, abertaF: null };
+
+function idadeMeses() {
+  if (perfil.nasc) {
+    var n = new Date(perfil.nasc + "T12:00:00"), h = new Date();
+    if (!isNaN(n)) {
+      var m = (h.getFullYear() - n.getFullYear()) * 12 + (h.getMonth() - n.getMonth());
+      if (h.getDate() < n.getDate()) m--;
+      return Math.max(0, m);
+    }
+  }
+  return perfil.meses;
+}
+function faseDe(m) { var f = FASES[0]; for (var i = 0; i < FASES.length; i++) if (m >= FASES[i].de) f = FASES[i]; return f; }
+function idadeTxt(m) {
+  if (m < 12) return m + (m === 1 ? " mês" : " meses");
+  var a = Math.floor(m / 12), r = m % 12;
+  return a + (a === 1 ? " ano" : " anos") + (r ? " e " + r + (r === 1 ? " mês" : " meses") : "");
+}
+function aPartir(m) { return m < 12 ? m + " meses" : (m % 12 ? idadeTxt(m) : (m / 12) + (m === 12 ? " ano" : " anos")); }
+function nomeBebe() { return perfil.nome ? esc(perfil.nome) : "sua bebê"; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+RECEITAS.forEach(function (r, i) { r.id = "r" + i; });
+
+function status(a, m) {
+  var desde = a[2], ate = a[3];
+  if (desde >= 999) return { k: "no", t: "Evitar" };
+  if (m < desde) return { k: "no", t: "Ainda não", sub: "a partir de " + aPartir(desde) };
+  if (ate >= 999) return { k: "warn", t: "Com moderação" };
+  if (m < ate) return { k: "warn", t: "Com cuidado", sub: "atenção até " + aPartir(ate) };
+  return { k: "ok", t: "Pode" };
+}
+
+/* =================== VIEWS =================== */
+var app = document.getElementById("app");
+var TABS = ["inicio", "receitas", "pode", "fases", "salvas"];
+
+function ic(id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; }
+
+function rcard(r) {
+  var m = idadeMeses(), fav = favs.indexOf(r.id) >= 0;
+  var idadeTag = r.f > m ? '<span class="tag no">a partir de ' + aPartir(r.f) + '</span>' : '<span class="tag age">' + aPartir(r.f) + '+</span>';
+  return '<button class="rcard" type="button" data-rec="' + r.id + '">' +
+    '<span class="emo t-' + r.t + '">' + ic(TIPO_IC[r.t]) + '</span>' +
+    '<span style="min-width:0"><b>' + r.n + '</b><small>' + TIPOS[r.t] + ' · ' + r.tp + '</small><br>' + idadeTag + '</span>' +
+    (fav ? '<svg class="heart" aria-label="Salva"><use href="#i-heart-f"/></svg>' : '<span></span>') + '</button>';
+}
+
+function viewInicio() {
+  var m = idadeMeses(), f = faseDe(m);
+  var desta = RECEITAS.filter(function (r) { return faseDe(r.f).id === f.id; });
+  var cuidado = ALIMENTOS.filter(function (a) { return a[5] && status(a, m).k !== "ok"; });
+  var h = '';
+  h += '<section class="hero" aria-labelledby="h-fase">' +
+    '<div class="eyebrow">Fase ' + f.nome + '</div>' +
+    '<h1 id="h-fase">' + f.titulo + ' para <em>' + nomeBebe() + '</em>, ' + idadeTxt(m) + '</h1>' +
+    '<div class="facts">' +
+      fact("i-spoon", "Textura", f.textura) +
+      fact("i-clock", "Refeições", f.refeicoes) +
+      fact("i-scale", "Quanto", f.quantidade) +
+      fact("i-milk", "Leite", f.leite) +
+      fact("i-drop", "Água", f.agua) +
+    '</div></section>';
+  h += '<div id="installSlot"></div>';
+  h += '<section class="block"><header><h2>Receitas desta fase</h2><button class="link" type="button" data-go="receitas">Ver todas</button></header>' +
+    '<div class="scroller">' + desta.map(function (r) {
+      return '<button class="mini" type="button" data-rec="' + r.id + '"><span class="tag ' + (r.t === "bebida" ? "ok" : "age") + '">' + TIPOS[r.t] + '</span><b>' + r.n + '</b><small class="muted">' + r.tp + '</small></button>';
+    }).join("") + '</div></section>';
+  h += '<section class="block"><h2>O que muda agora</h2><ul class="news">' + f.novidades.map(function (n) { return '<li>' + n + '</li>'; }).join("") + '</ul>' +
+    '<div class="tip"><b>Dica:</b> ' + f.dica + '</div></section>';
+  h += '<section class="block"><h2>Rotina de exemplo</h2><ol class="routine">' + f.rotina.map(function (x) { return '<li><time>' + x[0] + '</time><span>' + x[1] + '</span></li>'; }).join("") + '</ol></section>';
+  h += '<section class="block"><header><h2>Regras de ouro</h2><button class="link" type="button" data-go="pode">Pode ou não pode</button></header><div class="rules">' +
+    rule("Sal", m < 12 ? "no" : "warn", m < 12 ? "Ainda não" : "Pouco", "Nenhum até 1 ano. Depois, pouco.") +
+    rule("Açúcar", m < 24 ? "no" : "warn", m < 24 ? "Ainda não" : "De vez em quando", "Nada até 2 anos, inclusive em sucos e bolos.") +
+    rule("Mel", m < 24 ? "no" : "warn", m < 24 ? "Ainda não" : "Pouco", "Nunca antes de 1 ano: risco de botulismo.") +
+    rule("Leite de vaca", m < 12 ? "no" : "ok", m < 12 ? "Ainda não" : "Pode", "Como bebida, só depois de 1 ano.") +
+    rule("Suco", m < 12 ? "no" : "warn", m < 12 ? "Ainda não" : "Até 120 ml", "Antes de 1 ano, só leite e água.") +
+    rule("Ultraprocessados", "no", "Evitar", "Refrigerante, salgadinho, embutido, biscoito recheado.") +
+    '</div></section>';
+  if (cuidado.length) h += '<section class="block"><h2>Cuidado com engasgo nessa idade</h2><div class="list">' + cuidado.slice(0, 6).map(foodRow).join("") + '</div></section>';
+  h += note();
+  return h;
+}
+function fact(i, t, txt) { return '<div class="fact"><span class="ic">' + ic(i) + '</span><div><b>' + t + '</b><p>' + txt + '</p></div></div>'; }
+function rule(n, k, t, s) { return '<div class="rule"><b>' + n + '</b><span class="tag ' + k + '">' + t + '</span><small>' + s + '</small></div>'; }
+function note() {
+  return '<p class="note"><b>Importante:</b> informações gerais baseadas no Guia Alimentar para Crianças Brasileiras Menores de 2 Anos (Ministério da Saúde) e nas recomendações da Sociedade Brasileira de Pediatria. Cada criança é única: confirme com o pediatra, principalmente em caso de alergia, prematuridade ou doença. Em caso de engasgo grave, ligue 192 (SAMU).</p>';
+}
+
+function viewReceitas() {
+  var m = idadeMeses();
+  if (!ui.fase) ui.fase = faseDe(m).id;
+  var lista = RECEITAS.filter(function (r) {
+    if (ui.busca) {
+      var q = norm(ui.busca);
+      if (norm(r.n + " " + r.i.join(" ")).indexOf(q) < 0) return false;
+    } else if (ui.fase !== "todas" && faseDe(r.f).id !== ui.fase) return false;
+    if (ui.tipo !== "todas" && r.t !== ui.tipo) return false;
+    return true;
+  });
+  var faseAtual = faseDe(m).id;
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Receitas</h1><p class="lead">' + RECEITAS.length + ' receitas de 6 meses a 6 anos, com modo de preparo. O ponto laranja marca a fase de ' + nomeBebe() + '.</p></header>';
+  h += '<div class="filters">' +
+    '<label class="search">' + ic("i-search") + '<input id="busca" type="search" placeholder="Buscar receita ou ingrediente" value="' + esc(ui.busca) + '" autocomplete="off"></label>' +
+    '<div class="chips" role="group" aria-label="Idade">' +
+      '<button class="chip phase" type="button" data-fase="todas" aria-pressed="' + (ui.fase === "todas") + '">Todas</button>' +
+      FASES.map(function (f) { return '<button class="chip phase" type="button" data-fase="' + f.id + '" aria-pressed="' + (ui.fase === f.id) + '">' + f.curto + (f.id === faseAtual ? '<span class="dot" aria-label="fase atual"></span>' : '') + '</button>'; }).join("") +
+    '</div>' +
+    '<div class="chips" role="group" aria-label="Tipo">' +
+      '<button class="chip" type="button" data-tipo="todas" aria-pressed="' + (ui.tipo === "todas") + '">Tudo</button>' +
+      Object.keys(TIPOS).map(function (k) { return '<button class="chip" type="button" data-tipo="' + k + '" aria-pressed="' + (ui.tipo === k) + '">' + TIPOS[k] + '</button>'; }).join("") +
+    '</div></div>';
+  if (ui.fase !== "todas" && !ui.busca) {
+    var f = FASES.filter(function (x) { return x.id === ui.fase; })[0];
+    h += '<p class="muted" style="margin:0"><b style="color:var(--ink)">' + f.nome + ':</b> ' + f.textura + '</p>';
+    if (ui.tipo === "bebida" && f.de < 12) h += '<p class="warnbox" style="margin:0">Antes de 1 ano, as únicas bebidas são leite materno (ou fórmula) e água. Sucos, chás e água de coco ficam para depois.</p>';
+  }
+  h += '<div class="list">' + (lista.length ? lista.map(rcard).join("") : '<p class="empty">Nenhuma receita com esse filtro. Tente outro tipo ou outra idade.</p>') + '</div>';
+  return h;
+}
+function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+
+function foodRow(a) {
+  var m = ui.verMeses != null ? ui.verMeses : idadeMeses();
+  var s = status(a, m), key = a[0], open = ui.abertoA === key, tried = provou.indexOf(key) >= 0;
+  return '<div class="food"><button type="button" data-food="' + esc(key) + '" aria-expanded="' + open + '">' +
+    '<span class="fname">' + a[0] + (s.sub ? '<small>' + s.sub + '</small>' : (tried ? '<small>Já provou</small>' : '')) + '</span>' +
+    '<span class="tag ' + s.k + '">' + s.t + '</span></button>' +
+    (open ? '<div class="more"><p>' + a[4] + '</p>' + (a[5] ? '<span class="choke">Risco de engasgo</span>' : '') +
+      '<p class="muted">' + (a[2] >= 999 ? 'Melhor evitar na infância.' : a[2] === 0 ? 'Desde o nascimento.' : 'A partir de ' + aPartir(a[2]) + '.') + '</p>' +
+      (a[2] < 999 ? '<button class="tried" type="button" data-tried="' + esc(key) + '" aria-pressed="' + tried + '">' + ic("i-check").replace('<svg', '<svg width="16" height="16"') + (tried ? 'Já provou' : 'Marcar como provado') + '</button>' : '') +
+    '</div>' : '') + '</div>';
+}
+
+function viewPode() {
+  var m = ui.verMeses != null ? ui.verMeses : idadeMeses();
+  var grupos = ["Todos", "Frutas", "Legumes e verduras", "Proteínas", "Cereais e grãos", "Leite e derivados", "Bebidas", "Doces e industrializados"];
+  var lista = ALIMENTOS.filter(function (a) {
+    if (ui.buscaA && norm(a[0]).indexOf(norm(ui.buscaA)) < 0) return false;
+    if (ui.grupo !== "Todos" && a[1] !== ui.grupo) return false;
+    return true;
+  });
+  var cont = { ok: 0, warn: 0, no: 0 };
+  lista.forEach(function (a) { cont[status(a, m).k]++; });
+  var opts = [];
+  for (var i = 6; i <= 11; i++) opts.push([i, i + " meses"]);
+  [12, 18, 24, 36, 48, 60, 72].forEach(function (x) { opts.push([x, aPartir(x)]); });
+  if (opts.every(function (o) { return o[0] !== m; })) opts.push([m, idadeTxt(m)]);
+  opts.sort(function (a, b) { return a[0] - b[0]; });
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Pode ou não pode?</h1><p class="lead">Toque em um alimento para ver como oferecer.</p></header>';
+  h += '<div class="agebar"><label for="verIdade">Ver para a idade</label><select id="verIdade">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === m ? ' selected' : '') + '>' + o[1] + (o[0] === idadeMeses() ? ' (agora)' : '') + '</option>'; }).join("") + '</select></div>';
+  h += '<label class="search">' + ic("i-search") + '<input id="buscaA" type="search" placeholder="Buscar alimento ou bebida" value="' + esc(ui.buscaA) + '" autocomplete="off"></label>';
+  h += '<div class="chips" role="group" aria-label="Grupo">' + grupos.map(function (g) { return '<button class="chip" type="button" data-grupo="' + g + '" aria-pressed="' + (ui.grupo === g) + '">' + (g === "Doces e industrializados" ? "Doces e prontos" : g) + '</button>'; }).join("") + '</div>';
+  h += '<div class="legend"><span class="tag ok">Pode · ' + cont.ok + '</span><span class="tag warn">Com cuidado · ' + cont.warn + '</span><span class="tag no">Ainda não ou evitar · ' + cont.no + '</span></div>';
+  if (!lista.length) h += '<p class="empty">Nada encontrado. Tente outro nome.</p>';
+  var porGrupo = {};
+  lista.forEach(function (a) { (porGrupo[a[1]] = porGrupo[a[1]] || []).push(a); });
+  Object.keys(porGrupo).forEach(function (g) {
+    if (ui.grupo === "Todos") h += '<h2 class="grouph">' + g + '</h2>';
+    h += '<div class="list">' + porGrupo[g].map(foodRow).join("") + '</div>';
+  });
+  h += note();
+  return h;
+}
+
+function viewFases() {
+  var m = idadeMeses(), atual = faseDe(m).id;
+  if (ui.abertaF == null) ui.abertaF = atual;
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Fases por idade</h1><p class="lead">Textura, quantidade, leite e água em cada etapa, de 6 meses a 6 anos.</p></header><div class="list">';
+  FASES.forEach(function (f) {
+    var open = ui.abertaF === f.id, n = RECEITAS.filter(function (r) { return faseDe(r.f).id === f.id; }).length;
+    var num = f.de < 12 ? f.de : Math.floor(f.de / 12), un = f.de < 12 ? "meses" : (f.de === 18 ? "a e meio" : f.de < 24 ? "ano" : "anos");
+    if (f.de === 18) { num = "1½"; un = "ano"; }
+    h += '<div class="phase' + (f.id === atual ? ' current' : '') + '"><button type="button" data-fasebox="' + f.id + '" aria-expanded="' + open + '">' +
+      '<span class="age">' + num + '<small>' + un + '</small></span>' +
+      '<span><h3>' + f.titulo + '</h3><small class="muted">' + f.nome + ' · ' + n + ' receitas' + (f.id === atual ? ' · fase atual' : '') + '</small></span>' +
+      '<svg class="chev"><use href="#i-chev"/></svg></button>';
+    if (open) {
+      h += '<div class="body"><div class="facts">' + fact("i-spoon", "Textura", f.textura) + fact("i-clock", "Refeições", f.refeicoes) + fact("i-scale", "Quanto", f.quantidade) + fact("i-milk", "Leite", f.leite) + fact("i-drop", "Água", f.agua) + '</div>' +
+        '<div><b>O que muda</b><ul class="news">' + f.novidades.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div>' +
+        '<ol class="routine">' + f.rotina.map(function (x) { return '<li><time>' + x[0] + '</time><span>' + x[1] + '</span></li>'; }).join("") + '</ol>' +
+        '<div class="tip"><b>Dica:</b> ' + f.dica + '</div>' +
+        '<button class="btn" type="button" data-verfase="' + f.id + '">Ver as ' + n + ' receitas desta fase</button></div>';
+    }
+    h += '</div>';
+  });
+  return h + '</div>' + note();
+}
+
+function viewSalvas() {
+  var lista = RECEITAS.filter(function (r) { return favs.indexOf(r.id) >= 0; });
+  var provados = ALIMENTOS.filter(function (a) { return provou.indexOf(a[0]) >= 0; });
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Salvas</h1><p class="lead">As receitas favoritas e os alimentos que ' + nomeBebe() + ' já provou.</p></header>';
+  h += '<div class="stats"><div class="stat"><b>' + lista.length + '</b>receitas salvas</div><div class="stat"><b>' + provados.length + '</b>alimentos provados</div></div>';
+  h += '<section class="block"><h2>Receitas favoritas</h2><div class="list">' + (lista.length ? lista.map(rcard).join("") : '<p class="empty">Toque no coração dentro de uma receita para guardar aqui.</p>') + '</div></section>';
+  h += '<section class="block"><h2>Já provou</h2>' + (provados.length ? '<div class="chips" style="flex-wrap:wrap">' + provados.map(function (a) { return '<span class="chip">' + a[0] + '</span>'; }).join("") + '</div>' : '<p class="empty">Em "Pode?", abra um alimento e toque em "Marcar como provado". Ajuda a apresentar um alimento novo de cada vez e notar alergias.</p>') + '</section>';
+  return h;
+}
+
+/* =================== DETALHE =================== */
+var sheet = document.getElementById("sheet");
+function openRec(id) {
+  var r = RECEITAS.filter(function (x) { return x.id === id; })[0]; if (!r) return;
+  var m = idadeMeses(), fav = favs.indexOf(r.id) >= 0, f = faseDe(r.f);
+  var h = '<div class="wrap top"><button class="iconbtn" type="button" data-close aria-label="Voltar">' + ic("i-back") + '</button>' +
+    '<button class="iconbtn' + (fav ? ' on' : '') + '" type="button" data-fav="' + r.id + '" aria-pressed="' + fav + '" aria-label="Salvar receita">' + ic(fav ? "i-heart-f" : "i-heart") + '</button></div>';
+  h += '<div class="wrap" style="display:grid;gap:20px">';
+  h += '<div class="rhead"><span class="tag age" style="justify-self:start">' + TIPOS[r.t] + ' · a partir de ' + aPartir(r.f) + '</span><h1>' + r.n + '</h1>' +
+    '<div class="meta"><span>' + r.tp + '</span>' + (r.r !== "—" ? '<span>Rende ' + r.r + '</span>' : '') + '<span>Textura: ' + (f.de < 12 ? f.nome : "comida da família") + '</span></div></div>';
+  if (r.f > m) h += '<p class="warnbox" style="margin:0">Esta receita é para a partir de ' + aPartir(r.f) + '. ' + nomeBebe().charAt(0).toUpperCase() + nomeBebe().slice(1) + ' está com ' + idadeTxt(m) + '.</p>';
+  if (r.f < 12) h += '<p class="note" style="margin:0"><b>Sem sal e sem açúcar.</b> Até 1 ano, tempere só com cebola, alho, ervas e azeite.</p>';
+  else if (r.f < 24) h += '<p class="note" style="margin:0"><b>Sem açúcar e com pouco sal.</b> Açúcar e mel só depois dos 2 anos.</p>';
+  h += '<section class="block"><h2>Ingredientes</h2><ul class="ings">' + r.i.map(function (x, k) { return '<li><label><input type="checkbox" id="ing-' + r.id + '-' + k + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul></section>';
+  h += '<section class="block"><h2>Modo de preparo</h2><ol class="steps">' + r.p.map(function (x) { return '<li><span>' + x + '</span></li>'; }).join("") + '</ol></section>';
+  if (r.d) h += '<div class="tip"><b>Dica:</b> ' + r.d + '</div>';
+  h += '</div>';
+  sheet.innerHTML = h; sheet.hidden = false; sheet.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  sheet.dataset.rec = r.id;
+}
+function closeRec() { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; render(); }
+
+/* =================== PERFIL =================== */
+var modal = document.getElementById("modal");
+function openPerfil() {
+  var opts = "";
+  for (var i = 6; i <= 72; i++) opts += '<option value="' + i + '"' + (i === perfil.meses ? " selected" : "") + '>' + idadeTxt(i) + '</option>';
+  modal.innerHTML = '<form class="card" id="perfilForm"><h2>Sobre a bebê</h2>' +
+    '<div class="field"><label for="pNome">Nome</label><input id="pNome" type="text" maxlength="30" placeholder="Ex.: Liz" value="' + esc(perfil.nome) + '"></div>' +
+    '<div class="field"><label for="pNasc">Data de nascimento</label><input id="pNasc" type="date" value="' + esc(perfil.nasc) + '"><small>Com a data, a idade e a fase mudam sozinhas a cada mês.</small></div>' +
+    '<div class="field"><label for="pMeses">Ou escolha a idade</label><select id="pMeses">' + opts + '</select></div>' +
+    '<div class="row2"><button class="btn ghost" type="button" data-cancel>Cancelar</button><button class="btn" type="submit">Salvar</button></div></form>';
+  modal.hidden = false;
+  document.getElementById("pMeses").addEventListener("change", function () { document.getElementById("pNasc").value = ""; });
+  document.getElementById("perfilForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    perfil.nome = document.getElementById("pNome").value.trim();
+    perfil.nasc = document.getElementById("pNasc").value;
+    perfil.meses = parseInt(document.getElementById("pMeses").value, 10);
+    save("perfil", perfil); ui.fase = null; ui.verMeses = null; ui.abertaF = null;
+    modal.hidden = true; render();
+  });
+}
+
+/* =================== RENDER E EVENTOS =================== */
+var tab = "inicio";
+function render() {
+  var m = idadeMeses();
+  document.getElementById("ageLabel").textContent = (perfil.nome ? perfil.nome + " · " : "") + idadeTxt(m);
+  var html = tab === "receitas" ? viewReceitas() : tab === "pode" ? viewPode() : tab === "fases" ? viewFases() : tab === "salvas" ? viewSalvas() : viewInicio();
+  app.innerHTML = '<section class="view">' + html + '</section>';
+  document.querySelectorAll(".nav button").forEach(function (b) { b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"); });
+  bindInputs(); renderInstall();
+  var ac = app.querySelector('.chip.phase[aria-pressed="true"]');
+  if (ac && ac.parentNode) ac.parentNode.scrollLeft = Math.max(0, ac.offsetLeft - ac.parentNode.offsetLeft - 60);
+}
+function go(t, keepScroll) {
+  tab = TABS.indexOf(t) >= 0 ? t : "inicio";
+  if (location.hash !== "#" + tab) { try { history.replaceState(null, "", "#" + tab); } catch (e) { location.hash = tab; } }
+  render(); if (!keepScroll) window.scrollTo(0, 0);
+}
+function bindInputs() {
+  var b = document.getElementById("busca");
+  if (b) b.addEventListener("input", function () { ui.busca = b.value; var pos = b.selectionStart; render(); var nb = document.getElementById("busca"); nb.focus(); try { nb.setSelectionRange(pos, pos); } catch (e) {} });
+  var ba = document.getElementById("buscaA");
+  if (ba) ba.addEventListener("input", function () { ui.buscaA = ba.value; var pos = ba.selectionStart; render(); var nb = document.getElementById("buscaA"); nb.focus(); try { nb.setSelectionRange(pos, pos); } catch (e) {} });
+  var vi = document.getElementById("verIdade");
+  if (vi) vi.addEventListener("change", function () { ui.verMeses = parseInt(vi.value, 10); render(); });
+}
+
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("button, [data-cancel]"); if (!t) { if (e.target === modal) modal.hidden = true; return; }
+  var d = t.dataset;
+  if (d.tab) return go(d.tab);
+  if (d.go) return go(d.go);
+  if (d.rec) return openRec(d.rec);
+  if (d.close !== undefined) return closeRec();
+  if (d.fav) {
+    var i = favs.indexOf(d.fav); if (i >= 0) favs.splice(i, 1); else favs.push(d.fav);
+    save("favs", favs); var y = sheet.scrollTop; openRec(d.fav); sheet.scrollTop = y; return;
+  }
+  if (d.fase) { ui.fase = d.fase; ui.busca = ""; return render(); }
+  if (d.tipo) { ui.tipo = d.tipo; return render(); }
+  if (d.grupo) { ui.grupo = d.grupo; return render(); }
+  if (d.food) { ui.abertoA = ui.abertoA === d.food ? null : d.food; return render(); }
+  if (d.tried) {
+    var j = provou.indexOf(d.tried); if (j >= 0) provou.splice(j, 1); else provou.push(d.tried);
+    save("provou", provou); return render();
+  }
+  if (d.fasebox) { ui.abertaF = ui.abertaF === d.fasebox ? "" : d.fasebox; return render(); }
+  if (d.verfase) { ui.fase = d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
+  if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (t.id === "ageBtn") return openPerfil();
+  if (t.id === "installBtn") return doInstall();
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") { if (!modal.hidden) modal.hidden = true; else if (!sheet.hidden) closeRec(); }
+});
+window.addEventListener("hashchange", function () { var h = location.hash.slice(1); if (h && h !== tab && TABS.indexOf(h) >= 0) go(h); });
+
+/* instalar (só no site; dentro do Claude não aparece) */
+var deferredPrompt = null;
+function renderInstall() {
+  var slot = document.getElementById("installSlot"); if (!slot) return;
+  var standalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (standalone) return;
+  if (deferredPrompt) slot.innerHTML = '<div class="install"><span>Instale o BabyLi na tela inicial</span><button id="installBtn" type="button">Instalar</button></div>';
+  else if (/iphone|ipad/i.test(navigator.userAgent) && window.__babyliSite) slot.innerHTML = '<div class="install"><span>No iPhone: Compartilhar → Adicionar à Tela de Início</span></div>';
+}
+function doInstall() { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.finally(function () { deferredPrompt = null; render(); }); }
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredPrompt = e; if (tab === "inicio") renderInstall(); });
+
+go((location.hash || "").slice(1) || "inicio", true);
+</script>
+<!--APP-END-->
+<script>
+  window.__babyliSite = true;
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+  if (typeof renderInstall === "function") renderInstall();
+</script>
+</html>
