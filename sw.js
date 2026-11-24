@@ -1,5 +1,5 @@
 // Meu Prato da Semana: funciona offline depois da primeira abertura
-var CACHE = "meu-prato-v3";
+var CACHE = "meu-prato-v4";
 var FILES = ["./", "./index.html", "./calorias.html", "./manifest.webmanifest", "./ai.js", "./vendor/anthropic-sdk.js",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png",
   "./lembretes.ics", "./lembretes-refeicoes.ics", "./lembretes-agua.ics"];

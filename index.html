@@ -269,6 +269,15 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 
 .keybox { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
 
+.wake { border-radius: 18px; padding: 14px 16px; display: grid; gap: 10px; }
+.wake.ask { background: var(--apricot-soft); border: 1px solid var(--apricot); }
+.wake.done { background: var(--leaf-soft); display: flex; gap: 10px; justify-content: space-between; align-items: center; font-size: .92rem; }
+.wrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.wrow input, .sono input { font: inherit; padding: 9px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.linkbtn { border: 0; background: none; color: var(--leaf); font-weight: 800; text-decoration: underline; padding: 4px; flex: none; }
+.sono { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sono label { display: grid; gap: 4px; font-weight: 700; font-size: .88rem; }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -310,6 +319,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   <!-- CARDÁPIO -->
   <section data-view="cardapio">
+    <div class="wake" id="wake"></div>
     <div class="days" id="days" role="group" aria-label="Dia da semana"></div>
     <div class="next" id="next"></div>
     <div>
@@ -461,7 +471,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap">
         <h3>1. No calendário do celular</h3><span class="pill">Recomendado</span>
       </div>
-      <p class="muted">Avisa <b>mesmo com o app fechado</b>. O aviso de cada refeição já mostra o que comer naquele dia. Faça isso uma vez só.</p>
+      <p class="muted">Avisa <b>mesmo com o app fechado</b>. O aviso de cada refeição já mostra o que comer naquele dia. Faça isso uma vez só. Esses lembretes usam os horários fixos (acordando às 06:30). Para horários ajustados à hora que você acordou, use os avisos do app ou o botão "Pôr os horários de hoje no calendário".</p>
       <div class="ics">
         <a class="btn" id="ics-all" href="lembretes.ics">Refeições + água</a>
         <a class="btn ghost" id="ics-meals" href="lembretes-refeicoes.ics">Só refeições</a>
@@ -480,6 +490,17 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
         <summary>Quero tirar os lembretes</summary>
         <p>No calendário, abra um dos lembretes e escolha <b>Apagar → Todos os eventos futuros</b>. Faça isso uma vez para cada horário.</p>
       </details>
+    </div>
+
+    <div class="next">
+      <h3>Meu horário</h3>
+      <p class="muted">Todo dia, ao acordar, toque em <b>Acordei agora</b> na tela do Cardápio. Os horários da água e das refeições se ajustam e você não perde nenhum copo nem refeição.</p>
+      <div class="sono">
+        <label for="s-wake">Costumo acordar às<input id="s-wake" type="time"></label>
+        <label for="s-bed">Costumo dormir às<input id="s-bed" type="time"></label>
+      </div>
+      <p class="muted" style="font-size:.88rem">Se você não informar a hora que acordou, o app usa o horário de costume. Se o dia ficar curto até a hora de dormir, os intervalos diminuem um pouco, mas a quantidade continua a mesma: 6 refeições e 11 copos de água (mais 1 a cada mamada).</p>
+      <button class="btn ghost" id="ics-today" type="button">Pôr os horários de hoje no calendário</button>
     </div>
 
     <div class="next">
@@ -700,6 +721,30 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   function dayState(idx) { return load("mp:" + key(dateFor(idx)), { meals: {}, water: 0 }); }
   function setDayState(idx, s) { save("mp:" + key(dateFor(idx)), s); }
 
+  // ---------- HORÁRIOS PELA HORA QUE ACORDOU ----------
+  // Os horários do plano foram feitos para quem acorda às 06:30. Quando ela informa a hora que acordou,
+  // tudo anda junto. Se o dia ficar curto até a hora de dormir, os intervalos encolhem um pouco,
+  // mas a quantidade de refeições e de copos de água continua a mesma.
+  var BASE_WAKE = "06:30";
+  var BASE_SLOT = SLOTS.map(function (s) { return s.time; });
+  var BASE_WATER = WATER.map(function (w) { return w.t; });
+  var wakeToday = null;
+  function m2hm(m) { m = ((Math.round(m) % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ":" + pad(m % 60); }
+  function sono() { return load("mp:sono", { wake: BASE_WAKE, bed: "22:30" }); }
+  function applyWake() {
+    var cfg = sono();
+    wakeToday = load("mp:wake:" + key(new Date()), null);
+    var wm = minutes(wakeToday || cfg.wake || BASE_WAKE), base = minutes(BASE_WAKE);
+    var bed = minutes(cfg.bed || "22:30"); if (bed <= wm) bed += 1440;
+    var span = minutes(BASE_SLOT[BASE_SLOT.length - 1]) - base; // do acordar até a ceia
+    var avail = bed - 60 - wm;
+    var f = avail < span ? Math.max(0.6, avail / span) : 1;
+    function at(t) { var off = (minutes(t) - base) * f; return m2hm(off === 0 ? wm : wm + Math.round(off / 5) * 5); }
+    SLOTS.forEach(function (s, i) { s.time = at(BASE_SLOT[i]); });
+    WATER.forEach(function (w, i) { if (/^\d\d:\d\d$/.test(BASE_WATER[i])) w.t = at(BASE_WATER[i]); });
+  }
+  applyWake();
+
   var $ = function (id) { return document.getElementById(id); };
   var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -810,9 +855,12 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   });
   $("water-add").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) + 1); });
   $("water-undo").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) - 1); });
-  $("wtimes").innerHTML = WATER.map(function (w) {
-    return '<div class="wtime"><b class="num">' + w.t + '</b><small>' + esc(w.w) + '</small></div>';
-  }).join("");
+  function renderWTimes() {
+    $("wtimes").innerHTML = WATER.map(function (w) {
+      return '<div class="wtime"><b class="num">' + w.t + '</b><small>' + esc(w.w) + '</small></div>';
+    }).join("");
+  }
+  renderWTimes();
 
   // ---------- COMPRAS ----------
   var shopState = load("mp:shop", {});
@@ -918,6 +966,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       plano_de_hoje: SLOTS.map(function (s) {
         return { refeicao: s.name, horario: s.time, kcal: d.meals[s.id].k, itens: d.meals[s.id].items, ja_comeu: !!st.meals[s.id] };
       }),
+      acordou_as: wakeToday || "não informou (usando " + (sono().wake || BASE_WAKE) + ")",
       registrado_pela_nutri_hoje: fotoLog.map(function (x) { return { hora: x.t, comida: x.n, kcal: x.k }; }),
       total_registrado_kcal: logTotal(),
       copos_de_agua: st.water || 0
@@ -1116,9 +1165,9 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     if (cfg.meals) SLOTS.forEach(function (s) {
       list.push({ id: "m-" + s.id, t: s.time, kind: "meal", title: s.name + " (" + s.time + ")", body: function () { return shortMeal(WEEK[todayIdx].meals[s.id].items); } });
     });
-    if (cfg.water) WATER.forEach(function (w) {
+    if (cfg.water) WATER.forEach(function (w, i) {
       if (!/^\d\d:\d\d$/.test(w.t)) return;
-      list.push({ id: "w-" + w.t, t: w.t, kind: "water", title: "Hora da água 💧", body: function () { return "Beba 1 copo (250 ml) · " + w.w; } });
+      list.push({ id: "w" + i, t: w.t, kind: "water", title: "Hora da água 💧", body: function () { return "Beba 1 copo (250 ml) · " + w.w; } });
     });
     return list.sort(function (a, b) { return a.t < b.t ? -1 : 1; });
   }
@@ -1210,6 +1259,15 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   // ---------- CALENDÁRIO (.ics) ----------
   window.__buildICS = function (opts) {
+    if (!opts.today) {
+      // calendário fixo: sempre nos horários padrão (acordando às 06:30)
+      SLOTS.forEach(function (x, i) { x.time = BASE_SLOT[i]; });
+      WATER.forEach(function (x, i) { x.t = BASE_WATER[i]; });
+      try { return buildICS(opts); } finally { applyWake(); }
+    }
+    return buildICS(opts);
+  };
+  function buildICS(opts) {
     function esci(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\n/g, "\\n"); }
     function fold(line) {
       var out = [], cur = "", bytes = 0;
@@ -1226,11 +1284,24 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     function ev(uid, date, time, dur, rrule, summary, desc) {
       var hm = time.replace(":", "");
       L.push("BEGIN:VEVENT", "UID:" + uid + "@meu-prato", "DTSTAMP:" + stamp,
-        "DTSTART:" + ymd(date) + "T" + hm + "00", "DURATION:" + dur, "RRULE:" + rrule,
+        "DTSTART:" + ymd(date) + "T" + hm + "00", "DURATION:" + dur);
+      if (rrule) L.push("RRULE:" + rrule);
+      L.push(
         fold("SUMMARY:" + esci(summary)), fold("DESCRIPTION:" + esci(desc)), "TRANSP:TRANSPARENT",
         "BEGIN:VALARM", "ACTION:DISPLAY", fold("DESCRIPTION:" + esci(summary)), "TRIGGER:PT0M", "END:VALARM", "END:VEVENT");
     }
     var BYDAY = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"];
+    if (opts.today) {
+      var td = new Date(), di = (td.getDay() + 6) % 7, tag = ymd(td);
+      SLOTS.forEach(function (s) {
+        var m = WEEK[di].meals[s.id];
+        ev("hoje-" + tag + "-" + s.id, td, s.time, "PT20M", null, s.name + ": " + shortMeal(m.items), m.items.map(function (x) { return "- " + x; }).join("\n") + "\n\n≈ " + m.k + " kcal");
+      });
+      WATER.forEach(function (w, i) {
+        if (!/^\d\d:\d\d$/.test(w.t)) return;
+        ev("hoje-" + tag + "-agua" + i, td, w.t, "PT5M", null, "Beber água: 1 copo (250 ml)", w.w);
+      });
+    }
     if (opts.meals) WEEK.forEach(function (d, i) {
       var date = new Date(start); date.setDate(start.getDate() + i);
       SLOTS.forEach(function (s) {
@@ -1245,7 +1316,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     });
     L.push("END:VCALENDAR");
     return L.join("\r\n") + "\r\n";
-  };
+  }
 
 
   // chave da API (app instalado)
@@ -1259,6 +1330,57 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     var rm = document.getElementById("api-remove");
     if (rm) rm.addEventListener("click", function () { window.__apiKey.clear(); location.reload(); });
   })();
+
+  // ---------- ACORDEI ----------
+  function refreshSchedule() {
+    applyWake(); renderCardapio(); renderWTimes(); renderTimes(); nStatus(); renderWake();
+  }
+  function renderWake() {
+    var box = $("wake"), cfg = sono();
+    if (selected !== todayIdx) { box.hidden = true; return; }
+    box.hidden = false;
+    if (!wakeToday) {
+      box.className = "wake ask";
+      box.innerHTML = '<div><p class="eyebrow">' + (new Date().getHours() < 12 ? "Bom dia!" : "Olá!") + '</p><h3>Que horas você acordou hoje?</h3>' +
+        '<p class="muted" style="font-size:.88rem">Assim a água e as refeições ficam no seu ritmo. Agora estão no horário de costume (' + (cfg.wake || BASE_WAKE) + ').</p></div>' +
+        '<div class="wrow"><button type="button" class="btn" id="wake-now">Acordei agora</button>' +
+        '<label for="wake-at" class="sr">Hora que acordou</label><input type="time" id="wake-at" value="' + m2hm(Math.floor((new Date().getHours() * 60 + new Date().getMinutes()) / 5) * 5) + '">' +
+        '<button type="button" class="btn ghost" id="wake-set">Salvar</button></div>';
+    } else {
+      box.className = "wake done";
+      box.innerHTML = '<p>Você acordou às <b class="num">' + wakeToday + '</b>. Horários de hoje ajustados: café ' + SLOTS[0].time + ', almoço ' + SLOTS[2].time + ', ceia ' + SLOTS[5].time + '.</p>' +
+        '<button type="button" class="linkbtn" id="wake-edit">Mudar</button>';
+    }
+  }
+  function setWake(hm) {
+    if (!/^\d\d:\d\d$/.test(hm || "")) return;
+    var d = new Date(), sentKey = "mp:sent:" + key(d), sent = load(sentKey, {}), nowM = d.getHours() * 60 + d.getMinutes();
+    save("mp:wake:" + key(d), hm);
+    applyWake();
+    // não avisar de uma vez tudo o que já passou: marca como avisado o que ficou para trás
+    reminderList().forEach(function (r) { if (nowM - minutes(r.t) > 2) sent[r.id] = true; else delete sent[r.id]; });
+    save(sentKey, sent);
+    refreshSchedule(); checkReminders();
+    toast("Horários ajustados ✓", "Próxima: " + (nextReminder() ? nextReminder().t + " · " + nextReminder().title.replace(/ \(.*\)/, "") : "amanhã"));
+  }
+  document.addEventListener("click", function (e) {
+    if (e.target.id === "wake-now") { var d = new Date(); setWake(pad(d.getHours()) + ":" + pad(d.getMinutes())); }
+    if (e.target.id === "wake-set") setWake($("wake-at").value);
+    if (e.target.id === "wake-edit") { save("mp:wake:" + key(new Date()), null); try { localStorage.removeItem("mp:wake:" + key(new Date())); } catch (x) {} refreshSchedule(); }
+  });
+  var sc = sono();
+  $("s-wake").value = sc.wake || BASE_WAKE; $("s-bed").value = sc.bed || "22:30";
+  function saveSono() { var c = sono(); c.wake = $("s-wake").value || BASE_WAKE; c.bed = $("s-bed").value || "22:30"; save("mp:sono", c); refreshSchedule(); }
+  $("s-wake").addEventListener("change", saveSono); $("s-bed").addEventListener("change", saveSono);
+  $("ics-today").addEventListener("click", function () {
+    var ics = window.__buildICS({ today: true });
+    if (inClaude) { toast("Abra pelo app instalado", "No Claude não dá para baixar arquivos."); return; }
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+    a.download = "meu-prato-hoje.ics"; document.body.appendChild(a); a.click(); a.remove();
+  });
+  var _rc = renderCardapio; renderCardapio = function () { _rc(); renderWake(); };
+  renderWake();
 
   // ---------- ABAS ----------
   var TABS = ["cardapio", "fome", "nutri", "agua", "compras", "dicas", "lembretes"];
@@ -1284,7 +1406,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   setInterval(function () {
     now = new Date(); nowMin = now.getHours() * 60 + now.getMinutes();
     var newToday = (now.getDay() + 6) % 7;
-    if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; renderWater(); }
+    if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; applyWake(); renderWater(); renderWTimes(); renderTimes(); renderWake(); }
     renderNext(); renderMeals();
   }, 60000);
 })();

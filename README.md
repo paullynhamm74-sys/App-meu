@@ -48,3 +48,7 @@ Para regerar os `.ics` depois de mudar o cardápio, rode `window.__buildICS({mea
 ## Foto direto no app instalado (chave da API)
 
 Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela API (`ai.js` + SDK oficial empacotado em `vendor/anthropic-sdk.js`, `@anthropic-ai/sdk@1.6.0`). A usuária cola a própria chave (console.anthropic.com → API Keys), que fica salva só no celular. Modelo `claude-opus-5-5`, esforço `low`, com fallback automático do servidor em caso de recusa.
+
+## Horários pela hora que acordou
+
+No Cardápio, o cartão **"Que horas você acordou hoje?"** (botão **Acordei agora** ou hora manual) move todos os horários do dia (6 refeições e 11 copos de água) a partir da hora que ela acordou, mantendo os mesmos intervalos do plano (base 06:30). Se o dia ficar curto até a hora de dormir (padrão 22:30, ajustável em Lembretes → Meu horário), os intervalos encolhem até 40%, sem perder nenhuma refeição nem copo. Os avisos do app seguem esses horários; o botão "Pôr os horários de hoje no calendário" baixa um `.ics` só do dia.
