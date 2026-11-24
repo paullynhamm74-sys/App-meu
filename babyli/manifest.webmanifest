@@ -15,6 +15,7 @@
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
+    { "name": "Cardápio da semana", "url": "./index.html#semana", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Receitas", "url": "./index.html#receitas", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Pode ou não pode", "url": "./index.html#pode", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
   ]

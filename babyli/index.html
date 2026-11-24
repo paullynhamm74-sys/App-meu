@@ -66,15 +66,17 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px 10px; }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand svg { flex: none; }
+.brand div { white-space: nowrap; }
 .brand b { font-family: var(--display); font-size: 1.35rem; font-weight: 700; color: var(--beet); letter-spacing: -0.01em; }
 .brand span { font-family: var(--display); font-weight: 500; color: var(--pumpkin); font-size: 1.35rem; }
-.agebtn { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .9rem; white-space: nowrap; }
-.agebtn svg { width: 14px; height: 14px; }
+.agebtn { min-width: 0; max-width: 55%; overflow: hidden; text-overflow: ellipsis; display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .9rem; white-space: nowrap; }
+.agebtn span { overflow: hidden; text-overflow: ellipsis; }
+.agebtn svg { flex: none;  width: 14px; height: 14px; }
 
 /* navegação */
 .nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
-.nav div { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
-.nav button { border: 0; background: none; padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .72rem; font-weight: 800; color: var(--muted); }
+.nav div { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); }
+.nav button { border: 0; background: none; padding: 8px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .7rem; font-weight: 800; color: var(--muted); }
 .nav button svg { width: 24px; height: 24px; }
 .nav button[aria-current="page"] { color: var(--beet); }
 
@@ -221,6 +223,53 @@ section.view { display: grid; gap: 20px; padding-top: 6px; }
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
 .stat b { font-family: var(--display); font-size: 1.6rem; color: var(--beet); display: block; font-variant-numeric: tabular-nums; }
+/* semana */
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day { border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px; padding: 8px 0 6px; display: grid; justify-items: center; gap: 0; font-weight: 800; font-size: .82rem; }
+.day small { font-weight: 700; font-size: .66rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.day[aria-pressed="true"] { background: var(--beet); border-color: var(--beet); color: #fff; }
+.day[aria-pressed="true"] small { color: #fff; opacity: .85; }
+.meals { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.meal { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: grid; grid-template-columns: 64px 1fr; gap: 12px; }
+.meal time { font-weight: 800; color: var(--beet); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.meal time small { display: block; font-size: .72rem; color: var(--muted); font-weight: 700; margin-top: 2px; }
+.meal .mb { min-width: 0; display: grid; gap: 4px; }
+.meal b { font-family: var(--display); font-weight: 600; font-size: 1.05rem; line-height: 1.25; }
+.meal small.m { color: var(--muted); font-size: .84rem; }
+.mact { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .84rem; }
+.pill svg { width: 15px; height: 15px; }
+.pill.main { background: var(--beet); border-color: var(--beet); color: #fff; }
+.week { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.week > div { padding: 10px 14px; border-top: 1px solid var(--line); display: grid; gap: 2px; }
+.week > div:first-child { border-top: 0; }
+.week > div.today { background: var(--beet-soft); }
+.week b { font-size: .9rem; }
+.week span { font-size: .88rem; color: var(--muted); }
+.week span i { font-style: normal; font-weight: 800; color: var(--ink); }
+details.shop { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+details.shop summary { padding: 14px; font-family: var(--display); font-weight: 600; font-size: 1.1rem; cursor: pointer; }
+details.shop .inner { padding: 0 14px 14px; display: grid; gap: 14px; }
+details.shop h3 { font-size: .95rem; color: var(--beet); margin-bottom: 4px; }
+details.shop .ings { border-radius: 14px; }
+.todaylist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.todaylist li { border-top: 1px solid var(--line); }
+.todaylist li:first-child { border-top: 0; }
+.todaylist button, .todaylist .static { width: 100%; text-align: left; border: 0; background: none; display: grid; grid-template-columns: 62px 1fr; gap: 10px; padding: 11px 14px; }
+.todaylist time { font-weight: 800; color: var(--beet); font-variant-numeric: tabular-nums; }
+.todaylist small { display: block; color: var(--muted); font-size: .78rem; }
+
+/* passo a passo */
+.cook { min-height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; }
+.cook .bar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.cook .bar i { display: block; height: 100%; background: var(--beet); border-radius: 999px; transition: width .25s; }
+.cook .stage { display: grid; align-content: center; gap: 16px; padding-block: 24px; }
+.cook .num { font-family: var(--display); font-weight: 700; color: var(--beet); font-size: 1rem; text-transform: uppercase; letter-spacing: .06em; }
+.cook .big { font-size: 1.45rem; line-height: 1.45; font-weight: 700; margin: 0; }
+.cook .nav2 { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+.cook .done { font-family: var(--display); font-size: 2rem; color: var(--beet); }
+.startcook { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.startcook svg { width: 18px; height: 18px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 @media (max-width: 360px) { .rules { grid-template-columns: 1fr; } }
 </style>
@@ -246,6 +295,9 @@ section.view { display: grid; gap: 20px; padding-top: 6px; }
     <symbol id="i-milk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v3l2 3v13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8l2-3z"/></symbol>
     <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
     <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M7 8h10M9 16h6"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   </defs>
 </svg>
@@ -263,6 +315,7 @@ section.view { display: grid; gap: 20px; padding-top: 6px; }
 <nav class="nav" aria-label="Seções">
   <div>
     <button type="button" data-tab="inicio"><svg><use href="#i-home"/></svg>Início</button>
+    <button type="button" data-tab="semana"><svg><use href="#i-cal"/></svg>Semana</button>
     <button type="button" data-tab="receitas"><svg><use href="#i-bowl"/></svg>Receitas</button>
     <button type="button" data-tab="pode"><svg><use href="#i-check"/></svg>Pode?</button>
     <button type="button" data-tab="fases"><svg><use href="#i-steps"/></svg>Fases</button>
@@ -812,13 +865,64 @@ var ALIMENTOS = [
 ["Azeitona","Doces e industrializados",12,72,"Sem caroço, picada e pouca (é salgada).",1]
 ];
 
+/* =================== CARDÁPIO DA SEMANA =================== */
+var DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+var EXCLUI_PLANO = { "Feijão amassado com caldo": 1, "Água para o bebê": 1 };
+var FRUTAS_SIMPLES = [["Banana", 6], ["Mamão", 6], ["Manga", 6], ["Pera bem madura", 6], ["Melancia sem sementes", 6], ["Abacate", 6], ["Laranja em gomos sem sementes", 6], ["Kiwi", 6], ["Morango", 6], ["Goiaba sem sementes", 6], ["Caqui", 6], ["Uvas cortadas em 4", 6], ["Abacaxi maduro", 6]];
+function slotsDe(m) {
+  if (m < 7) return [["09:30", "Lanche da manhã", "fruta"], ["11:30", "Almoço", "almoco"], ["15:00", "Lanche da tarde", "fruta"]];
+  if (m < 12) return [["09:30", "Lanche da manhã", "fruta"], ["11:30", "Almoço", "almoco"], ["15:00", "Lanche da tarde", m >= 9 ? "lanche" : "fruta"], ["18:00", "Jantar", "almoco"]];
+  var g = m >= 24;
+  return [["07:00", "Café da manhã", "cafe"], ["09:30", "Lanche da manhã", "fruta"], [g ? "12:00" : "11:30", "Almoço", "almoco"], [g ? "15:30" : "15:00", "Lanche da tarde", "lanche"], [g ? "19:00" : "18:00", "Jantar", "almoco"], ["No dia", "Bebida do dia", "bebida"]];
+}
+function poolDe(tipo, m) {
+  var fi = FASES.indexOf(faseDe(m)), minF = FASES[Math.max(0, fi - 2)].de;
+  var el = RECEITAS.filter(function (r) { return r.f <= m && !EXCLUI_PLANO[r.n]; });
+  var tipos = tipo === "lanche" ? ["lanche", "fruta"] : [tipo];
+  var livre = tipo === "cafe" || tipo === "bebida" || tipo === "sobremesa";
+  var p = el.filter(function (r) { return tipos.indexOf(r.t) >= 0 && (livre || r.f >= minF); });
+  if (p.length < 3) p = el.filter(function (r) { return tipos.indexOf(r.t) >= 0; });
+  p.sort(function (a, b) { return b.f - a.f || RECEITAS.indexOf(a) - RECEITAS.indexOf(b); });
+  if (tipo === "fruta") {
+    var fr = p.filter(function (r) { return r.t === "fruta"; }).slice(0, 4);
+    p = [];
+    var nomesR = norm(fr.map(function (r) { return r.n; }).join(" "));
+    var simples = FRUTAS_SIMPLES.filter(function (x) { return nomesR.indexOf(norm(x[0].split(" ")[0])) < 0; })
+      .map(function (x) { return { n: x[0] + (m < 9 ? " (amassar ou em tiras)" : m < 12 ? " (em pedaços macios)" : ""), simples: 1, t: "fruta" }; });
+    var si = 0; fr.forEach(function (r) { p.push(r); if (si < simples.length) p.push(simples[si++]); if (si < simples.length) p.push(simples[si++]); });
+    while (si < simples.length) p.push(simples[si++]);
+  }
+  return p;
+}
+function planoState() { var all = load("plano", {}); var id = faseDe(idadeMeses()).id; return { all: all, id: id, st: all[id] || { seed: 0, trocas: {} } }; }
+function montarSemana() {
+  var m = idadeMeses(), slots = slotsDe(m), ps = planoState(), st = ps.st, cont = {}, pools = {};
+  var semana = [];
+  for (var d = 0; d < 7; d++) {
+    var dia = [];
+    slots.forEach(function (s, si) {
+      var tipo = s[2];
+      if (tipo === "lanche" && d >= 5 && m >= 10 && poolDe("sobremesa", m).length) tipo = "sobremesa";
+      var pool = pools[tipo] || (pools[tipo] = poolDe(tipo, m));
+      if (!pool.length) return;
+      var c = cont[tipo] = (cont[tipo] == null ? 0 : cont[tipo] + 1);
+      var key = d + "-" + si, off = st.trocas[key] || 0;
+      var r = pool[(c + st.seed * 3 + off) % pool.length];
+      dia.push({ hora: s[0], nome: s[1], r: r, key: key, n: pool.length });
+    });
+    semana.push(dia);
+  }
+  return semana;
+}
+function hojeIdx() { return (new Date().getDay() + 6) % 7; }
+
 /* =================== ESTADO =================== */
 function load(k, d) { try { var v = localStorage.getItem("babyli:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
 function save(k, v) { try { localStorage.setItem("babyli:" + k, JSON.stringify(v)); } catch (e) {} }
 var perfil = load("perfil", { nome: "", meses: 10, nasc: "" });
 var favs = load("favs", []);
 var provou = load("provou", []);
-var ui = { fase: null, tipo: "todas", busca: "", grupo: "Todos", buscaA: "", verMeses: null, abertoA: null, abertaF: null };
+var ui = { dia: null, fase: null, tipo: "todas", busca: "", grupo: "Todos", buscaA: "", verMeses: null, abertoA: null, abertaF: null };
 
 function idadeMeses() {
   if (perfil.nasc) {
@@ -853,7 +957,7 @@ function status(a, m) {
 
 /* =================== VIEWS =================== */
 var app = document.getElementById("app");
-var TABS = ["inicio", "receitas", "pode", "fases", "salvas"];
+var TABS = ["inicio", "semana", "receitas", "pode", "fases", "salvas"];
 
 function ic(id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; }
 
@@ -882,6 +986,12 @@ function viewInicio() {
       fact("i-drop", "Água", f.agua) +
     '</div></section>';
   h += '<div id="installSlot"></div>';
+  var hoje = montarSemana()[hojeIdx()];
+  h += '<section class="block"><header><h2>Hoje no cardápio</h2><button class="link" type="button" data-go="semana">Semana toda</button></header><ul class="todaylist">' +
+    hoje.map(function (x) {
+      var inner = '<time>' + x.hora + '</time><span><small>' + x.nome + '</small>' + x.r.n + '</span>';
+      return '<li>' + (x.r.simples ? '<div class="static">' + inner + '</div>' : '<button type="button" data-rec="' + x.r.id + '">' + inner + '</button>') + '</li>';
+    }).join("") + '</ul>' + (m < 12 ? '<p class="muted" style="margin:0;font-size:.9rem">E leite materno em livre demanda, com água no copinho entre as refeições.</p>' : '') + '</section>';
   h += '<section class="block"><header><h2>Receitas desta fase</h2><button class="link" type="button" data-go="receitas">Ver todas</button></header>' +
     '<div class="scroller">' + desta.map(function (r) {
       return '<button class="mini" type="button" data-rec="' + r.id + '"><span class="tag ' + (r.t === "bebida" ? "ok" : "age") + '">' + TIPOS[r.t] + '</span><b>' + r.n + '</b><small class="muted">' + r.tp + '</small></button>';
@@ -905,6 +1015,38 @@ function fact(i, t, txt) { return '<div class="fact"><span class="ic">' + ic(i) 
 function rule(n, k, t, s) { return '<div class="rule"><b>' + n + '</b><span class="tag ' + k + '">' + t + '</span><small>' + s + '</small></div>'; }
 function note() {
   return '<p class="note"><b>Importante:</b> informações gerais baseadas no Guia Alimentar para Crianças Brasileiras Menores de 2 Anos (Ministério da Saúde) e nas recomendações da Sociedade Brasileira de Pediatria. Cada criança é única: confirme com o pediatra, principalmente em caso de alergia, prematuridade ou doença. Em caso de engasgo grave, ligue 192 (SAMU).</p>';
+}
+
+function viewSemana() {
+  var m = idadeMeses(), sem = montarSemana(), hj = hojeIdx();
+  if (ui.dia == null) ui.dia = hj;
+  var dia = sem[ui.dia];
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Cardápio da semana</h1><p class="lead">O que ' + nomeBebe() + ' vai comer, para ' + idadeTxt(m) + '. Toque em "Passo a passo" para cozinhar ou em "Trocar" para outra opção.</p></header>';
+  h += '<div class="days" role="group" aria-label="Dia da semana">' + DIAS.map(function (d, i) {
+    return '<button class="day" type="button" data-dia="' + i + '" aria-pressed="' + (ui.dia === i) + '">' + d.slice(0, 3) + '<small>' + (i === hj ? 'hoje' : '&nbsp;') + '</small></button>';
+  }).join("") + '</div>';
+  h += '<h2 style="font-size:1.25rem">' + DIAS[ui.dia] + (ui.dia === hj ? ' · hoje' : '') + '</h2>';
+  if (m < 12) h += '<p class="note" style="margin:0"><b>O dia todo:</b> leite materno em livre demanda e água no copinho entre as refeições. ' + (m < 24 ? 'No almoço e no jantar, sirva também feijão amassado com os grãos.' : '') + '</p>';
+  h += '<ul class="meals">' + dia.map(function (x) {
+    var r = x.r;
+    var info = r.simples ? 'Fruta lavada e cortada para a idade.' : TIPOS[r.t] + ' · ' + r.tp;
+    var acts = (r.simples ? '' : '<button class="pill main" type="button" data-rec="' + r.id + '">' + ic("i-play") + 'Passo a passo</button>') +
+      (x.n > 1 ? '<button class="pill" type="button" data-troca="' + x.key + '">' + ic("i-swap") + 'Trocar</button>' : '');
+    return '<li class="meal"><time>' + x.hora + '<small>' + x.nome + '</small></time><div class="mb"><b>' + r.n + '</b><small class="m">' + info + '</small><div class="mact">' + acts + '</div></div></li>';
+  }).join("") + '</ul>';
+  h += '<section class="block"><header><h2>Semana toda</h2><button class="link" type="button" data-novasemana>Montar outra semana</button></header><div class="week">' +
+    sem.map(function (d, i) {
+      var principais = d.filter(function (x) { return x.nome === "Almoço" || x.nome === "Jantar"; });
+      return '<div class="' + (i === hj ? 'today' : '') + '"><b>' + DIAS[i] + '</b>' + principais.map(function (x) { return '<span><i>' + x.nome + ':</i> ' + x.r.n + '</span>'; }).join("") + '</div>';
+    }).join("") + '</div></section>';
+  var vistos = {}, recs = [];
+  sem.forEach(function (d) { d.forEach(function (x) { if (!x.r.simples && !vistos[x.r.id]) { vistos[x.r.id] = 1; recs.push(x.r); } }); });
+  h += '<details class="shop"><summary>Lista de compras da semana (' + recs.length + ' receitas)</summary><div class="inner">' +
+    (m < 24 ? '<p class="muted" style="margin:0">Inclua também: feijão, arroz, frutas variadas para os lanches' + (m < 12 ? '' : ' e leite') + '.</p>' : '<p class="muted" style="margin:0">Inclua também frutas variadas para os lanches.</p>') +
+    recs.map(function (r) { return '<div><h3>' + r.n + '</h3><ul class="ings">' + r.i.map(function (x, k) { return '<li><label><input type="checkbox" id="shop-' + r.id + '-' + k + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul></div>'; }).join("") +
+    '</div></details>';
+  h += note();
+  return h;
 }
 
 function viewReceitas() {
@@ -1028,6 +1170,7 @@ function openRec(id) {
   h += '<div class="rhead"><span class="tag age" style="justify-self:start">' + TIPOS[r.t] + ' · a partir de ' + aPartir(r.f) + '</span><h1>' + r.n + '</h1>' +
     '<div class="meta"><span>' + r.tp + '</span>' + (r.r !== "—" ? '<span>Rende ' + r.r + '</span>' : '') + '<span>Textura: ' + (f.de < 12 ? f.nome : "comida da família") + '</span></div></div>';
   if (r.f > m) h += '<p class="warnbox" style="margin:0">Esta receita é para a partir de ' + aPartir(r.f) + '. ' + nomeBebe().charAt(0).toUpperCase() + nomeBebe().slice(1) + ' está com ' + idadeTxt(m) + '.</p>';
+  h += '<button class="btn startcook" type="button" data-cook="' + r.id + '">' + ic("i-play") + 'Começar passo a passo (' + r.p.length + ' passos)</button>';
   if (r.f < 12) h += '<p class="note" style="margin:0"><b>Sem sal e sem açúcar.</b> Até 1 ano, tempere só com cebola, alho, ervas e azeite.</p>';
   else if (r.f < 24) h += '<p class="note" style="margin:0"><b>Sem açúcar e com pouco sal.</b> Açúcar e mel só depois dos 2 anos.</p>';
   h += '<section class="block"><h2>Ingredientes</h2><ul class="ings">' + r.i.map(function (x, k) { return '<li><label><input type="checkbox" id="ing-' + r.id + '-' + k + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul></section>';
@@ -1038,7 +1181,33 @@ function openRec(id) {
   document.body.style.overflow = "hidden";
   sheet.dataset.rec = r.id;
 }
-function closeRec() { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; render(); }
+var wake = null;
+function cook(id, k) {
+  var r = RECEITAS.filter(function (x) { return x.id === id; })[0]; if (!r) return;
+  var total = r.p.length + 1, h = '';
+  h += '<div class="wrap cook"><div class="top"><button class="iconbtn" type="button" data-rec="' + r.id + '" aria-label="Voltar para a receita">' + ic("i-back") + '</button>' +
+    '<b style="font-family:var(--display);font-weight:600;text-align:right;min-width:0">' + r.n + '</b></div>' +
+    '<div class="bar" aria-hidden="true"><i style="width:' + Math.round(Math.min(k, total) / total * 100) + '%"></i></div><div class="stage">';
+  if (k === 0) {
+    h += '<span class="num">Antes de começar</span><p class="big">Separe os ingredientes</p><ul class="ings">' +
+      r.i.map(function (x, j) { return '<li><label><input type="checkbox" id="ck-' + r.id + '-' + j + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul>';
+  } else if (k <= r.p.length) {
+    h += '<span class="num">Passo ' + k + ' de ' + r.p.length + '</span><p class="big">' + r.p[k - 1] + '</p>';
+    if (k === r.p.length && r.d) h += '<div class="tip"><b>Dica:</b> ' + r.d + '</div>';
+  } else {
+    h += '<span class="done">Pronto!</span><p class="big">Espere amornar, confira a temperatura e bom apetite para ' + nomeBebe() + '.</p>' +
+      (r.f < 48 ? '<p class="note" style="margin:0"><b>Na hora de comer:</b> ela sentada, sem telas, e sempre com um adulto por perto.</p>' : '');
+  }
+  h += '</div><div class="nav2">' +
+    (k > 0 ? '<button class="btn ghost" type="button" data-step="' + (k - 1) + '" data-cookid="' + r.id + '">Voltar</button>' : '<span></span>') +
+    (k <= r.p.length ? '<button class="btn" type="button" data-step="' + (k + 1) + '" data-cookid="' + r.id + '">' + (k === 0 ? 'Começar' : k === r.p.length ? 'Terminei' : 'Próximo passo') + '</button>'
+      : '<button class="btn" type="button" data-rec="' + r.id + '">Voltar para a receita</button>') + '</div></div>';
+  sheet.innerHTML = h; sheet.hidden = false; sheet.scrollTop = 0; document.body.style.overflow = "hidden";
+  if (!wake && navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; w.addEventListener("release", function () { wake = null; }); }).catch(function () {});
+}
+function closeRec() {
+  if (wake) { try { wake.release(); } catch (e) {} wake = null; }
+  sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; render(); }
 
 /* =================== PERFIL =================== */
 var modal = document.getElementById("modal");
@@ -1066,8 +1235,9 @@ function openPerfil() {
 var tab = "inicio";
 function render() {
   var m = idadeMeses();
-  document.getElementById("ageLabel").textContent = (perfil.nome ? perfil.nome + " · " : "") + idadeTxt(m);
-  var html = tab === "receitas" ? viewReceitas() : tab === "pode" ? viewPode() : tab === "fases" ? viewFases() : tab === "salvas" ? viewSalvas() : viewInicio();
+  var a = Math.floor(m / 12), r = m % 12;
+  document.getElementById("ageLabel").textContent = (perfil.nome ? perfil.nome + " · " : "") + (m < 12 ? idadeTxt(m) : a + (a === 1 ? " ano" : " anos") + (r ? " " + r + "m" : ""));
+  var html = tab === "semana" ? viewSemana() : tab === "receitas" ? viewReceitas() : tab === "pode" ? viewPode() : tab === "fases" ? viewFases() : tab === "salvas" ? viewSalvas() : viewInicio();
   app.innerHTML = '<section class="view">' + html + '</section>';
   document.querySelectorAll(".nav button").forEach(function (b) { b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"); });
   bindInputs(); renderInstall();
@@ -1110,6 +1280,15 @@ document.addEventListener("click", function (e) {
   if (d.fasebox) { ui.abertaF = ui.abertaF === d.fasebox ? "" : d.fasebox; return render(); }
   if (d.verfase) { ui.fase = d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (d.cook) return cook(d.cook, 0);
+  if (d.step) return cook(d.cookid, parseInt(d.step, 10));
+  if (d.dia) { ui.dia = parseInt(d.dia, 10); return render(); }
+  if (d.troca) {
+    var ps = planoState(); ps.st.trocas[d.troca] = (ps.st.trocas[d.troca] || 0) + 1; ps.all[ps.id] = ps.st; save("plano", ps.all); return render();
+  }
+  if (d.novasemana !== undefined) {
+    var ps2 = planoState(); ps2.st = { seed: ps2.st.seed + 1, trocas: {} }; ps2.all[ps2.id] = ps2.st; save("plano", ps2.all); return render();
+  }
   if (t.id === "ageBtn") return openPerfil();
   if (t.id === "installBtn") return doInstall();
 });
