@@ -310,6 +310,34 @@ details.shop .ings { border-radius: 14px; }
 .addbtn { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .addbtn svg { width: 18px; height: 18px; }
 
+/* contador e conquistas */
+.counter { background: var(--surface); border: 1.5px solid var(--beet); border-radius: 24px; padding: 18px; display: grid; gap: 12px; }
+.counter .big { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.counter .big b { font-family: var(--display); font-weight: 700; font-size: 3rem; line-height: 1; color: var(--beet); font-variant-numeric: tabular-nums; }
+.counter .big span { font-weight: 800; }
+.counter p { margin: 0; }
+.counter .bar { height: 12px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.counter .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--pumpkin), var(--beet)); border-radius: 999px; }
+.counter .row { display: flex; justify-content: space-between; gap: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); flex-wrap: wrap; }
+.trail { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.trail::-webkit-scrollbar { display: none; }
+.trail span { flex: none; min-width: 46px; text-align: center; border-radius: 12px; padding: 6px 6px; font-size: .74rem; font-weight: 800; background: var(--bg); color: var(--muted); border: 1.5px solid var(--line); }
+.trail span.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.trail span.now { background: var(--beet); color: #fff; border-color: var(--beet); }
+.fmt { display: inline-flex; align-items: center; gap: 8px; background: var(--pumpkin-soft); color: var(--pumpkin); border-radius: 999px; padding: 6px 14px; font-family: var(--display); font-weight: 600; font-size: 1.05rem; justify-self: start; }
+.ftable { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-size: .92rem; }
+.ftable th, .ftable td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+.ftable tr:first-child > * { border-top: 0; }
+.ftable th { width: 38%; font-weight: 800; }
+.ftable td.novo { color: var(--beet); font-weight: 700; }
+.party { position: relative; min-height: 100%; display: grid; align-content: start; gap: 18px; padding-block: 24px 40px; text-align: left; }
+.party canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.party > *:not(canvas) { position: relative; z-index: 1; }
+.party .yay { font-family: var(--display); font-weight: 700; font-size: 2.6rem; line-height: 1.05; color: var(--beet); margin: 0; }
+.party .age2 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; margin: 0; }
+.party .badge { width: 120px; height: 120px; border-radius: 50%; background: var(--beet); color: #fff; display: grid; place-items: center; text-align: center; font-family: var(--display); font-weight: 700; font-size: 2.6rem; line-height: .9; box-shadow: 0 0 0 10px var(--beet-soft); }
+.party .badge small { display: block; font-size: .8rem; font-family: var(--body); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+
 /* passo a passo */
 .cook { min-height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; }
 .cook .bar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
@@ -918,6 +946,62 @@ var ALIMENTOS = [
 ["Azeitona","Doces e industrializados",12,72,"Sem caroço, picada e pouca (é salgada).",1]
 ];
 
+/* =================== COMO COMER EM CADA MÊS =================== */
+var FORMATO = {
+  m6: ["Amassado", "Amassado com garfo, sem liquidificar nem peneirar. Ou pedaços grandes e bem moles para ela segurar."],
+  m7: ["Amassado com pedacinhos", "Amassado, deixando pequenos pedaços macios. Carnes bem desfiadas ou moídas."],
+  m8: ["Desfiado e em tiras", "Amassado grosso, desfiado e tiras do tamanho de um dedo para pegar com a mão."],
+  m9: ["Picadinho", "Pedaços pequenos e macios. Já não precisa amassar tudo."],
+  m10: ["Picadinho e para pegar", "Picadinho e pedaços macios que ela pega sozinha. Comida da casa separada antes do sal."],
+  m11: ["Pedaços macios", "Pedaços maiores e macios. Ela mastiga bem com a gengiva."],
+  a1: ["Comida da família picada", "Comida da casa cortada em pedaços pequenos, com pouco sal."],
+  a15: ["Comida da família", "Pedaços normais. Ela já usa colher e garfo."],
+  a2: ["Quase tudo inteiro", "Comida da família. Uva, tomate-cereja e salsicha ainda cortados no comprimento."],
+  a3: ["Quase tudo inteiro", "Comida da família. Uva e tomate-cereja ainda cortados até os 4 anos."],
+  a4: ["Inteiro", "Uva inteira e pipoca liberadas, sempre com ela sentada."],
+  a5: ["Inteiro", "Come como a família. Castanhas inteiras com supervisão."]
+};
+var COMO_SERVIR = [
+  ["Banana", [[6, "Amassada, ou metade com a casca embaixo para segurar"], [9, "Em rodelas grossas ou tiras"], [12, "Em pedaços ou inteira para morder"]]],
+  ["Mamão, manga e melancia", [[6, "Amassados ou raspados; tiras grandes e maduras"], [9, "Picados em cubinhos macios"], [12, "Em pedaços"]]],
+  ["Maçã e pera", [[6, "Cozidas e amassadas, ou cruas só raspadas"], [9, "Cozidas em pedaços; cruas só raladas"], [24, "Cruas em fatias bem finas"], [48, "Cruas em pedaços"]]],
+  ["Uva e tomate-cereja", [[6, "Cortados em 4 no comprimento e amassados"], [9, "Cortados em 4 no comprimento"], [48, "Inteiros, com ela sentada"]]],
+  ["Cenoura, abóbora e legumes", [[6, "Cozidos e amassados"], [8, "Cozidos, em palitos do tamanho de um dedo"], [9, "Cozidos e picadinhos"], [12, "Em pedaços; cenoura crua só ralada"], [48, "Crus em palitos finos"]]],
+  ["Folhas (couve, espinafre)", [[6, "Refogadas, bem picadinhas e misturadas"], [12, "Refogadas e picadas; alface em tiras finas"]]],
+  ["Batata, mandioca e inhame", [[6, "Amassados"], [8, "Amassado grosso ou palitos macios"], [9, "Em cubinhos macios"], [12, "Em pedaços"]]],
+  ["Arroz", [[6, "Bem cozido, molinho"], [8, "Bem cozido, soltinho e úmido"], [12, "Como o da família"]]],
+  ["Feijão", [[6, "Grãos amassados com o caldo"], [9, "Grãos levemente amassados"], [12, "Grãos inteiros com caldo"]]],
+  ["Carne bovina", [[6, "Moída bem soltinha ou desfiada fininha"], [8, "Desfiada, ou tiras grandes para chupar"], [9, "Picadinha, moída ou almôndegas macias"], [12, "Em pedaços pequenos"], [24, "Em pedaços, bem cozida"]]],
+  ["Frango", [[6, "Desfiado bem fino"], [8, "Desfiado ou em tiras macias"], [9, "Picadinho"], [12, "Em pedaços pequenos"]]],
+  ["Peixe", [[6, "Desfiado, sem nenhuma espinha"], [9, "Em lascas, sem espinhas"], [12, "Em pedaços, sempre conferindo as espinhas"]]],
+  ["Ovo", [[6, "Cozido (gema e clara) e amassado"], [8, "Cozido em quartos ou omelete em tiras"], [9, "Mexido bem firme ou picado"], [12, "Como o da família, sempre bem cozido"]]],
+  ["Macarrão", [[6, "Pequeno, bem cozido e amassado"], [8, "Pequeno e bem cozido"], [10, "Parafuso ou penne macio, cortado ao meio"], [12, "Formatos normais"]]],
+  ["Pão", [[6, "Ainda não (tem sal)"], [12, "Em tiras ou pedaços"]]],
+  ["Pipoca e castanhas", [[6, "Ainda não. Castanha só triturada ou em pasta"], [48, "Pipoca pode, sentada; castanha ainda triturada"], [60, "Castanha inteira com supervisão"]]]
+];
+function servirEm(row, m) { var t = row[1][0], prev = null; row[1].forEach(function (x) { if (m >= x[0]) { prev = t; t = x; } }); return { txt: t[1], novo: t[0] === m || (t[0] > 6 && faseDe(t[0]).id === faseDe(m).id && t[0] <= m && m < 12 && t[0] === m) }; }
+var MARCOS = [6, 7, 8, 9, 10, 11, 12, 18, 24, 36, 48, 60, 72];
+function marcoAtual(m) { var r = 0; MARCOS.forEach(function (x) { if (m >= x) r = x; }); return r; }
+function marcoNome(x) { return x === 72 ? "6 anos" : aPartir(x); }
+function addMeses(d, n) { var r = new Date(d.getFullYear(), d.getMonth() + n, 1, 12); var last = new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate(); r.setDate(Math.min(d.getDate(), last)); return r; }
+function diasEntre(a, b) { return Math.round((b - a) / 864e5); }
+function nascDate() { if (!perfil.nasc) return null; var d = new Date(perfil.nasc + "T12:00:00"); return isNaN(d) ? null : d; }
+function hoje12() { var d = new Date(); d.setHours(12, 0, 0, 0); return d; }
+function contador() {
+  var n = nascDate(); if (!n) return null;
+  var h = hoje12(), m = idadeMeses(), inicio = addMeses(n, 6);
+  var prox = MARCOS.filter(function (x) { return x > m; })[0];
+  var ant = marcoAtual(m);
+  var dProx = prox ? addMeses(n, prox) : null, dAnt = addMeses(n, Math.max(ant, 0));
+  return {
+    m: m, dias: diasEntre(inicio, h) + 1, inicio: inicio, vida: diasEntre(n, h),
+    diasNoMes: diasEntre(addMeses(n, m), h), prox: prox, faltam: dProx ? diasEntre(h, dProx) : 0,
+    pct: dProx ? Math.max(0, Math.min(100, Math.round(diasEntre(dAnt, h) / Math.max(1, diasEntre(dAnt, dProx)) * 100))) : 100,
+    dataMarco: addMeses(n, ant)
+  };
+}
+function fmtData(d) { return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0") + "/" + d.getFullYear(); }
+
 /* =================== CARDÁPIO DA SEMANA =================== */
 var DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 var EXCLUI_PLANO = { "Feijão amassado com caldo": 1, "Água para o bebê": 1 };
@@ -1054,7 +1138,7 @@ function viewInicio() {
   var m = idadeMeses(), f = faseDe(m);
   var desta = RECEITAS.filter(function (r) { return faseDe(r.f).id === f.id; });
   var cuidado = ALIMENTOS.filter(function (a) { return a[5] && status(a, m).k !== "ok"; });
-  var h = '';
+  var h = cardContador();
   h += '<section class="hero" aria-labelledby="h-fase">' +
     '<div class="eyebrow">Fase ' + f.nome + '</div>' +
     '<h1 id="h-fase">' + f.titulo + ' para <em>' + nomeBebe() + '</em>, ' + idadeTxt(m) + '</h1>' +
@@ -1091,6 +1175,28 @@ function viewInicio() {
   h += note();
   return h;
 }
+function cardContador() {
+  var c = contador();
+  if (!c) return '<section class="counter"><span class="eyebrow">Contador da introdução alimentar</span><h2 style="font-size:1.3rem">Conte cada dia desde os 6 meses</h2><p class="muted">Coloque a data de nascimento de ' + nomeBebe() + ' e o app conta os dias, mostra quanto falta para o próximo mês e dá os parabéns a cada conquista.</p><button class="btn" type="button" id="ageBtn2">Colocar data de nascimento</button></section>';
+  var trilha = MARCOS.filter(function (x) { return x <= 12 || x <= (c.prox || 72); }).map(function (x) {
+    var k = x < c.m && x !== marcoAtual(c.m) ? "ok" : x === marcoAtual(c.m) ? "now" : "";
+    return '<span class="' + k + '">' + (x < 12 ? x + "m" : x === 18 ? "1a½" : (x / 12) + "a") + '</span>';
+  }).join("");
+  var h = '<section class="counter" aria-label="Contador">';
+  if (c.dias < 1) {
+    var falta = -c.dias + 1;
+    h += '<span class="eyebrow">Contagem regressiva</span><div class="big"><b>' + falta + '</b><span>' + (falta === 1 ? 'dia' : 'dias') + ' para os 6 meses</span></div><p class="muted">Em ' + fmtData(c.inicio) + ' começa a introdução alimentar de ' + nomeBebe() + '. Até lá, só leite materno.</p>';
+  } else {
+    h += '<span class="eyebrow">Introdução alimentar</span><div class="big"><b>Dia ' + c.dias + '</b><span>comendo comidinhas</span></div>' +
+      '<p class="muted">' + nomeBebe().charAt(0).toUpperCase() + nomeBebe().slice(1) + ' tem ' + idadeTxt(c.m) + (c.diasNoMes ? ' e ' + c.diasNoMes + (c.diasNoMes === 1 ? ' dia' : ' dias') : '') + '. Começou a comer em ' + fmtData(c.inicio) + '.</p>';
+    if (c.prox) h += '<div class="bar" aria-hidden="true"><i style="width:' + c.pct + '%"></i></div><div class="row"><span>' + marcoNome(marcoAtual(c.m)) + '</span><span>' + (c.faltam === 0 ? 'É hoje!' : 'Faltam ' + c.faltam + (c.faltam === 1 ? ' dia' : ' dias') + ' para ' + marcoNome(c.prox)) + '</span></div>';
+    else h += '<p><b>Completou 6 anos! Jornada concluída.</b></p>';
+  }
+  h += '<div class="trail" aria-label="Conquistas">' + trilha + '</div>';
+  if (c.dias >= 1) h += '<div class="mact"><button class="pill" type="button" data-festa="' + marcoAtual(c.m) + '">Rever os parabéns de ' + marcoNome(marcoAtual(c.m)) + '</button><button class="pill" type="button" data-go="fases">Como ela come agora</button></div>';
+  return h + '</section>';
+}
+
 function fact(i, t, txt) { return '<div class="fact"><span class="ic">' + ic(i) + '</span><div><b>' + t + '</b><p>' + txt + '</p></div></div>'; }
 function rule(n, k, t, s) { return '<div class="rule"><b>' + n + '</b><span class="tag ' + k + '">' + t + '</span><small>' + s + '</small></div>'; }
 function note() {
@@ -1223,7 +1329,18 @@ function viewPode() {
 function viewFases() {
   var m = idadeMeses(), atual = faseDe(m).id;
   if (ui.abertaF == null) ui.abertaF = atual;
-  var h = '<header class="block"><h1 style="font-size:1.6rem">Fases por idade</h1><p class="lead">Textura, quantidade, leite e água em cada etapa, de 6 meses a 6 anos.</p></header><div class="list">';
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Fases por idade</h1><p class="lead">Como servir cada alimento em cada mês, e o guia completo de cada etapa.</p></header>';
+  if (ui.comoMes == null) ui.comoMes = marcoAtual(Math.max(6, m)) || 6;
+  var cm = ui.comoMes, fm = FORMATO[faseDe(cm).id];
+  h += '<section class="block"><h2>Amassado, picado ou inteiro?</h2><div class="chips" role="group" aria-label="Mês">' + MARCOS.slice(0, 12).map(function (x) {
+    return '<button class="chip phase" type="button" data-como="' + x + '" aria-pressed="' + (cm === x) + '">' + (x < 12 ? x + "m" : x === 18 ? "1a e meio" : (x / 12) + (x === 12 ? " ano" : " anos")) + (x === marcoAtual(m) ? '<span class="dot" aria-label="agora"></span>' : '') + '</button>';
+  }).join("") + '</div>' +
+  '<span class="fmt">' + ic("i-spoon").replace('<svg', '<svg width="18" height="18"') + fm[0] + '</span><p style="margin:0">' + fm[1] + '</p>' +
+  '<table class="ftable"><tbody>' + COMO_SERVIR.map(function (row) {
+    var ci = MARCOS.indexOf(cm), ca = ci > 0 ? MARCOS[ci - 1] : 0;
+    var v = servirEm(row, cm), mudou = cm > 6 && row[1].some(function (x) { return x[0] > ca && x[0] <= cm; });
+    return '<tr><th>' + row[0] + '</th><td' + (mudou ? ' class="novo"' : '') + '>' + v.txt + (mudou ? ' <span class="tag age">novo</span>' : '') + '</td></tr>';
+  }).join("") + '</tbody></table></section><h2 style="font-size:1.25rem">Guia de cada fase</h2><div class="list">';
   FASES.forEach(function (f) {
     var open = ui.abertaF === f.id, n = RECEITAS.filter(function (r) { return faseDe(r.f).id === f.id; }).length;
     var num = f.de < 12 ? f.de : Math.floor(f.de / 12), un = f.de < 12 ? "meses" : (f.de === 18 ? "a e meio" : f.de < 24 ? "ano" : "anos");
@@ -1347,8 +1464,9 @@ function openPerfil() {
     perfil.nome = document.getElementById("pNome").value.trim();
     perfil.nasc = document.getElementById("pNasc").value;
     perfil.meses = parseInt(document.getElementById("pMeses").value, 10);
-    save("perfil", perfil); ui.fase = null; ui.verMeses = null; ui.abertaF = null;
-    modal.hidden = true; render();
+    save("perfil", perfil); ui.fase = null; ui.verMeses = null; ui.abertaF = null; ui.comoMes = null;
+    if (perfil.nasc) { var mc0 = marcoAtual(idadeMeses()); var idx0 = MARCOS.indexOf(mc0); save("celebrado", idx0 > 0 ? MARCOS[idx0 - 1] : 0); }
+    modal.hidden = true; render(); checarFesta();
   });
 }
 
@@ -1382,6 +1500,53 @@ function keepRender() {
   render();
   var tw2 = app.querySelector(".tablewrap"); if (tw2) tw2.scrollLeft = sl;
   window.scrollTo(0, y);
+}
+
+function festa(x) {
+  var n = nascDate(), m = idadeMeses(), idx = MARCOS.indexOf(x), ant = idx > 0 ? MARCOS[idx - 1] : 0;
+  var f = faseDe(x), fm = FORMATO[f.id];
+  var novas = RECEITAS.filter(function (r) { return x === 6 ? r.f === 6 : r.f > ant && r.f <= x; });
+  var alim = ALIMENTOS.filter(function (a) { return a[2] < 999 && (x === 6 ? a[2] === 6 : a[2] > ant && a[2] <= x); });
+  var c = contador();
+  var h = '<div class="wrap party"><canvas id="confete" aria-hidden="true"></canvas>' +
+    '<div class="top" style="position:static;background:none;padding:0"><span></span><button class="iconbtn" type="button" data-close aria-label="Fechar">' + ic("i-back").replace('M15 5l-7 7 7 7', 'M6 6l12 12M18 6L6 18') + '</button></div>' +
+    '<div class="badge">' + (x < 12 ? x : x === 18 ? "1½" : x / 12) + '<small>' + (x < 12 ? 'meses' : x === 12 ? 'ano' : 'anos') + '</small></div>' +
+    '<p class="yay">Parabéns' + (perfil.nome ? ', ' + esc(perfil.nome) : '') + '!</p>' +
+    '<p class="age2">' + (x === 6 ? 'Chegou a hora das primeiras comidinhas' : 'Completou ' + marcoNome(x)) + (n ? ' em ' + fmtData(addMeses(n, x)) : '') + '</p>' +
+    (c && c.dias > 1 && x > 6 ? '<p class="muted" style="margin:0">Já são ' + diasEntre(c.inicio, addMeses(n, x)) + ' dias de introdução alimentar. Que conquista!</p>' : '') +
+    '<section class="block"><h2>Como ela come agora</h2><span class="fmt">' + fm[0] + '</span><p style="margin:0">' + fm[1] + '</p>' +
+    '<table class="ftable"><tbody>' + COMO_SERVIR.map(function (row) {
+      var nv = x > 6 && row[1].some(function (y) { return y[0] > ant && y[0] <= x; });
+      return '<tr><th>' + row[0] + '</th><td' + (nv ? ' class="novo"' : '') + '>' + servirEm(row, x).txt + (nv ? ' <span class="tag age">novo</span>' : '') + '</td></tr>';
+    }).join("") + '</tbody></table></section>' +
+    '<section class="block"><h2>O que muda</h2><ul class="news">' + f.novidades.map(function (y) { return '<li>' + y + '</li>'; }).join("") + '</ul></section>' +
+    (alim.length ? '<section class="block"><h2>Novos alimentos liberados</h2><div class="chips" style="flex-wrap:wrap">' + alim.map(function (a) { return '<span class="chip">' + a[0] + '</span>'; }).join("") + '</div></section>' : '') +
+    (novas.length ? '<section class="block"><h2>' + novas.length + ' receitas novas</h2><div class="list">' + novas.map(rcard).join("") + '</div></section>' : '') +
+    '<div class="row2"><button class="btn ghost" type="button" data-close>Fechar</button><button class="btn" type="button" data-verfase="' + f.id + '" data-close2>Ver receitas</button></div></div>';
+  sheet.innerHTML = h; sheet.hidden = false; sheet.scrollTop = 0; document.body.style.overflow = "hidden";
+  confete();
+}
+function confete() {
+  var cv = document.getElementById("confete"); if (!cv) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var ctx = cv.getContext("2d"), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  var cs = getComputedStyle(document.documentElement), cores = ["--beet", "--pumpkin", "--ok", "--warn"].map(function (v) { return cs.getPropertyValue(v).trim() || "#b03a6f"; });
+  var ps = []; for (var i = 0; i < 140; i++) ps.push({ x: Math.random() * W, y: -Math.random() * H, w: 6 + Math.random() * 6, h: 8 + Math.random() * 8, vy: 2 + Math.random() * 3, vx: -1 + Math.random() * 2, r: Math.random() * 6, vr: -.1 + Math.random() * .2, c: cores[i % cores.length] });
+  var t0 = performance.now();
+  (function loop(t) {
+    if (!document.getElementById("confete")) return;
+    ctx.clearRect(0, 0, W, H);
+    var vivo = t - t0 < 4500;
+    ps.forEach(function (p) { p.y += p.vy; p.x += p.vx; p.r += p.vr; if (p.y > H && vivo) { p.y = -10; p.x = Math.random() * W; }
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); });
+    if (vivo || ps.some(function (p) { return p.y < H; })) requestAnimationFrame(loop); else ctx.clearRect(0, 0, W, H);
+  })(t0);
+}
+function checarFesta() {
+  if (!nascDate()) return;
+  var mc = marcoAtual(idadeMeses()); if (!mc) return;
+  var ja = load("celebrado", 0);
+  if (mc > ja) { save("celebrado", mc); festa(mc); }
 }
 
 /* =================== RENDER E EVENTOS =================== */
@@ -1432,8 +1597,11 @@ document.addEventListener("click", function (e) {
     save("provou", provou); return render();
   }
   if (d.fasebox) { ui.abertaF = ui.abertaF === d.fasebox ? "" : d.fasebox; return render(); }
+  if (d.verfase && !sheet.hidden) { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; }
   if (d.verfase) { ui.fase = d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (d.festa) return festa(parseInt(d.festa, 10));
+  if (d.como) { ui.comoMes = parseInt(d.como, 10); return render(); }
   if (d.modo) { ui.modoSemana = d.modo; return render(); }
   if (d.donebtn) { marcar(d.donebtn); return keepRender(); }
   if (d.anotar) return openNota(null, d.anotar);
@@ -1452,7 +1620,7 @@ document.addEventListener("click", function (e) {
   if (d.novasemana !== undefined) {
     var ps2 = planoState(); ps2.st = { seed: ps2.st.seed + 1, trocas: {} }; ps2.all[ps2.id] = ps2.st; save("plano", ps2.all); return render();
   }
-  if (t.id === "ageBtn") return openPerfil();
+  if (t.id === "ageBtn" || t.id === "ageBtn2") return openPerfil();
   if (t.id === "installBtn") return doInstall();
 });
 document.addEventListener("change", function (e) {
@@ -1477,6 +1645,8 @@ function doInstall() { if (!deferredPrompt) return; deferredPrompt.prompt(); def
 window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredPrompt = e; if (tab === "inicio") renderInstall(); });
 
 go((location.hash || "").slice(1) || "inicio", true);
+checarFesta();
+document.addEventListener("visibilitychange", function () { if (!document.hidden) { if (tab === "inicio" && sheet.hidden) render(); checarFesta(); } });
 </script>
 <!--APP-END-->
 <script>

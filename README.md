@@ -53,6 +53,8 @@ Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela AP
 
 App separado de receitas para bebês e crianças, de 6 meses a 6 anos. Abra `babyli/index.html` (no GitHub Pages: `https://paullynhamm74-sys.github.io/App-meu/babyli/`) e instale na tela inicial como o Meu Prato.
 
+- **Contador e parabéns**: com a data de nascimento, conta cada dia da introdução alimentar desde os 6 meses (ou os dias que faltam), mostra quanto falta para o próximo mês e uma trilha de conquistas (6 a 11 meses, 1 ano, 1 ano e meio, 2 a 6 anos). A cada conquista abre uma tela de parabéns com confete, como ela come agora, alimentos e receitas novas liberadas.
+- **Amassado, picado ou inteiro?** (aba Fases): escolha o mês e veja como servir 16 alimentos (banana, frutas, maçã, uva, legumes, folhas, batata, arroz, feijão, carne, frango, peixe, ovo, macarrão, pão, pipoca e castanhas), com o que mudou marcado como novo.
 - **Início**: fase atual da bebê (textura, refeições, quantidade, leite, água), o que muda agora, rotina de exemplo e regras de ouro (sal, açúcar, mel, leite de vaca, suco, ultraprocessados).
 - **Semana**: cardápio de segunda a domingo montado para a idade da bebê (lanches, almoço, jantar e, depois de 1 ano, café da manhã e bebida do dia). Cada refeição abre o passo a passo; dá para trocar uma refeição, montar outra semana e ver a lista de compras. Modo **Tabela da semana** com caixinhas para marcar cada refeição cumprida (as marcações recomeçam toda segunda-feira).
 - **Passo a passo**: dentro de cada receita, modo de cozinhar com um passo por tela, letra grande e a tela acesa.
