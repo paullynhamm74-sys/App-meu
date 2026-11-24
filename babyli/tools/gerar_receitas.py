@@ -8,7 +8,7 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 EXIST = json.load(open(os.path.join(AQUI, "existentes.json")))
 USADOS = set(r["n"].lower() for r in EXIST)
 
-FASES = [6, 7, 8, 9, 10, 11, 12, 18, 24, 36, 48, 60]
+FASES = [6, 7, 8, 9, 10, 11, 12, 24, 36, 48]  # 1 a 2, 2 a 3, 3 a 4 e 4 a 5 anos
 BEBE = [6, 7, 8, 9, 10, 11]
 ALVO = {
     6: dict(almoco=30, fruta=16, cafe=3, bebida=1),
@@ -18,11 +18,9 @@ ALVO = {
     10: dict(almoco=25, fruta=7, cafe=6, lanche=9, sobremesa=3),
     11: dict(almoco=25, fruta=6, cafe=7, lanche=9, sobremesa=3),
     12: dict(almoco=20, cafe=8, lanche=8, fruta=3, bebida=7, sobremesa=4),
-    18: dict(almoco=20, cafe=8, lanche=8, fruta=3, bebida=7, sobremesa=4),
     24: dict(almoco=20, cafe=7, lanche=9, fruta=2, bebida=6, sobremesa=6),
     36: dict(almoco=20, cafe=7, lanche=9, fruta=2, bebida=6, sobremesa=6),
     48: dict(almoco=20, cafe=7, lanche=9, fruta=2, bebida=6, sobremesa=6),
-    60: dict(almoco=20, cafe=7, lanche=9, fruta=2, bebida=6, sobremesa=6),
 }
 for f, alvo in ALVO.items():
     assert sum(alvo.values()) == 50, f
@@ -686,11 +684,11 @@ for idx, f in enumerate(BEBE):
     fill(f, "sobremesa", sg)
 
 # --- 1 ano em diante
-ANO = [12, 18, 24, 36, 48, 60]
+ANO = [12, 24, 36, 48]
 for idx, f in enumerate(ANO):
     # almoço: pratos prontos da fase, depois famílias
-    gens = [lambda d=d: R(d[0], f, "almoco", d[2], d[3], d[4], d[5], d[6]) for d in PRATOS if d[1] <= f and (fase_de(d[1]) == f)]
-    gens += [lambda d=d: R(d[0], f, "almoco", d[2], d[3], d[4], d[5], d[6]) for d in PRATOS if d[1] < f]
+    gens = [lambda d=d: R(d[0], max(d[1], f), "almoco", d[2], d[3], d[4], d[5], d[6]) for d in PRATOS if d[1] <= f and (fase_de(d[1]) == f)]
+    gens += [lambda d=d: R(d[0], max(d[1], f), "almoco", d[2], d[3], d[4], d[5], d[6]) for d in PRATOS if d[1] < f]
     rnd = random.Random(f)
     vegs_ok = [v for v in KVEG if f >= 24 or v[0] != "salada de tomate e pepino"]
     ris_ok = [r for r in RISOTOS if f >= 24 or r != "cogumelos"]
@@ -708,15 +706,15 @@ for idx, f in enumerate(ANO):
         else: gens.append(lambda p=p, v=v: macarrao_k(f, p, v))
     fill(f, "almoco", gens)
 
-    cg = [lambda d=d: R(d[0], f, "cafe", "10 min", "1 porção", d[2], d[3], d[4]) for d in CAFES_K if fase_de(d[1]) == f]
-    cg += [lambda d=d: R(d[0], f, "cafe", "10 min", "1 porção", d[2], d[3], d[4]) for d in CAFES_K if d[1] < f]
+    cg = [lambda d=d: R(d[0], max(d[1], f), "cafe", "10 min", "1 porção", d[2], d[3], d[4]) for d in CAFES_K if fase_de(d[1]) == f]
+    cg += [lambda d=d: R(d[0], max(d[1], f), "cafe", "10 min", "1 porção", d[2], d[3], d[4]) for d in CAFES_K if d[1] < f]
     for j in range(60):
         fr = FRUTAS_ANO[(j + idx * 2) % len(FRUTAS_ANO)]
         cg.append([lambda fr=fr: mingau_k(f, fr), lambda fr=fr: iogurte_k(f, fr), lambda j=j: crepioca_k(f, ["frango desfiado", "queijo e tomate", "espinafre", "ricota e orégano", "banana e canela", "atum" if f >= 48 else "ovo e cenoura"][(j + idx) % 6])][j % 3])
     fill(f, "cafe", cg)
 
-    lg = [lambda d=d: R(d[0], f, "lanche", "30 min", "porções para a família", d[2], d[3], d[4]) for d in LANCHES_K if fase_de(d[1]) == f]
-    lg += [lambda d=d: R(d[0], f, "lanche", "30 min", "porções para a família", d[2], d[3], d[4]) for d in LANCHES_K if d[1] < f]
+    lg = [lambda d=d: R(d[0], max(d[1], f), "lanche", "30 min", "porções para a família", d[2], d[3], d[4]) for d in LANCHES_K if fase_de(d[1]) == f]
+    lg += [lambda d=d: R(d[0], max(d[1], f), "lanche", "30 min", "porções para a família", d[2], d[3], d[4]) for d in LANCHES_K if d[1] < f]
     rl = random.Random(f * 3)
     opts = [("bolo", x) for x in FRUTAS_ANO] + [("bisc", x) for x in ["banana", "maçã", "pera", "manga", "mamão", "caqui", "pêssego", "goiaba"]] + [("muf", v) for v in VEGS] + \
            [("pal", (a, b)) for a in PALITOS_K for b in PASTAS] + ([("san", (r, pz)) for r in RECHEIOS for pz in ["pão integral", "pão sírio", "pão de forma"] if f >= 48 or "atum" not in r] if f >= 24 else [])
@@ -738,13 +736,13 @@ for idx, f in enumerate(ANO):
     bg = []
     for j in range(80):
         ops = [lambda j=j: vitamina(f, FRUTAS_ANO[(j + idx * 2) % 10]), lambda j=j: suco(f, SUCOS[(j + idx * 2) % len(SUCOS)]), lambda j=j: agua(f, AGUAS[(j + idx) % len(AGUAS)])]
-        if f >= 18: ops.append(lambda j=j: smoothie(f, SMOOTHIES[(j + idx) % len(SMOOTHIES)]))
+        ops.append(lambda j=j: smoothie(max(f, 18), SMOOTHIES[(j + idx) % len(SMOOTHIES)]))
         if f >= 24: ops.append(lambda j=j: limonada(f, ["morango", "melancia", "hortelã", "pera", "abacaxi"][(j + idx) % 5]))
         bg.append(ops[j % len(ops)])
     fill(f, "bebida", bg)
 
-    sg = [lambda d=d: R(d[0], f, "sobremesa", "40 min", "porções para a família", d[2], d[3], d[4]) for d in DOCES24 if fase_de(d[1]) == f]
-    sg += [lambda d=d: R(d[0], f, "sobremesa", "40 min", "porções para a família", d[2], d[3], d[4]) for d in DOCES24 if d[1] < f]
+    sg = [lambda d=d: R(d[0], max(d[1], f), "sobremesa", "40 min", "porções para a família", d[2], d[3], d[4]) for d in DOCES24 if fase_de(d[1]) == f]
+    sg += [lambda d=d: R(d[0], max(d[1], f), "sobremesa", "40 min", "porções para a família", d[2], d[3], d[4]) for d in DOCES24 if d[1] < f]
     for j in range(60):
         a, b = FRUTAS_ANO[(j + idx) % len(FRUTAS_ANO)], FRUTAS_ANO[(j * 4 + 3) % len(FRUTAS_ANO)]
         sg.append([lambda a=a, b=b: picole(f, a, b) if a != b else None, lambda a=a: nice_cream(f, a) if a != "banana" else None, lambda j=j: gelatina(f, GELATINAS[(j + idx) % 4]), lambda a=a: fruta_assada(f, ["maçã", "pera", "banana", "goiaba", "pêssego"][(j + idx) % 5])][j % 4])
@@ -764,6 +762,7 @@ for r in saida:
 total = {}
 for r in EXIST + saida:
     total[fase_de(r["f"])] = total.get(fase_de(r["f"]), 0) + 1
+assert all(v == 50 for v in total.values()), total
 print(total, len(saida))
 dest = os.path.join(AQUI, "..", "receitas.js")
 with open(dest, "w") as fh:

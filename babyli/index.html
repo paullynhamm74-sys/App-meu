@@ -1088,6 +1088,7 @@ function dataBR(iso) { var p = (iso || "").split("-"); return p.length === 3 ? p
 function hojeISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 
 /* =================== ESTADO =================== */
+function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
 function load(k, d) { try { var v = localStorage.getItem("babyli:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
 function save(k, v) { try { localStorage.setItem("babyli:" + k, JSON.stringify(v)); } catch (e) {} }
 var perfil = load("perfil", { nome: "", meses: 10, nasc: "" });
@@ -1117,8 +1118,18 @@ function idadeTxt(m) {
 function aPartir(m) { return m < 12 ? m + " meses" : (m % 12 ? idadeTxt(m) : (m / 12) + (m === 12 ? " ano" : " anos")); }
 function nomeBebe() { return perfil.nome ? esc(perfil.nome) : "sua bebê"; }
 function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
-if (typeof LIVRO !== "undefined") RECEITAS = RECEITAS.concat(LIVRO);
 RECEITAS.forEach(function (r, i) { r.id = "r" + i; });
+if (typeof LIVRO !== "undefined") { LIVRO.forEach(function (r) { r.id = "L-" + norm(r.n).replace(/[^a-z0-9]+/g, "-"); }); RECEITAS = RECEITAS.concat(LIVRO); }
+var LIVRO_FASES = [
+  { id: "m6", de: 6, curto: "6m", nome: "6 meses" }, { id: "m7", de: 7, curto: "7m", nome: "7 meses" },
+  { id: "m8", de: 8, curto: "8m", nome: "8 meses" }, { id: "m9", de: 9, curto: "9m", nome: "9 meses" },
+  { id: "m10", de: 10, curto: "10m", nome: "10 meses" }, { id: "m11", de: 11, curto: "11m", nome: "11 meses" },
+  { id: "b1", de: 12, curto: "1 a 2 anos", nome: "1 a 2 anos", titulo: "Comida da família", fmt: ["Comida da família picada", "Comida da casa em pedaços pequenos, com pouco sal. Sem açúcar e sem mel até os 2 anos."] },
+  { id: "b2", de: 24, curto: "2 a 3 anos", nome: "2 a 3 anos", titulo: "Pequena cozinheira", fmt: ["Quase tudo inteiro", "Comida da família. Uva, tomate-cereja e salsicha ainda cortados no comprimento."] },
+  { id: "b3", de: 36, curto: "3 a 4 anos", nome: "3 a 4 anos", titulo: "Autonomia", fmt: ["Quase tudo inteiro", "Comida da família. Uva e tomate-cereja ainda cortados até os 4 anos."] },
+  { id: "b4", de: 48, curto: "4 a 5 anos", nome: "4 a 5 anos", titulo: "Escola e lancheira", fmt: ["Inteiro", "Uva inteira e pipoca liberadas, sempre sentada. Castanhas inteiras só a partir dos 5 anos."] }
+];
+function faseLivro(m) { var f = LIVRO_FASES[0]; LIVRO_FASES.forEach(function (x) { if (m >= x.de) f = x; }); return f; }
 
 function status(a, m) {
   var desde = a[2], ate = a[3];
@@ -1263,10 +1274,10 @@ function viewSemana() {
 var ORDEM_TIPOS = ["almoco", "cafe", "lanche", "fruta", "bebida", "sobremesa"];
 function viewReceitas() {
   var m = idadeMeses();
-  if (!ui.fase || ui.fase === "todas") ui.fase = faseDe(m).id;
-  var faseAtual = faseDe(m).id, f = FASES.filter(function (x) { return x.id === ui.fase; })[0];
-  var daFase = RECEITAS.filter(function (r) { return faseDe(r.f).id === ui.fase; });
-  var h = '<header class="block"><h1 style="font-size:1.6rem">Livro de receitas</h1><p class="lead">' + RECEITAS.length + ' receitas com passo a passo, 50 em cada fase, de 6 meses a 5 anos. O ponto laranja marca a fase de ' + nomeBebe() + '.</p></header>';
+  if (!ui.fase || !LIVRO_FASES.some(function (x) { return x.id === ui.fase; })) ui.fase = faseLivro(m).id;
+  var faseAtual = faseLivro(m).id, f = LIVRO_FASES.filter(function (x) { return x.id === ui.fase; })[0];
+  var daFase = RECEITAS.filter(function (r) { return faseLivro(r.f).id === ui.fase; });
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Livro de receitas</h1><p class="lead">' + RECEITAS.length + ' receitas com passo a passo, 50 em cada fase: mês a mês de 6 a 11 meses, depois 1 a 2, 2 a 3, 3 a 4 e 4 a 5 anos. O ponto laranja marca a fase de ' + nomeBebe() + '.</p></header>';
   h += '<label class="search">' + ic("i-search") + '<input id="busca" type="search" placeholder="Buscar em todas as fases: receita ou ingrediente" value="' + esc(ui.busca) + '" autocomplete="off"></label>';
   if (ui.busca) {
     var q = norm(ui.busca);
@@ -1275,11 +1286,11 @@ function viewReceitas() {
     h += '<p class="muted" style="margin:0">' + achou.length + ' receita' + (achou.length === 1 ? '' : 's') + ' com "' + esc(ui.busca) + '"' + (achou.length > 60 ? ', mostrando as 60 mais perto da idade dela' : '') + '.</p>';
     return h + '<div class="list">' + (achou.length ? achou.slice(0, 60).map(rcard).join("") : '<p class="empty">Nada encontrado. Tente outro ingrediente, como "abóbora" ou "frango".</p>') + '</div>';
   }
-  h += '<div class="chips" role="group" aria-label="Fase">' + FASES.map(function (x) {
-    return '<button class="chip phase" type="button" data-fase="' + x.id + '" aria-pressed="' + (ui.fase === x.id) + '">' + x.curto.replace("5 a 6 anos", "5 anos") + (x.id === faseAtual ? '<span class="dot" aria-label="fase atual"></span>' : '') + '</button>';
+  h += '<div class="chips" role="group" aria-label="Fase">' + LIVRO_FASES.map(function (x) {
+    return '<button class="chip phase" type="button" data-fase="' + x.id + '" aria-pressed="' + (ui.fase === x.id) + '">' + x.curto + (x.id === faseAtual ? '<span class="dot" aria-label="fase atual"></span>' : '') + '</button>';
   }).join("") + '</div>';
-  var fm = FORMATO[f.id];
-  h += '<section class="bookcover"><div><span class="eyebrow">Fase ' + f.nome.replace("5 a 6 anos", "5 anos") + '</span><h2>' + f.titulo + '</h2><p>' + fm[1] + '</p></div>' +
+  var fm = f.fmt || FORMATO[f.id], titulo = f.titulo || FASES.filter(function (x) { return x.id === f.id; })[0].titulo;
+  h += '<section class="bookcover"><div><span class="eyebrow">Fase ' + f.nome + '</span><h2>' + titulo + '</h2><p>' + fm[1] + '</p></div>' +
     '<div class="bookstats"><b>' + daFase.length + '</b><small>receitas</small></div></section>';
   var cont = {}; daFase.forEach(function (r) { cont[r.t] = (cont[r.t] || 0) + 1; });
   h += '<div class="chips" role="group" aria-label="Tipo"><button class="chip" type="button" data-tipo="todas" aria-pressed="' + (ui.tipo === "todas") + '">Tudo · ' + daFase.length + '</button>' +
@@ -1294,7 +1305,6 @@ function viewReceitas() {
   });
   return h;
 }
-function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 
 function foodRow(a) {
   var m = ui.verMeses != null ? ui.verMeses : idadeMeses();
@@ -1611,7 +1621,7 @@ document.addEventListener("click", function (e) {
   }
   if (d.fasebox) { ui.abertaF = ui.abertaF === d.fasebox ? "" : d.fasebox; return render(); }
   if (d.verfase && !sheet.hidden) { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; }
-  if (d.verfase) { ui.fase = d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
+  if (d.verfase) { var fx = FASES.filter(function (x) { return x.id === d.verfase; })[0]; ui.fase = fx ? faseLivro(fx.de).id : d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
   if (d.festa) return festa(parseInt(d.festa, 10));
   if (d.como) { ui.comoMes = parseInt(d.como, 10); return render(); }
