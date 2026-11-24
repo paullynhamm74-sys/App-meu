@@ -55,7 +55,7 @@
 [hidden] { display: none !important; }
 html, body { background: var(--bg); }
 body { margin: 0; color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
-button, input, select { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--beet); outline-offset: 2px; border-radius: 8px; }
 h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.2; text-wrap: balance; margin: 0; }
@@ -259,6 +259,57 @@ details.shop .ings { border-radius: 14px; }
 .todaylist time { font-weight: 800; color: var(--beet); font-variant-numeric: tabular-nums; }
 .todaylist small { display: block; color: var(--muted); font-size: .78rem; }
 
+/* tabela e marcações */
+.progress { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; display: grid; gap: 8px; }
+.progress b { font-variant-numeric: tabular-nums; }
+.progress .bar { height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.progress .bar i { display: block; height: 100%; background: var(--ok); border-radius: 999px; transition: width .25s; }
+.modebar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+.wtable { border-collapse: separate; border-spacing: 0; min-width: 100%; font-size: .86rem; }
+.wtable th, .wtable td { border-bottom: 1px solid var(--line); padding: 9px 8px; vertical-align: top; text-align: left; }
+.wtable thead th { background: var(--bg); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.wtable thead th small { display: block; color: var(--beet); font-weight: 800; letter-spacing: 0; }
+.wtable thead th:first-child { position: sticky; left: 0; z-index: 2; }
+.wtable tbody th { position: sticky; left: 0; z-index: 1; background: var(--surface); min-width: 66px; font-weight: 800; border-right: 1px solid var(--line); }
+.wtable tbody th small { display: block; color: var(--muted); font-weight: 700; font-size: .74rem; font-variant-numeric: tabular-nums; }
+.wtable tr.today > * { background: var(--beet-soft); }
+.wtable tbody tr:last-child > * { border-bottom: 0; }
+.cell { display: flex; gap: 8px; align-items: flex-start; min-width: 140px; max-width: 170px; cursor: pointer; line-height: 1.3; }
+.cell input { width: 20px; height: 20px; accent-color: var(--ok); flex: none; margin: 0; }
+.cell input:checked + span { color: var(--muted); text-decoration: line-through; }
+.cell em { display: block; font-style: normal; color: var(--no); font-weight: 800; font-size: .74rem; }
+.meal.done b { text-decoration: line-through; color: var(--muted); }
+.pill.ok[aria-pressed="true"] { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.nalert { font-size: .82rem; font-weight: 800; color: var(--no); }
+.todaylist .ok { color: var(--ok); font-weight: 800; font-size: .78rem; }
+
+/* anotações */
+.notas { display: grid; gap: 10px; }
+.nota { border-radius: 18px; padding: 14px; display: grid; gap: 6px; }
+.nota.nao { background: var(--no-soft); }
+.nota.gostou { background: var(--ok-soft); }
+.nota.reacao { background: var(--warn-soft); }
+.nota.obs { background: var(--beet-soft); }
+.nota .tag { background: var(--surface); }
+.nota header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.nota header time { font-size: .8rem; color: var(--muted); font-weight: 700; }
+.nota b { font-family: var(--display); font-weight: 600; font-size: 1.1rem; overflow-wrap: anywhere; }
+.nota p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.nota .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.nota .pill { background: var(--surface); }
+.pill.danger { background: var(--no); border-color: var(--no); color: #fff; }
+.radios { display: flex; flex-wrap: wrap; gap: 8px; }
+.radios label { position: relative; cursor: pointer; }
+.radios input { position: absolute; opacity: 0; pointer-events: none; }
+.radios label:has(input:checked) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.radios label:has(input:focus-visible) { outline: 3px solid var(--beet); outline-offset: 2px; }
+.field textarea { border: 1.5px solid var(--line); background: var(--bg); border-radius: 12px; padding: 11px 12px; width: 100%; resize: vertical; }
+.modal .card { max-height: 92vh; overflow-y: auto; }
+.err { color: var(--no); font-weight: 700; margin: 0; }
+.addbtn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.addbtn svg { width: 18px; height: 18px; }
+
 /* passo a passo */
 .cook { min-height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; }
 .cook .bar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
@@ -298,6 +349,8 @@ details.shop .ings { border-radius: 14px; }
     <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
     <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   </defs>
 </svg>
@@ -319,7 +372,7 @@ details.shop .ings { border-radius: 14px; }
     <button type="button" data-tab="receitas"><svg><use href="#i-bowl"/></svg>Receitas</button>
     <button type="button" data-tab="pode"><svg><use href="#i-check"/></svg>Pode?</button>
     <button type="button" data-tab="fases"><svg><use href="#i-steps"/></svg>Fases</button>
-    <button type="button" data-tab="salvas"><svg><use href="#i-heart"/></svg>Salvas</button>
+    <button type="button" data-tab="notas"><svg><use href="#i-note"/></svg>Notas</button>
   </div>
 </nav>
 
@@ -915,6 +968,31 @@ function montarSemana() {
   return semana;
 }
 function hojeIdx() { return (new Date().getDay() + 6) % 7; }
+function semanaKey() { var d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - hojeIdx()); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+function doneKey(x) { return semanaKey() + "|" + x.key + "|" + x.r.n; }
+function marcar(k) {
+  var wk = semanaKey() + "|";
+  Object.keys(feito).forEach(function (o) { if (o.indexOf(wk) !== 0) delete feito[o]; });
+  if (feito[k]) delete feito[k]; else feito[k] = 1;
+  save("feito", feito);
+}
+var NOTA_TIPOS = { nao: ["Não gostou", "no"], gostou: ["Gostou", "ok"], reacao: ["Reação ou alergia", "warn"], obs: ["Observação", "age"] };
+function notasSobre(nome, tipos) {
+  var n = norm(nome);
+  return notas.filter(function (x) {
+    if (tipos && tipos.indexOf(x.tipo) < 0) return false;
+    var s = norm(x.sobre || "").trim(); if (s.length < 3) return false;
+    return n.indexOf(s) >= 0 || s.indexOf(n) >= 0;
+  });
+}
+function alertaNotas(nome) {
+  var ns = notasSobre(nome, ["nao", "reacao"]); if (!ns.length) return "";
+  var vistos = {}, partes = [];
+  ns.forEach(function (x) { var t = (x.tipo === "nao" ? "Não gostou de " : "Reação a ") + x.sobre.trim(); if (!vistos[t]) { vistos[t] = 1; partes.push(esc(t)); } });
+  return partes.join(" · ");
+}
+function dataBR(iso) { var p = (iso || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : ""; }
+function hojeISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 
 /* =================== ESTADO =================== */
 function load(k, d) { try { var v = localStorage.getItem("babyli:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
@@ -922,7 +1000,9 @@ function save(k, v) { try { localStorage.setItem("babyli:" + k, JSON.stringify(v
 var perfil = load("perfil", { nome: "", meses: 10, nasc: "" });
 var favs = load("favs", []);
 var provou = load("provou", []);
-var ui = { dia: null, fase: null, tipo: "todas", busca: "", grupo: "Todos", buscaA: "", verMeses: null, abertoA: null, abertaF: null };
+var notas = load("notas", []);
+var feito = load("feito", {});
+var ui = { modoSemana: "dia", filtroNota: "todas", apagar: null, dia: null, fase: null, tipo: "todas", busca: "", grupo: "Todos", buscaA: "", verMeses: null, abertoA: null, abertaF: null };
 
 function idadeMeses() {
   if (perfil.nasc) {
@@ -957,7 +1037,7 @@ function status(a, m) {
 
 /* =================== VIEWS =================== */
 var app = document.getElementById("app");
-var TABS = ["inicio", "semana", "receitas", "pode", "fases", "salvas"];
+var TABS = ["inicio", "semana", "receitas", "pode", "fases", "notas"];
 
 function ic(id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; }
 
@@ -989,7 +1069,7 @@ function viewInicio() {
   var hoje = montarSemana()[hojeIdx()];
   h += '<section class="block"><header><h2>Hoje no cardápio</h2><button class="link" type="button" data-go="semana">Semana toda</button></header><ul class="todaylist">' +
     hoje.map(function (x) {
-      var inner = '<time>' + x.hora + '</time><span><small>' + x.nome + '</small>' + x.r.n + '</span>';
+      var inner = '<time>' + x.hora + '</time><span><small>' + x.nome + (feito[doneKey(x)] ? ' · <span class="ok">cumprida</span>' : '') + '</small>' + x.r.n + '</span>';
       return '<li>' + (x.r.simples ? '<div class="static">' + inner + '</div>' : '<button type="button" data-rec="' + x.r.id + '">' + inner + '</button>') + '</li>';
     }).join("") + '</ul>' + (m < 12 ? '<p class="muted" style="margin:0;font-size:.9rem">E leite materno em livre demanda, com água no copinho entre as refeições.</p>' : '') + '</section>';
   h += '<section class="block"><header><h2>Receitas desta fase</h2><button class="link" type="button" data-go="receitas">Ver todas</button></header>' +
@@ -1025,20 +1105,35 @@ function viewSemana() {
   h += '<div class="days" role="group" aria-label="Dia da semana">' + DIAS.map(function (d, i) {
     return '<button class="day" type="button" data-dia="' + i + '" aria-pressed="' + (ui.dia === i) + '">' + d.slice(0, 3) + '<small>' + (i === hj ? 'hoje' : '&nbsp;') + '</small></button>';
   }).join("") + '</div>';
+  var total = 0, ok = 0;
+  sem.forEach(function (d) { d.forEach(function (x) { total++; if (feito[doneKey(x)]) ok++; }); });
+  h += '<div class="progress" id="progresso"><span><b>' + ok + ' de ' + total + '</b> refeições cumpridas nesta semana</span><div class="bar" aria-hidden="true"><i style="width:' + Math.round(ok / Math.max(1, total) * 100) + '%"></i></div></div>';
+  h += '<div class="modebar"><div class="chips" role="group" aria-label="Como ver"><button class="chip" type="button" data-modo="dia" aria-pressed="' + (ui.modoSemana === "dia") + '">Por dia</button><button class="chip" type="button" data-modo="tabela" aria-pressed="' + (ui.modoSemana === "tabela") + '">Tabela da semana</button></div><button class="link" type="button" data-novasemana>Montar outra semana</button></div>';
+  if (ui.modoSemana === "tabela") {
+    var slots = sem[0];
+    h += '<div class="tablewrap"><table class="wtable"><thead><tr><th>Dia</th>' + slots.map(function (x) { return '<th>' + x.nome + '<small>' + x.hora + '</small></th>'; }).join("") + '</tr></thead><tbody>' +
+      sem.map(function (d, i) {
+        var feitas = d.filter(function (x) { return feito[doneKey(x)]; }).length;
+        return '<tr class="' + (i === hj ? 'today' : '') + '"><th>' + DIAS[i].slice(0, 3) + (i === hj ? ' · hoje' : '') + '<small>' + feitas + '/' + d.length + '</small></th>' + d.map(function (x) {
+          var k = doneKey(x), al = alertaNotas(x.r.n);
+          return '<td><label class="cell"><input type="checkbox" data-done="' + esc(k) + '"' + (feito[k] ? ' checked' : '') + ' aria-label="' + DIAS[i] + ', ' + x.nome + ': cumprida"><span>' + x.r.n + (al ? '<em>' + al + '</em>' : '') + '</span></label></td>';
+        }).join("") + '</tr>';
+      }).join("") + '</tbody></table></div>' +
+      '<p class="muted" style="margin:0;font-size:.88rem">Marque a caixinha quando ela comer. Arraste a tabela para o lado para ver todas as refeições. As marcações recomeçam toda segunda-feira.</p>';
+  } else {
   h += '<h2 style="font-size:1.25rem">' + DIAS[ui.dia] + (ui.dia === hj ? ' · hoje' : '') + '</h2>';
   if (m < 12) h += '<p class="note" style="margin:0"><b>O dia todo:</b> leite materno em livre demanda e água no copinho entre as refeições. ' + (m < 24 ? 'No almoço e no jantar, sirva também feijão amassado com os grãos.' : '') + '</p>';
   h += '<ul class="meals">' + dia.map(function (x) {
     var r = x.r;
     var info = r.simples ? 'Fruta lavada e cortada para a idade.' : TIPOS[r.t] + ' · ' + r.tp;
-    var acts = (r.simples ? '' : '<button class="pill main" type="button" data-rec="' + r.id + '">' + ic("i-play") + 'Passo a passo</button>') +
-      (x.n > 1 ? '<button class="pill" type="button" data-troca="' + x.key + '">' + ic("i-swap") + 'Trocar</button>' : '');
-    return '<li class="meal"><time>' + x.hora + '<small>' + x.nome + '</small></time><div class="mb"><b>' + r.n + '</b><small class="m">' + info + '</small><div class="mact">' + acts + '</div></div></li>';
+    var k = doneKey(x), dn = !!feito[k], al = alertaNotas(r.n);
+    var acts = '<button class="pill ok" type="button" data-donebtn="' + esc(k) + '" aria-pressed="' + dn + '">' + ic("i-check") + (dn ? 'Cumprida' : 'Marcar cumprida') + '</button>' +
+      (r.simples ? '' : '<button class="pill main" type="button" data-rec="' + r.id + '">' + ic("i-play") + 'Passo a passo</button>') +
+      (x.n > 1 ? '<button class="pill" type="button" data-troca="' + x.key + '">' + ic("i-swap") + 'Trocar</button>' : '') +
+      '<button class="pill" type="button" data-anotar="' + esc(r.n.replace(/ \(.*\)$/, "")) + '">' + ic("i-note") + 'Anotar</button>';
+    return '<li class="meal' + (dn ? ' done' : '') + '"><time>' + x.hora + '<small>' + x.nome + '</small></time><div class="mb"><b>' + r.n + '</b><small class="m">' + info + '</small>' + (al ? '<span class="nalert">' + al + '</span>' : '') + '<div class="mact">' + acts + '</div></div></li>';
   }).join("") + '</ul>';
-  h += '<section class="block"><header><h2>Semana toda</h2><button class="link" type="button" data-novasemana>Montar outra semana</button></header><div class="week">' +
-    sem.map(function (d, i) {
-      var principais = d.filter(function (x) { return x.nome === "Almoço" || x.nome === "Jantar"; });
-      return '<div class="' + (i === hj ? 'today' : '') + '"><b>' + DIAS[i] + '</b>' + principais.map(function (x) { return '<span><i>' + x.nome + ':</i> ' + x.r.n + '</span>'; }).join("") + '</div>';
-    }).join("") + '</div></section>';
+  }
   var vistos = {}, recs = [];
   sem.forEach(function (d) { d.forEach(function (x) { if (!x.r.simples && !vistos[x.r.id]) { vistos[x.r.id] = 1; recs.push(x.r); } }); });
   h += '<details class="shop"><summary>Lista de compras da semana (' + recs.length + ' receitas)</summary><div class="inner">' +
@@ -1086,11 +1181,11 @@ function foodRow(a) {
   var m = ui.verMeses != null ? ui.verMeses : idadeMeses();
   var s = status(a, m), key = a[0], open = ui.abertoA === key, tried = provou.indexOf(key) >= 0;
   return '<div class="food"><button type="button" data-food="' + esc(key) + '" aria-expanded="' + open + '">' +
-    '<span class="fname">' + a[0] + (s.sub ? '<small>' + s.sub + '</small>' : (tried ? '<small>Já provou</small>' : '')) + '</span>' +
+    '<span class="fname">' + a[0] + (s.sub ? '<small>' + s.sub + '</small>' : (tried ? '<small>Já provou</small>' : '')) + (alertaNotas(a[0]) ? '<small class="nalert">' + alertaNotas(a[0]) + '</small>' : '') + '</span>' +
     '<span class="tag ' + s.k + '">' + s.t + '</span></button>' +
     (open ? '<div class="more"><p>' + a[4] + '</p>' + (a[5] ? '<span class="choke">Risco de engasgo</span>' : '') +
       '<p class="muted">' + (a[2] >= 999 ? 'Melhor evitar na infância.' : a[2] === 0 ? 'Desde o nascimento.' : 'A partir de ' + aPartir(a[2]) + '.') + '</p>' +
-      (a[2] < 999 ? '<button class="tried" type="button" data-tried="' + esc(key) + '" aria-pressed="' + tried + '">' + ic("i-check").replace('<svg', '<svg width="16" height="16"') + (tried ? 'Já provou' : 'Marcar como provado') + '</button>' : '') +
+      (a[2] < 999 ? '<div class="mact"><button class="tried" type="button" data-tried="' + esc(key) + '" aria-pressed="' + tried + '">' + ic("i-check").replace('<svg', '<svg width="16" height="16"') + (tried ? 'Já provou' : 'Marcar como provado') + '</button><button class="pill" type="button" data-anotar="' + esc(a[0]) + '">' + ic("i-note") + 'Anotar</button></div>' : '') +
     '</div>' : '') + '</div>';
 }
 
@@ -1149,11 +1244,34 @@ function viewFases() {
   return h + '</div>' + note();
 }
 
+function viewNotas() {
+  var h = '<header class="block"><h1 style="font-size:1.6rem">Anotações</h1><p class="lead">Anote o que ' + nomeBebe() + ' não gostou, o que amou e qualquer reação. Fica salvo neste celular.</p></header>';
+  h += '<button class="btn addbtn" type="button" data-novanota>' + ic("i-plus") + 'Nova anotação</button>';
+  var naoG = {}, listaNao = [];
+  notas.forEach(function (n) { if (n.tipo === "nao" && n.sobre) { var k = norm(n.sobre.trim()); if (!naoG[k]) { naoG[k] = 1; listaNao.push(n.sobre.trim()); } } });
+  if (listaNao.length) h += '<section class="block"><h2>Não gostou (por enquanto)</h2><div class="chips" style="flex-wrap:wrap">' + listaNao.map(function (x) { return '<span class="chip">' + esc(x) + '</span>'; }).join("") + '</div>' +
+    '<div class="tip"><b>Dica:</b> recusar faz parte. Ofereça de novo daqui a alguns dias, preparado de outro jeito (assado, em bolinho, misturado no arroz). Pode levar de 8 a 10 tentativas até ela aceitar.</div></section>';
+  if (notas.some(function (n) { return n.tipo === "reacao"; })) h += '<p class="warnbox" style="margin:0">Teve reação? Suspenda o alimento e fale com o pediatra. Se ela tiver falta de ar, inchaço no rosto ou vômitos repetidos, procure atendimento na hora.</p>';
+  var cont = { todas: notas.length }; Object.keys(NOTA_TIPOS).forEach(function (t) { cont[t] = notas.filter(function (n) { return n.tipo === t; }).length; });
+  if (notas.length) h += '<div class="chips" role="group" aria-label="Filtrar anotações"><button class="chip" type="button" data-fnota="todas" aria-pressed="' + (ui.filtroNota === "todas") + '">Todas · ' + cont.todas + '</button>' +
+    Object.keys(NOTA_TIPOS).map(function (t) { return '<button class="chip" type="button" data-fnota="' + t + '" aria-pressed="' + (ui.filtroNota === t) + '">' + NOTA_TIPOS[t][0] + ' · ' + cont[t] + '</button>'; }).join("") + '</div>';
+  var lista = notas.filter(function (n) { return ui.filtroNota === "todas" || n.tipo === ui.filtroNota; })
+    .sort(function (a, b) { return (b.data || "").localeCompare(a.data || "") || b.id - a.id; });
+  h += '<div class="notas">' + (lista.length ? lista.map(function (n) {
+    var t = NOTA_TIPOS[n.tipo] || NOTA_TIPOS.obs;
+    return '<article class="nota ' + n.tipo + '"><header><span class="tag ' + t[1] + '">' + t[0] + '</span><time>' + dataBR(n.data) + '</time></header>' +
+      (n.sobre ? '<b>' + esc(n.sobre) + '</b>' : '') + (n.texto ? '<p>' + esc(n.texto) + '</p>' : '') +
+      '<div class="acts"><button class="pill" type="button" data-editnota="' + n.id + '">' + ic("i-edit") + 'Editar</button>' +
+      (ui.apagar === n.id ? '<button class="pill danger" type="button" data-delnota="' + n.id + '">Apagar mesmo</button><button class="pill" type="button" data-naoapagar>Cancelar</button>'
+        : '<button class="pill" type="button" data-askdel="' + n.id + '">Apagar</button>') + '</div></article>';
+  }).join("") : '<p class="empty">' + (notas.length ? 'Nenhuma anotação desse tipo.' : 'Nenhuma anotação ainda. Toque em "Nova anotação" ou em "Anotar" no cardápio, numa receita ou em um alimento.') + '</p>') + '</div>';
+  return h + viewSalvas();
+}
+
 function viewSalvas() {
   var lista = RECEITAS.filter(function (r) { return favs.indexOf(r.id) >= 0; });
   var provados = ALIMENTOS.filter(function (a) { return provou.indexOf(a[0]) >= 0; });
-  var h = '<header class="block"><h1 style="font-size:1.6rem">Salvas</h1><p class="lead">As receitas favoritas e os alimentos que ' + nomeBebe() + ' já provou.</p></header>';
-  h += '<div class="stats"><div class="stat"><b>' + lista.length + '</b>receitas salvas</div><div class="stat"><b>' + provados.length + '</b>alimentos provados</div></div>';
+  var h = '<div class="stats"><div class="stat"><b>' + lista.length + '</b>receitas salvas</div><div class="stat"><b>' + provados.length + '</b>alimentos provados</div></div>';
   h += '<section class="block"><h2>Receitas favoritas</h2><div class="list">' + (lista.length ? lista.map(rcard).join("") : '<p class="empty">Toque no coração dentro de uma receita para guardar aqui.</p>') + '</div></section>';
   h += '<section class="block"><h2>Já provou</h2>' + (provados.length ? '<div class="chips" style="flex-wrap:wrap">' + provados.map(function (a) { return '<span class="chip">' + a[0] + '</span>'; }).join("") + '</div>' : '<p class="empty">Em "Pode?", abra um alimento e toque em "Marcar como provado". Ajuda a apresentar um alimento novo de cada vez e notar alergias.</p>') + '</section>';
   return h;
@@ -1170,7 +1288,10 @@ function openRec(id) {
   h += '<div class="rhead"><span class="tag age" style="justify-self:start">' + TIPOS[r.t] + ' · a partir de ' + aPartir(r.f) + '</span><h1>' + r.n + '</h1>' +
     '<div class="meta"><span>' + r.tp + '</span>' + (r.r !== "—" ? '<span>Rende ' + r.r + '</span>' : '') + '<span>Textura: ' + (f.de < 12 ? f.nome : "comida da família") + '</span></div></div>';
   if (r.f > m) h += '<p class="warnbox" style="margin:0">Esta receita é para a partir de ' + aPartir(r.f) + '. ' + nomeBebe().charAt(0).toUpperCase() + nomeBebe().slice(1) + ' está com ' + idadeTxt(m) + '.</p>';
+  var alr = alertaNotas(r.n);
+  if (alr) h += '<p class="warnbox" style="margin:0">Sua anotação: ' + alr + '. Tente oferecer de outro jeito, sem forçar.</p>';
   h += '<button class="btn startcook" type="button" data-cook="' + r.id + '">' + ic("i-play") + 'Começar passo a passo (' + r.p.length + ' passos)</button>';
+  h += '<button class="btn ghost addbtn" type="button" data-anotar="' + esc(r.n) + '">' + ic("i-note") + 'Anotar sobre esta receita</button>';
   if (r.f < 12) h += '<p class="note" style="margin:0"><b>Sem sal e sem açúcar.</b> Até 1 ano, tempere só com cebola, alho, ervas e azeite.</p>';
   else if (r.f < 24) h += '<p class="note" style="margin:0"><b>Sem açúcar e com pouco sal.</b> Açúcar e mel só depois dos 2 anos.</p>';
   h += '<section class="block"><h2>Ingredientes</h2><ul class="ings">' + r.i.map(function (x, k) { return '<li><label><input type="checkbox" id="ing-' + r.id + '-' + k + '"><span>' + x + '</span></label></li>'; }).join("") + '</ul></section>';
@@ -1231,13 +1352,45 @@ function openPerfil() {
   });
 }
 
+function openNota(id, sobre) {
+  var n = id ? notas.filter(function (x) { return x.id === id; })[0] : null;
+  var tipo = n ? n.tipo : "nao";
+  var sug = ALIMENTOS.map(function (a) { return a[0]; }).concat(RECEITAS.map(function (r) { return r.n; }));
+  modal.innerHTML = '<form class="card" id="notaForm"><h2>' + (n ? 'Editar anotação' : 'Nova anotação') + '</h2>' +
+    '<div class="field"><span style="font-weight:800;font-size:.9rem">Tipo</span><div class="radios">' + Object.keys(NOTA_TIPOS).map(function (t) {
+      return '<label class="chip"><input type="radio" name="ntipo" value="' + t + '"' + (t === tipo ? ' checked' : '') + '>' + NOTA_TIPOS[t][0] + '</label>';
+    }).join("") + '</div></div>' +
+    '<div class="field"><label for="nSobre">Alimento ou refeição</label><input id="nSobre" type="text" maxlength="60" list="nSug" placeholder="Ex.: beterraba" value="' + esc(n ? n.sobre : (sobre || "")) + '"><datalist id="nSug">' + sug.map(function (x) { return '<option value="' + esc(x) + '">'; }).join("") + '</datalist></div>' +
+    '<div class="field"><label for="nTexto">Anotação</label><textarea id="nTexto" rows="3" maxlength="500" placeholder="Ex.: fez careta e cuspiu. Tentar assada na próxima vez.">' + esc(n ? n.texto : "") + '</textarea></div>' +
+    '<div class="field"><label for="nData">Data</label><input id="nData" type="date" value="' + esc(n ? n.data : hojeISO()) + '"></div>' +
+    '<p class="err" id="nErr" hidden>Escreva o alimento ou a anotação.</p>' +
+    '<div class="row2"><button class="btn ghost" type="button" data-cancel>Cancelar</button><button class="btn" type="submit">Salvar</button></div></form>';
+  modal.hidden = false;
+  document.getElementById("notaForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var sb = document.getElementById("nSobre").value.trim(), tx = document.getElementById("nTexto").value.trim();
+    if (!sb && !tx) { document.getElementById("nErr").hidden = false; return; }
+    var tp = (document.querySelector('input[name="ntipo"]:checked') || {}).value || "obs";
+    var dt = document.getElementById("nData").value || hojeISO();
+    if (n) { n.tipo = tp; n.sobre = sb; n.texto = tx; n.data = dt; }
+    else notas.push({ id: Date.now(), tipo: tp, sobre: sb, texto: tx, data: dt });
+    save("notas", notas); modal.hidden = true; keepRender();
+  });
+}
+function keepRender() {
+  var tw = app.querySelector(".tablewrap"), sl = tw ? tw.scrollLeft : 0, y = window.scrollY;
+  render();
+  var tw2 = app.querySelector(".tablewrap"); if (tw2) tw2.scrollLeft = sl;
+  window.scrollTo(0, y);
+}
+
 /* =================== RENDER E EVENTOS =================== */
 var tab = "inicio";
 function render() {
   var m = idadeMeses();
   var a = Math.floor(m / 12), r = m % 12;
   document.getElementById("ageLabel").textContent = (perfil.nome ? perfil.nome + " · " : "") + (m < 12 ? idadeTxt(m) : a + (a === 1 ? " ano" : " anos") + (r ? " " + r + "m" : ""));
-  var html = tab === "semana" ? viewSemana() : tab === "receitas" ? viewReceitas() : tab === "pode" ? viewPode() : tab === "fases" ? viewFases() : tab === "salvas" ? viewSalvas() : viewInicio();
+  var html = tab === "semana" ? viewSemana() : tab === "receitas" ? viewReceitas() : tab === "pode" ? viewPode() : tab === "fases" ? viewFases() : tab === "notas" ? viewNotas() : viewInicio();
   app.innerHTML = '<section class="view">' + html + '</section>';
   document.querySelectorAll(".nav button").forEach(function (b) { b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"); });
   bindInputs(); renderInstall();
@@ -1245,6 +1398,7 @@ function render() {
   if (ac && ac.parentNode) ac.parentNode.scrollLeft = Math.max(0, ac.offsetLeft - ac.parentNode.offsetLeft - 60);
 }
 function go(t, keepScroll) {
+  if (t === "salvas") t = "notas";
   tab = TABS.indexOf(t) >= 0 ? t : "inicio";
   if (location.hash !== "#" + tab) { try { history.replaceState(null, "", "#" + tab); } catch (e) { location.hash = tab; } }
   render(); if (!keepScroll) window.scrollTo(0, 0);
@@ -1280,6 +1434,15 @@ document.addEventListener("click", function (e) {
   if (d.fasebox) { ui.abertaF = ui.abertaF === d.fasebox ? "" : d.fasebox; return render(); }
   if (d.verfase) { ui.fase = d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (d.modo) { ui.modoSemana = d.modo; return render(); }
+  if (d.donebtn) { marcar(d.donebtn); return keepRender(); }
+  if (d.anotar) return openNota(null, d.anotar);
+  if (d.novanota !== undefined) return openNota(null, "");
+  if (d.editnota) return openNota(parseInt(d.editnota, 10));
+  if (d.fnota) { ui.filtroNota = d.fnota; return render(); }
+  if (d.askdel) { ui.apagar = parseInt(d.askdel, 10); return keepRender(); }
+  if (d.naoapagar !== undefined) { ui.apagar = null; return keepRender(); }
+  if (d.delnota) { var di = parseInt(d.delnota, 10); notas = notas.filter(function (x) { return x.id !== di; }); save("notas", notas); ui.apagar = null; return keepRender(); }
   if (d.cook) return cook(d.cook, 0);
   if (d.step) return cook(d.cookid, parseInt(d.step, 10));
   if (d.dia) { ui.dia = parseInt(d.dia, 10); return render(); }
@@ -1292,10 +1455,14 @@ document.addEventListener("click", function (e) {
   if (t.id === "ageBtn") return openPerfil();
   if (t.id === "installBtn") return doInstall();
 });
+document.addEventListener("change", function (e) {
+  var k = e.target.dataset && e.target.dataset.done;
+  if (k) { marcar(k); keepRender(); }
+});
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape") { if (!modal.hidden) modal.hidden = true; else if (!sheet.hidden) closeRec(); }
 });
-window.addEventListener("hashchange", function () { var h = location.hash.slice(1); if (h && h !== tab && TABS.indexOf(h) >= 0) go(h); });
+window.addEventListener("hashchange", function () { var h = location.hash.slice(1); if (h === "salvas") h = "notas"; if (h && h !== tab && TABS.indexOf(h) >= 0) go(h); });
 
 /* instalar (só no site; dentro do Claude não aparece) */
 var deferredPrompt = null;

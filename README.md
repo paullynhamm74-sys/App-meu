@@ -54,11 +54,11 @@ Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela AP
 App separado de receitas para bebês e crianças, de 6 meses a 6 anos. Abra `babyli/index.html` (no GitHub Pages: `https://paullynhamm74-sys.github.io/App-meu/babyli/`) e instale na tela inicial como o Meu Prato.
 
 - **Início**: fase atual da bebê (textura, refeições, quantidade, leite, água), o que muda agora, rotina de exemplo e regras de ouro (sal, açúcar, mel, leite de vaca, suco, ultraprocessados).
-- **Semana**: cardápio de segunda a domingo montado para a idade da bebê (lanches, almoço, jantar e, depois de 1 ano, café da manhã e bebida do dia). Cada refeição abre o passo a passo; dá para trocar uma refeição, montar outra semana e ver a lista de compras.
+- **Semana**: cardápio de segunda a domingo montado para a idade da bebê (lanches, almoço, jantar e, depois de 1 ano, café da manhã e bebida do dia). Cada refeição abre o passo a passo; dá para trocar uma refeição, montar outra semana e ver a lista de compras. Modo **Tabela da semana** com caixinhas para marcar cada refeição cumprida (as marcações recomeçam toda segunda-feira).
 - **Passo a passo**: dentro de cada receita, modo de cozinhar com um passo por tela, letra grande e a tela acesa.
 - **Receitas**: 80 receitas com ingredientes e modo de preparo, separadas por idade (6, 7, 8, 9, 10 e 11 meses, 1 ano, 1 ano e meio, 2, 3, 4 e 5 a 6 anos) e por tipo: almoço e jantar, café da manhã, lanche, fruta, bebida e sobremesa. Busca por ingrediente e favoritas.
 - **Pode?**: 89 alimentos e bebidas com semáforo para a idade escolhida (Pode / Com cuidado / Ainda não ou evitar), como oferecer, aviso de risco de engasgo e "já provou".
 - **Fases**: guia completo de cada fase.
-- **Salvas**: receitas favoritas e alimentos já provados.
+- **Notas**: blocos de anotações (Não gostou, Gostou, Reação ou alergia, Observação) com data, para editar e apagar. O que ela não gostou aparece como aviso no cardápio, nas receitas e no Pode?. Também guarda as receitas favoritas e os alimentos já provados.
 
 Nome e data de nascimento ficam salvos só no aparelho; com a data, a fase muda sozinha a cada mês. Baseado no Guia Alimentar para Crianças Brasileiras Menores de 2 Anos (Ministério da Saúde) e na SBP. Confirme sempre com o pediatra.
