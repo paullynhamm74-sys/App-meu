@@ -326,6 +326,11 @@ details.shop .ings { border-radius: 14px; }
 .addbtn { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .addbtn svg { width: 18px; height: 18px; }
 
+.gpt { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 0 14px; }
+.gpt summary { padding: 12px 0; font-weight: 800; cursor: pointer; }
+.gpt[open] { padding-bottom: 14px; display: grid; gap: 10px; }
+.gpt ol { margin: 0; padding-left: 20px; font-size: .92rem; }
+.gpt textarea { width: 100%; border: 1.5px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 12px; font-size: .86rem; resize: vertical; }
 /* livro */
 .bookcover { background: var(--pumpkin-soft); border-radius: 22px; padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
 .bookcover h2 { font-size: 1.3rem; margin-top: 2px; }
@@ -1170,6 +1175,15 @@ function cortesHTML(lista, m, ant) {
   }).join("") + '</div>';
 }
 
+function promptGPT(r) {
+  var fx = faseDe(r.f), forma = r.f < 12 ? FORMATO[fx.id][0].toLowerCase() + " (" + FORMATO[fx.id][1] + ")" : "comida da família em pedaços pequenos";
+  var vaso = { almoco: "pratinho infantil", cafe: "pratinho ou tigela infantil", lanche: "pratinho infantil", fruta: "tigelinha infantil", bebida: "copo infantil transparente", sobremesa: "potinho infantil" }[r.t];
+  return "Crie uma foto realista, vista de cima, de uma receita para criança de " + aPartir(r.f) + ": " + r.n + ". " +
+    "Ingredientes: " + r.i.join(", ") + ". " +
+    (r.t === "bebida" ? "Mostre a bebida pronta, " : "Mostre o alimento pronto, com a textura: " + forma + ", ") +
+    "servido em " + vaso + " colorido, sobre mesa clara, luz natural suave, estilo foto de livro de receitas. Sem pessoas, sem mãos e sem texto na imagem. Formato quadrado.";
+}
+
 function rcard(r) {
   var m = idadeMeses(), fav = favs.indexOf(r.id) >= 0;
   var idadeTag = r.f > m ? '<span class="tag no">a partir de ' + aPartir(r.f) + '</span>' : '<span class="tag age">' + aPartir(r.f) + '+</span>';
@@ -1453,7 +1467,9 @@ function openRec(id) {
   var temFoto = !!fotoDe(r.id);
   h += '<figure class="recimg">' + imgReceita(r) + '</figure><div class="imgbar"><span>' + (temFoto ? 'Sua foto' : 'Ilustração do prato, na textura de ' + (r.f < 12 ? aPartir(r.f) : 'comida da família')) + '</span><span class="mact" style="margin:0">' +
     '<label class="pill" for="fotoIn">' + ic("i-plus") + (temFoto ? 'Trocar foto' : 'Usar minha foto') + '</label>' + (temFoto ? '<button class="pill" type="button" data-semfoto="' + r.id + '">Tirar foto</button>' : '') +
-    '<input type="file" id="fotoIn" accept="image/*" hidden data-fotoid="' + r.id + '"></span></div>' + (ui.fotoErr ? '<p class="warnbox" style="margin:0">' + ui.fotoErr + '</p>' : '');
+    '<input type="file" id="fotoIn" accept="image/*" hidden data-fotoid="' + r.id + '"></span></div>' +
+    '<details class="gpt"><summary>Criar a imagem no ChatGPT</summary><ol><li>Toque em <b>Copiar pedido</b>.</li><li>Abra o ChatGPT, cole e envie.</li><li>Salve a imagem no celular e volte aqui em <b>Usar minha foto</b>.</li></ol>' +
+    '<textarea id="gptTxt" rows="5" readonly>' + esc(promptGPT(r)) + '</textarea><button class="btn" type="button" data-copiargpt>Copiar pedido</button><p class="muted" id="gptOk" style="margin:0" aria-live="polite"></p></details>' + (ui.fotoErr ? '<p class="warnbox" style="margin:0">' + ui.fotoErr + '</p>' : '');
   ui.fotoErr = "";
   h += '<div class="rhead"><span class="tag age" style="justify-self:start">' + TIPOS[r.t] + ' · a partir de ' + aPartir(r.f) + '</span><h1>' + r.n + '</h1>' +
     '<div class="meta"><span>' + r.tp + '</span>' + (r.r !== "—" ? '<span>Rende ' + r.r + '</span>' : '') + '<span>Textura: ' + (f.de < 12 ? f.nome : "comida da família") + '</span></div></div>';
@@ -1658,6 +1674,13 @@ document.addEventListener("click", function (e) {
   if (d.verfase && !sheet.hidden) { sheet.hidden = true; sheet.innerHTML = ""; document.body.style.overflow = ""; }
   if (d.verfase) { var fx = FASES.filter(function (x) { return x.id === d.verfase; })[0]; ui.fase = fx ? faseLivro(fx.de).id : d.verfase; ui.tipo = "todas"; ui.busca = ""; return go("receitas"); }
   if (d.cancel !== undefined) { modal.hidden = true; return; }
+  if (d.copiargpt !== undefined) {
+    var ta = document.getElementById("gptTxt"), ok = document.getElementById("gptOk");
+    var feito = function () { ok.textContent = "Copiado. Agora cole no ChatGPT."; };
+    var manual = function () { ta.focus(); ta.select(); ok.textContent = "Texto selecionado: toque e segure para copiar."; };
+    try { navigator.clipboard.writeText(ta.value).then(feito, manual); } catch (er) { manual(); }
+    return;
+  }
   if (d.semfoto) { try { localStorage.removeItem("babyli:foto:" + d.semfoto); } catch (e) {} var y0 = sheet.scrollTop; openRec(d.semfoto); sheet.scrollTop = y0; render(); return; }
   if (d.festa) return festa(parseInt(d.festa, 10));
   if (d.como) { ui.comoMes = parseInt(d.como, 10); return render(); }
