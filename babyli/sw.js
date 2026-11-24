@@ -1,5 +1,5 @@
 // BabyLi Papinha: funciona offline depois da primeira abertura
-var CACHE = "babyli-v8";
+var CACHE = "babyli-v9";
 var FILES = ["./", "./index.html", "./manifest.webmanifest", "./receitas.js", "./ilustra.js",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png"];
 self.addEventListener("install", function (e) {
