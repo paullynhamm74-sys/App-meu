@@ -52,3 +52,7 @@ Fora do Claude, a Nutri e o Pode ou Não Pode podem usar o Claude direto pela AP
 ## Horários pela hora que acordou
 
 No Cardápio, o cartão **"Que horas você acordou hoje?"** (botão **Acordei agora** ou hora manual) move todos os horários do dia (6 refeições e 11 copos de água) a partir da hora que ela acordou, mantendo os mesmos intervalos do plano (base 06:30). Se o dia ficar curto até a hora de dormir (padrão 22:30, ajustável em Lembretes → Meu horário), os intervalos encolhem até 40%, sem perder nenhuma refeição nem copo. Os avisos do app seguem esses horários; o botão "Pôr os horários de hoje no calendário" baixa um `.ics` só do dia.
+
+## Organização das telas
+
+Barra de baixo com 5 abas: **Hoje** (acordei, próxima refeição, progresso do dia em anéis, +1 copo e atalhos), **Cardápio** (semana), **Foto** (Nutri, botão central), **Água** e **Mais** (Lanches de fome, Compras e preparo, Meu plano e peso, Lembretes, Dicas — cada uma com "Voltar"). Endereços diretos: `#hoje`, `#cardapio`, `#nutri`, `#agua`, `#mais`, `#fome`, `#compras`, `#plano`, `#dicas`, `#lembretes`.

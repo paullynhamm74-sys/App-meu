@@ -37,6 +37,8 @@
   --high-soft: #f8e1dc;
   --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --r: 18px;
+  --shadow: 0 6px 20px -14px rgba(30, 60, 40, .35);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -60,7 +62,7 @@ body {
   max-width: 640px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 20px 110px;
+  padding-block: 20px 120px;
   display: grid; gap: 20px;
 }
 h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.15; }
@@ -75,7 +77,54 @@ button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); outline-offset: 2px; }
 
 /* header */
-.top { display: grid; gap: 12px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.head { display: grid; gap: 2px; }
+.card, .next { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+.btn, .qbtn, .lrow, .back, .day, .check, .bell { min-height: 44px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.big-btn { padding: 14px 22px; font-size: 1.05rem; }
+.btn.wbtn { background: var(--water); color: var(--surface); }
+
+/* progresso do dia */
+.prog { padding: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
+.ring { --c: var(--leaf); --t: var(--leaf-soft); width: 88px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--c) calc(var(--p) * 360deg), var(--t) 0); }
+.ring > div { width: 74%; aspect-ratio: 1; border-radius: 50%; background: var(--surface); display: grid; place-content: center; text-align: center; line-height: 1.05; }
+.ring b { font-family: var(--display); font-size: 1.15rem; }
+.ring small { font-size: .68rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.ring.water { --c: var(--water); --t: var(--water-soft); }
+.ring.kcal { --c: var(--apricot); --t: var(--apricot-soft); }
+.prog-note { grid-column: 1 / -1; text-align: center; font-size: .9rem; }
+.btn.water-btn { grid-column: 1 / -1; width: 100%; background: var(--water); color: var(--surface); padding: 14px; font-size: 1.02rem; }
+
+/* atalhos */
+.quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qbtn { border: 0; border-radius: var(--r); padding: 16px 14px; display: grid; gap: 2px; text-align: left; text-decoration: none; align-content: start; min-height: 104px; }
+.qbtn svg { width: 28px; height: 28px; margin-bottom: 6px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.qbtn b { font-family: var(--display); font-size: 1.02rem; line-height: 1.15; }
+.qbtn span { font-size: .8rem; opacity: .85; }
+.qbtn.warm { background: var(--apricot); color: var(--surface); }
+.qbtn.leaf { background: var(--leaf); color: var(--bg); }
+.qbtn.soft { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.qbtn.soft svg { color: var(--leaf); }
+
+/* lista do Mais */
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.lrow { width: 100%; border: 0; background: none; display: flex; gap: 14px; align-items: center; padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+.lrow:last-child { border-bottom: 0; }
+.li { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.li svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.li.warm { background: var(--apricot-soft); color: var(--apricot); }
+.li.leaf { background: var(--leaf-soft); color: var(--leaf); }
+.li.water { background: var(--water-soft); color: var(--water); }
+.li.soft { background: var(--bg); color: var(--muted); }
+.lt { flex: 1; min-width: 0; display: grid; }
+.lt b { font-weight: 800; }
+.lt small { color: var(--muted); font-size: .85rem; }
+.chev { color: var(--muted); font-size: 1.5rem; line-height: 1; }
+.back { justify-self: start; display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; color: var(--leaf); font-weight: 800; padding: 0 8px 0 0; margin-bottom: -6px; }
+.back svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .stats { display: flex; flex-wrap: wrap; gap: 8px; }
 .pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -88,7 +137,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); o
 /* day chips */
 .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
 .day {
-  border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+  border: 1px solid var(--line); background: var(--surface); border-radius: 14px;
   padding: 8px 0; display: grid; justify-items: center; gap: 0; font-weight: 800; font-size: .85rem;
 }
 .day small { font-weight: 600; font-size: .7rem; color: var(--muted); }
@@ -97,11 +146,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); o
 .day.today:not([aria-pressed="true"]) { border-color: var(--leaf); }
 
 /* next meal */
-.next {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
-  padding: 18px; display: grid; gap: 10px;
-  box-shadow: 0 6px 20px -12px rgba(30, 60, 40, .35);
-}
+.next { padding: 18px; display: grid; gap: 10px; }
 .next .when { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .next .time { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--leaf); }
 
@@ -118,7 +163,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); o
 .meal.is-next .t::after { content: "agora"; display: block; font-family: var(--body); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; color: var(--apricot); }
 
 .check {
-  width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface);
+  width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface);
   display: grid; place-items: center; flex: none;
 }
 .check svg { width: 18px; height: 18px; opacity: 0; }
@@ -126,7 +171,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--apricot); o
 .check[aria-pressed="true"] svg { opacity: 1; stroke: var(--bg); }
 
 .btn {
-  border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 800;
+  border: 0; border-radius: 14px; padding: 12px 18px; font-weight: 800;
   background: var(--leaf); color: var(--bg);
 }
 .btn.ghost { background: var(--leaf-soft); color: var(--leaf); }
@@ -229,7 +274,7 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .msg.me .muted { color: var(--bg); opacity: .8; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { border: 1px solid var(--apricot); background: var(--apricot-soft); color: var(--ink); border-radius: 999px; padding: 7px 12px; font-size: .85rem; font-weight: 700; }
-.composer { position: sticky; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 8px; display: grid; gap: 8px; box-shadow: 0 8px 24px -14px rgba(30, 60, 40, .45); }
+.composer { position: sticky; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 8px; display: grid; gap: 8px; box-shadow: 0 8px 24px -14px rgba(30, 60, 40, .45); }
 .crow { display: flex; align-items: flex-end; gap: 4px; }
 .crow textarea { flex: 1; min-width: 0; resize: none; font: inherit; border: 0; background: transparent; color: var(--ink); padding: 9px 6px; max-height: 140px; }
 .crow textarea:focus-visible { outline: none; }
@@ -251,8 +296,8 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .shortcut span { font-size: .88rem; color: var(--muted); }
 
 /* lembretes */
-.bell { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--leaf); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .82rem; }
-.bell svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bell { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface); color: var(--leaf); border-radius: 50%; padding: 0; }
+.bell svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ics a { text-decoration: none; text-align: center; }
 .ics a:first-child { grid-column: 1 / -1; }
@@ -269,10 +314,12 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 
 .keybox { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
 
-.wake { border-radius: 18px; padding: 14px 16px; display: grid; gap: 10px; }
+.wake { border-radius: var(--r); padding: 14px 16px; display: grid; gap: 10px; }
 .wake.ask { background: var(--apricot-soft); border: 1px solid var(--apricot); }
 .wake.done { background: var(--leaf-soft); display: flex; gap: 10px; justify-content: space-between; align-items: center; font-size: .92rem; }
-.wrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.wrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.wrow #wake-now { grid-column: 1 / -1; padding: 14px; font-size: 1.02rem; }
+.wrow input { min-width: 0; min-height: 44px; }
 .wrow input, .sono input { font: inherit; padding: 9px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 .linkbtn { border: 0; background: none; color: var(--leaf); font-weight: 800; text-decoration: underline; padding: 4px; flex: none; }
 .sono { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -286,15 +333,19 @@ nav.tabs {
   padding-left: max(8px, env(safe-area-inset-left, 0px));
   padding-right: max(8px, env(safe-area-inset-right, 0px));
 }
-nav.tabs .in { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); }
+nav.tabs .in { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; }
 nav.tabs button {
-  border: 0; background: none; padding: 10px 2px 12px; display: grid; justify-items: center; gap: 2px;
-  font-size: .66rem; font-weight: 800; color: var(--muted);
+  border: 0; background: none; padding: 8px 2px 10px; display: grid; justify-items: center; gap: 2px; min-height: 58px;
+  font-size: .72rem; font-weight: 800; color: var(--muted);
 }
 nav.tabs svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+nav.tabs svg circle[r="1.6"] { fill: currentColor; }
 nav.tabs button[aria-current="page"] { color: var(--leaf); }
-nav.tabs button.fome[aria-current="page"], nav.tabs button.fome { color: var(--apricot); }
-nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
+nav.tabs button.foto { color: var(--leaf); }
+nav.tabs .fab { width: 56px; height: 56px; margin-top: -26px; border-radius: 50%; background: var(--leaf); color: var(--bg); display: grid; place-items: center;
+  box-shadow: 0 8px 20px -8px rgba(30, 60, 40, .6); border: 4px solid var(--surface); }
+nav.tabs .fab svg { width: 26px; height: 26px; }
+nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -304,24 +355,39 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 <!--APP-BODY-START-->
 <div class="wrap">
   <header class="top">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+    <div>
       <p class="eyebrow" id="today-label">Hoje</p>
-      <button type="button" class="bell" id="bell" aria-label="Lembretes"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Lembretes</button>
+      <h1 id="greet">Olá, mamãe</h1>
     </div>
-    <h1 id="greet">Olá, mamãe</h1>
-    <div class="stats">
-      <span class="pill num">~1.900 kcal/dia</span>
-      <span class="pill water num" id="water-pill">Água 0 de 12 copos</span>
-      <span class="pill warm">Amamentando</span>
-      <span class="pill num" id="peso-pill">Meta: −0,5 kg/semana</span>
-    </div>
+    <button type="button" class="bell" id="bell" aria-label="Lembretes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></button>
   </header>
 
-  <!-- CARDÁPIO -->
-  <section data-view="cardapio">
+  <!-- HOJE -->
+  <section data-view="hoje">
     <div class="wake" id="wake"></div>
-    <div class="days" id="days" role="group" aria-label="Dia da semana"></div>
     <div class="next" id="next"></div>
+
+    <div class="card prog" aria-label="Seu dia">
+      <div class="ring meals" id="ring-meals" style="--p:0"><div><b class="num" id="prog-meals">0/6</b><small>refeições</small></div></div>
+      <div class="ring water" id="ring-water" style="--p:0"><div><b class="num" id="prog-water">0/12</b><small>copos</small></div></div>
+      <div class="ring kcal" id="ring-kcal" style="--p:0"><div><b class="num" id="prog-kcal">0</b><small>kcal</small></div></div>
+      <p class="muted num prog-note" id="water-pill">Água 0 de 12 copos</p>
+      <button type="button" class="btn water-btn" id="water-add-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Bebi 1 copo de água</button>
+    </div>
+
+    <div class="quick">
+      <button type="button" class="qbtn warm" data-go="fome"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg><b>Bateu fome?</b><span>Lanches rápidos</span></button>
+      <button type="button" class="qbtn leaf" data-go="nutri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><b>Tirar foto</b><span>Calorias da comida</span></button>
+      <a class="qbtn soft" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><b>Pode ou não pode?</b><span>Resposta rápida</span></a>
+      <button type="button" class="qbtn soft" data-go="lembretes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b>Lembretes</b><span>Água e refeições</span></button>
+    </div>
+    <div class="note" id="day-note"></div>
+  </section>
+
+  <!-- CARDÁPIO -->
+  <section data-view="cardapio" hidden>
+    <div class="head"><p class="eyebrow">Semana</p><h2>Cardápio</h2></div>
+    <div class="days" id="days" role="group" aria-label="Dia da semana"></div>
     <div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px">
         <h2 id="day-title">Cardápio</h2>
@@ -329,11 +395,11 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       </div>
       <div class="meals" id="meals"></div>
     </div>
-    <div class="note" id="day-note"></div>
   </section>
 
   <!-- FOME -->
   <section data-view="fome" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
     <div>
       <p class="eyebrow">Bateu a fome fora de hora?</p>
       <h2>Lanches rápidos, já com a porção</h2>
@@ -355,7 +421,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   <section data-view="nutri" hidden>
     <div style="display:flex;justify-content:space-between;align-items:end;gap:8px;flex-wrap:wrap">
       <div>
-        <p class="eyebrow">Sua agente de calorias</p>
+        <p class="eyebrow">Foto e calorias</p>
         <h2>Nutri</h2>
       </div>
       <button class="btn ghost" id="chat-new" type="button" style="padding:8px 12px;font-size:.85rem">Nova conversa</button>
@@ -419,15 +485,15 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   <!-- ÁGUA -->
   <section data-view="agua" hidden>
-    <div>
-      <p class="eyebrow">Meta de hoje</p>
+    <div class="head">
+      <p class="eyebrow">Água · meta de hoje</p>
       <h2 class="num" id="water-title">0 de 3 litros</h2>
     </div>
     <div class="bar" aria-hidden="true"><i id="water-bar"></i></div>
     <p class="muted">Cada copo = 250 ml. Toque no copo quando beber.</p>
     <div class="glasses" id="glasses"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn" id="water-add" type="button">+1 copo</button>
+      <button class="btn big-btn wbtn" id="water-add" type="button">+1 copo</button>
       <button class="btn ghost" id="water-undo" type="button">Desfazer</button>
     </div>
     <div class="note">
@@ -439,6 +505,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   <!-- COMPRAS -->
   <section data-view="compras" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
     <div>
       <p class="eyebrow">Para a semana toda</p>
       <h2>Lista de compras</h2>
@@ -462,6 +529,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   <!-- LEMBRETES -->
   <section data-view="lembretes" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
     <div>
       <p class="eyebrow">Para não esquecer</p>
       <h2>Lembretes de comida e água</h2>
@@ -494,7 +562,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
     <div class="next">
       <h3>Meu horário</h3>
-      <p class="muted">Todo dia, ao acordar, toque em <b>Acordei agora</b> na tela do Cardápio. Os horários da água e das refeições se ajustam e você não perde nenhum copo nem refeição.</p>
+      <p class="muted">Todo dia, ao acordar, toque em <b>Acordei agora</b> na tela <b>Hoje</b>. Os horários da água e das refeições se ajustam e você não perde nenhum copo nem refeição.</p>
       <div class="sono">
         <label for="s-wake">Costumo acordar às<input id="s-wake" type="time"></label>
         <label for="s-bed">Costumo dormir às<input id="s-bed" type="time"></label>
@@ -521,9 +589,10 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     </div>
   </section>
 
-  <!-- DICAS -->
-  <section data-view="dicas" hidden>
-    <div>
+  <!-- MEU PLANO -->
+  <section data-view="plano" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
+    <div class="head">
       <p class="eyebrow">Avaliação</p>
       <h2>Meu plano</h2>
     </div>
@@ -554,11 +623,29 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       </form>
       <ul class="plog num" id="peso-log"></ul>
     </div>
+  </section>
 
+  <!-- MAIS -->
+  <section data-view="mais" hidden>
+    <div class="head"><p class="eyebrow">Tudo do app</p><h2>Mais</h2></div>
+    <div class="list">
+      <button type="button" class="lrow" data-go="fome"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg></span><span class="lt"><b>Lanches de fome</b><small>12 opções de até 200 kcal</small></span><span class="chev">›</span></button>
+      <button type="button" class="lrow" data-go="compras"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span><span class="lt"><b>Compras e preparo</b><small>Lista da semana e domingo</small></span><span class="chev">›</span></button>
+      <button type="button" class="lrow" data-go="plano"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></span><span class="lt"><b>Meu plano e peso</b><small id="peso-pill">Meta: −0,5 kg/semana</small></span><span class="chev">›</span></button>
+      <button type="button" class="lrow" data-go="lembretes"><span class="li water"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="lt"><b>Lembretes</b><small>Avisos, calendário e horário de acordar</small></span><span class="chev">›</span></button>
+      <button type="button" class="lrow" data-go="dicas"><span class="li soft"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></span><span class="lt"><b>Dicas</b><small>Medidas caseiras, trocas e cuidados</small></span><span class="chev">›</span></button>
+    </div>
+    <p class="muted" style="font-size:.85rem;text-align:center">Plano de ~1.900 kcal por dia para quem amamenta. Mostre para a sua nutricionista ou médica.</p>
+  </section>
+
+  <!-- DICAS -->
+  <section data-view="dicas" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
+    <div class="head"><p class="eyebrow">Para ler com calma</p><h2>Dicas</h2></div>
     <div class="tips">
       <div class="tip"><h3>Suas contas</h3><p>Seu corpo gasta cerca de <b>1.330 kcal</b> só para funcionar (metabolismo basal, calculado para uma mulher de uns 30 anos). Com a rotina de casa e o bebê, isso vai para uns <b>1.850 kcal</b>. A amamentação soma mais uns <b>500 kcal</b>. Total: cerca de <b>2.350 kcal</b> por dia.</p><p style="margin-top:6px">O plano dá <b>~1.900 kcal</b>. A diferença de ~450 kcal por dia vira cerca de <b>0,5 kg a menos por semana</b>, sem mexer no seu leite.</p></div>
       <div class="tip"><h3>Proteína: 90 a 110 g por dia</h3><p>É o que mais segura a fome e protege o leite. Por isso todo café da manhã tem ovo, leite ou queijo, e almoço e jantar têm frango ou ovo.</p></div>
-      <div class="tip"><h3>Como não passar fome</h3><p>1. Coma a cada 2h30 a 3h, nos horários do cardápio. Pular refeição dá fome forte depois.<br>2. Comece almoço e jantar pela salada. Folhas e legumes são à vontade.<br>3. Mastigue devagar: o corpo leva 20 minutos para avisar que está satisfeito.<br>4. Água antes de cada refeição e em toda mamada.<br>5. Fome mesmo assim? Use a aba <b>Fome!</b>: até 2 lanches extras por dia estão previstos.<br>6. Durma quando o bebê dormir, se der. Noite mal dormida aumenta a fome no dia seguinte.</p></div>
+      <div class="tip"><h3>Como não passar fome</h3><p>1. Coma a cada 2h30 a 3h, nos horários do cardápio. Pular refeição dá fome forte depois.<br>2. Comece almoço e jantar pela salada. Folhas e legumes são à vontade.<br>3. Mastigue devagar: o corpo leva 20 minutos para avisar que está satisfeito.<br>4. Água antes de cada refeição e em toda mamada.<br>5. Fome mesmo assim? Toque em <b>Bateu fome?</b> na tela Hoje: até 2 lanches extras por dia estão previstos.<br>6. Durma quando o bebê dormir, se der. Noite mal dormida aumenta a fome no dia seguinte.</p></div>
       <div class="tip"><h3>Sem café</h3><p>Você não toma café preto, então o café da manhã usa <b>leite puro ou morno com canela</b>. Você não precisa de cafeína, e o bebê também agradece.</p></div>
       <div class="tip"><h3>Não desça de 1.800 kcal</h3><p>Comer menos que isso amamentando pode diminuir o leite e deixar você sem energia. Perder mais rápido que 1 kg por semana não é o objetivo.</p></div>
       <div class="tip"><h3>Medidas caseiras</h3><p><b>Colher de sopa (cs)</b> = colher grande de mesa, cheia mas sem montinho. <b>Concha</b> = concha média de feijão. <b>Filé de frango de 120 g</b> = do tamanho da palma da sua mão. <b>Xícara</b> = 240 ml.</p></div>
@@ -575,18 +662,11 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
 <nav class="tabs" aria-label="Seções">
   <div class="in">
-    <button type="button" data-tab="cardapio" aria-current="page">
-      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cardápio</button>
-    <button type="button" data-tab="fome" class="fome">
-      <svg viewBox="0 0 24 24"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg>Fome!</button>
-    <button type="button" data-tab="nutri">
-      <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6M12 7v6"/></svg>Nutri</button>
-    <button type="button" data-tab="agua">
-      <svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Água</button>
-    <button type="button" data-tab="compras">
-      <svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Compras</button>
-    <button type="button" data-tab="dicas">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Meu plano</button>
+    <button type="button" data-tab="hoje" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>Hoje</button>
+    <button type="button" data-tab="cardapio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cardápio</button>
+    <button type="button" data-tab="nutri" class="foto"><span class="fab"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>Foto</button>
+    <button type="button" data-tab="agua"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Água</button>
+    <button type="button" data-tab="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>Mais</button>
   </div>
 </nav>
 
@@ -773,7 +853,6 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
 
   function renderNext() {
     var box = $("next");
-    if (selected !== todayIdx) { box.hidden = true; return; }
     var i = nextSlotIdx();
     box.hidden = false;
     if (i === -1) {
@@ -789,7 +868,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
       '<ul>' + m.items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' +
       '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">' +
       '<span class="muted num">≈ ' + m.k + ' kcal · + 1 copo de água</span>' +
-      '<button type="button" class="btn" data-eat="' + s.id + '">' + (st.meals[s.id] ? "Feito ✓" : "Já comi") + '</button></div>';
+      '<button type="button" class="btn" data-today="1" data-eat="' + s.id + '">' + (st.meals[s.id] ? "Feito ✓" : "Já comi") + '</button></div>';
   }
 
   function renderMeals() {
@@ -808,18 +887,30 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
         '</div>';
     }).join("");
     $("day-progress").textContent = done + "/6 feitas · ≈ " + total.toLocaleString("pt-BR") + " kcal";
-    $("day-note").innerHTML = "<p><strong>Dica do dia:</strong> " + esc(d.note) + "</p>";
+    $("day-note").innerHTML = "<p><strong>Dica do dia:</strong> " + esc(WEEK[todayIdx].note) + "</p>";
   }
 
-  function renderCardapio() { renderDays(); renderNext(); renderMeals(); }
+  function renderCardapio() { renderDays(); renderNext(); renderMeals(); renderHoje(); }
+
+  // progresso do dia na tela Hoje
+  function renderHoje() {
+    var st = dayState(todayIdx), done = 0, kcal = 0;
+    SLOTS.forEach(function (s) { if (st.meals[s.id]) { done++; kcal += WEEK[todayIdx].meals[s.id].k; } });
+    try { kcal += logTotal(); } catch (e) {}
+    var w = st.water || 0;
+    $("prog-meals").textContent = done + "/6"; $("ring-meals").style.setProperty("--p", Math.min(1, done / 6));
+    $("prog-water").textContent = w + "/" + WATER_GOAL; $("ring-water").style.setProperty("--p", Math.min(1, w / WATER_GOAL));
+    $("prog-kcal").textContent = kcal.toLocaleString("pt-BR"); $("ring-kcal").style.setProperty("--p", Math.min(1, kcal / 1900));
+  }
 
   document.addEventListener("click", function (e) {
     var day = e.target.closest("[data-day]");
     if (day) { selected = +day.getAttribute("data-day"); renderCardapio(); return; }
     var eat = e.target.closest("[data-eat]");
     if (eat) {
-      var st = dayState(selected), id = eat.getAttribute("data-eat");
-      st.meals[id] = !st.meals[id]; setDayState(selected, st); renderCardapio();
+      var idx = eat.hasAttribute("data-today") ? todayIdx : selected;
+      var st = dayState(idx), id = eat.getAttribute("data-eat");
+      st.meals[id] = !st.meals[id]; setDayState(idx, st); renderCardapio();
     }
   });
 
@@ -845,7 +936,8 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     var liters = (n * 0.25).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     $("water-title").textContent = liters + " de 3 litros" + (n >= WATER_GOAL ? " · meta batida!" : "");
     $("water-bar").style.width = Math.min(100, n / WATER_GOAL * 100) + "%";
-    $("water-pill").textContent = "Água " + n + " de " + WATER_GOAL + " copos";
+    $("water-pill").textContent = n >= WATER_GOAL ? "Meta de água batida! Continue bebendo nas mamadas." : "Faltam " + (WATER_GOAL - n) + " copos de água hoje (" + liters + " de 3 litros).";
+    renderHoje();
   }
   function setWater(n) { var st = dayState(todayIdx); st.water = Math.max(0, Math.min(20, n)); setDayState(todayIdx, st); renderWater(); }
   $("glasses").addEventListener("click", function (e) {
@@ -854,10 +946,11 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     setWater(n === cur ? n - 1 : n);
   });
   $("water-add").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) + 1); });
+  $("water-add-home").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) + 1); toast("Mais 1 copo ✓", (dayState(todayIdx).water || 0) + " de " + WATER_GOAL + " copos hoje"); });
   $("water-undo").addEventListener("click", function () { setWater((dayState(todayIdx).water || 0) - 1); });
   function renderWTimes() {
     $("wtimes").innerHTML = WATER.map(function (w) {
-      return '<div class="wtime"><b class="num">' + w.t + '</b><small>' + esc(w.w) + '</small></div>';
+      return '<div class="wtime water"><b class="num">' + w.t + '</b><small>' + esc(w.w) + '</small></div>';
     }).join("");
   }
   renderWTimes();
@@ -949,6 +1042,7 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
     }).join("");
     $("foto-empty").hidden = fotoLog.length > 0;
     $("foto-sum").textContent = fotoLog.length ? logTotal() + " kcal registradas" : "";
+    renderHoje();
   }
   $("foto-log").addEventListener("click", function (e) {
     var b = e.target.closest("[data-fdel]"); if (!b) return;
@@ -1337,7 +1431,6 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   }
   function renderWake() {
     var box = $("wake"), cfg = sono();
-    if (selected !== todayIdx) { box.hidden = true; return; }
     box.hidden = false;
     if (!wakeToday) {
       box.className = "wake ask";
@@ -1383,14 +1476,16 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   renderWake();
 
   // ---------- ABAS ----------
-  var TABS = ["cardapio", "fome", "nutri", "agua", "compras", "dicas", "lembretes"];
+  var TABS = ["hoje", "cardapio", "nutri", "agua", "mais", "fome", "compras", "plano", "dicas", "lembretes"];
+  var NAV_OF = { fome: "mais", compras: "mais", plano: "mais", dicas: "mais", lembretes: "mais" };
   function show(tab) {
-    if (TABS.indexOf(tab) < 0) tab = "cardapio";
+    if (TABS.indexOf(tab) < 0) tab = "hoje";
     document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });
+    var nav = NAV_OF[tab] || tab;
+    document.querySelector("header.top").hidden = tab !== "hoje";
     document.querySelectorAll("nav.tabs button").forEach(function (b) {
-      if (b.getAttribute("data-tab") === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+      if (b.getAttribute("data-tab") === nav) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
-    save("mp:tab", tab);
     window.scrollTo(0, 0);
   }
   $("bell").addEventListener("click", function () { show("lembretes"); });
@@ -1398,16 +1493,19 @@ nav.tabs button.fome:not([aria-current="page"]) { opacity: .85; }
   document.querySelector("nav.tabs").addEventListener("click", function (e) {
     var b = e.target.closest("[data-tab]"); if (b) show(b.getAttribute("data-tab"));
   });
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-go]"); if (g) show(g.getAttribute("data-go"));
+  });
 
   renderCardapio(); renderWater(); renderShop(); renderPeso();
-  show((location.hash || "").slice(1) || "cardapio");
+  show((location.hash || "").slice(1) || "hoje");
 
   // atualiza "próxima refeição" a cada minuto
   setInterval(function () {
     now = new Date(); nowMin = now.getHours() * 60 + now.getMinutes();
     var newToday = (now.getDay() + 6) % 7;
     if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; applyWake(); renderWater(); renderWTimes(); renderTimes(); renderWake(); }
-    renderNext(); renderMeals();
+    renderNext(); renderMeals(); renderHoje();
   }, 60000);
 })();
 </script>
