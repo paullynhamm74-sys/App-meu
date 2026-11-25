@@ -34,6 +34,8 @@
   --water-soft: #e2eff9;
   --done: #8aa596;
   --high: #c2452f;
+  --night: #5a54a8;
+  --night-soft: #e7e6f6;
   --high-soft: #f8e1dc;
   --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body: "Nunito", "Segoe UI", system-ui, sans-serif;
@@ -44,13 +46,13 @@
   :root:not([data-theme="light"]) {
     --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
     --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
-    --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; color-scheme: dark;
+    --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; --night: #a9a4f0; --night-soft: #25233f; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121a15; --surface: #1a251e; --ink: #e8efe9; --muted: #9fb3a6; --line: #2b3a31;
   --leaf: #7cc49c; --leaf-soft: #20352a; --apricot: #f0a36f; --apricot-soft: #3a2a1f;
-  --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; color-scheme: dark;
+  --water: #72b4ea; --water-soft: #1b2e3d; --done: #5f7a6b; --high: #f08a76; --high-soft: #3d221d; --night: #a9a4f0; --night-soft: #25233f; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -325,6 +327,47 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .sono { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .sono label { display: grid; gap: 4px; font-weight: 700; font-size: .88rem; }
 
+/* receitas */
+.seerec { justify-self: start; margin-top: 4px; border: 0; background: var(--apricot-soft); color: var(--ink); border-radius: 999px; padding: 6px 12px; min-height: 32px; font-weight: 800; font-size: .8rem; }
+.rdays { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.rday { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-weight: 800; font-size: .85rem; }
+.rday.today { border-color: var(--leaf); }
+.rday[aria-pressed="true"] { background: var(--leaf); border-color: var(--leaf); color: var(--bg); }
+.rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.rcard { border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 0; overflow: hidden; display: grid; grid-template-rows: auto 1fr; text-align: left; box-shadow: var(--shadow, none); min-width: 0; }
+.rband { display: flex; align-items: center; gap: 8px; padding: 12px; }
+.rband svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.rband small { font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.rcard.warm .rband, .rhero.warm { background: var(--apricot-soft); color: var(--apricot); }
+.rcard.leaf .rband, .rhero.leaf { background: var(--leaf-soft); color: var(--leaf); }
+.rcard.water .rband, .rhero.water { background: var(--water-soft); color: var(--water); }
+.rcard.night .rband, .rhero.night { background: var(--night-soft); color: var(--night); }
+.rbody { padding: 10px 12px 12px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.rbody b { font-family: var(--display); font-size: 1rem; line-height: 1.2; color: var(--ink); overflow-wrap: anywhere; }
+.rmeta { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.todayrec { display: grid; gap: 8px; }
+.trhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.trlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.rec { display: grid; gap: 16px; }
+.rhero { border-radius: var(--r); padding: 18px; display: grid; gap: 6px; }
+.rhero svg { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rhero h2 { color: var(--ink); }
+.rhero p:last-child { color: var(--ink); }
+.rfacts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.rfacts div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: grid; justify-items: center; }
+.rfacts b { font-family: var(--display); font-size: 1.4rem; color: var(--leaf); line-height: 1.1; }
+.rfacts small { font-size: .75rem; color: var(--muted); font-weight: 700; }
+.rtags { display: flex; flex-wrap: wrap; gap: 6px; }
+.rtags span { background: var(--leaf-soft); color: var(--leaf); border-radius: 999px; padding: 4px 10px; font-size: .78rem; font-weight: 800; }
+.rsec { display: grid; gap: 8px; }
+.ingr { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.ingr label { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; min-height: 44px; }
+.ingr input { width: 22px; height: 22px; accent-color: var(--leaf); flex: none; }
+.ingr input:checked + span { color: var(--done); text-decoration: line-through; }
+.rsteps { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 10px; }
+.rsteps li { counter-increment: st; display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+.rsteps li::before { content: counter(st); width: 32px; height: 32px; border-radius: 50%; background: var(--leaf); color: var(--bg); display: grid; place-items: center; font-family: var(--display); font-weight: 800; }
+
 /* bottom nav */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
@@ -380,6 +423,10 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
       <button type="button" class="qbtn leaf" data-go="nutri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><b>Tirar foto</b><span>Calorias da comida</span></button>
       <a class="qbtn soft" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><b>Pode ou não pode?</b><span>Resposta rápida</span></a>
       <button type="button" class="qbtn soft" data-go="lembretes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b>Lembretes</b><span>Água e refeições</span></button>
+    </div>
+    <div class="todayrec">
+      <div class="trhead"><h3>Receitas de hoje</h3><button type="button" class="linkbtn" data-go="receitas">Ver todas</button></div>
+      <div class="trlist" id="today-rec"></div>
     </div>
     <div class="note" id="day-note"></div>
   </section>
@@ -625,10 +672,25 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
     </div>
   </section>
 
+  <!-- RECEITAS -->
+  <section data-view="receitas" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
+    <div class="head"><p class="eyebrow">Do seu cardápio</p><h2>Receitas da semana</h2></div>
+    <div class="rdays" id="rdays" role="group" aria-label="Filtrar por dia"></div>
+    <div class="rgrid" id="rgrid"></div>
+  </section>
+
+  <!-- RECEITA (detalhe) -->
+  <section data-view="receita" hidden>
+    <button type="button" class="back" id="rec-back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
+    <article class="rec" id="rec"></article>
+  </section>
+
   <!-- MAIS -->
   <section data-view="mais" hidden>
     <div class="head"><p class="eyebrow">Tudo do app</p><h2>Mais</h2></div>
     <div class="list">
+      <button type="button" class="lrow" data-go="receitas"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-1.5 1-2 1-3M12 7c0-1.5 1-2 1-3M16 7c0-1.5 1-2 1-3"/></svg></span><span class="lt"><b>Receitas da semana</b><small>19 receitas fáceis do cardápio</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="fome"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg></span><span class="lt"><b>Lanches de fome</b><small>12 opções de até 200 kcal</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="compras"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span><span class="lt"><b>Compras e preparo</b><small>Lista da semana e domingo</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="plano"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></span><span class="lt"><b>Meu plano e peso</b><small id="peso-pill">Meta: −0,5 kg/semana</small></span><span class="chev">›</span></button>
@@ -882,7 +944,8 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
       return '<div class="meal' + (isDone ? " done" : "") + (i === ni ? " is-next" : "") + '">' +
         '<span class="t num">' + s.time + '</span>' +
         '<div class="body"><h3>' + s.name + '</h3><ul>' + m.items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' +
-        '<span class="kcal num">≈ ' + m.k + ' kcal</span></div>' +
+        '<span class="kcal num">≈ ' + m.k + ' kcal</span>' +
+        (recFor(selected, s.name) ? '<button type="button" class="seerec" data-rec="' + recFor(selected, s.name).id + '">Ver receita ›</button>' : '') + '</div>' +
         '<button type="button" class="check" aria-label="Marcar ' + s.name + ' como feita" aria-pressed="' + isDone + '" data-eat="' + s.id + '">' + CHECK + '</button>' +
         '</div>';
     }).join("");
@@ -1475,9 +1538,315 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   var _rc = renderCardapio; renderCardapio = function () { _rc(); renderWake(); };
   renderWake();
 
+  // ---------- RECEITAS ----------
+  // Receitas do cardápio "Meu Prato da Semana".
+  // Cada receita rende as porções indicadas; "kcal" é por porção, igual à porção do cardápio.
+  // Sem chia, quiabo, carne vermelha ou café. Proteína: frango, ovos, leite, queijo, feijão.
+  var RECEITAS = [
+    {
+      id: "frango-base", nome: "Frango cozido e desfiado da semana", dias: [6], refeicao: "Preparo de domingo",
+      tempo: 50, porcoes: 10, kcal: 160, tags: ["Base da semana", "Congela bem"],
+      resumo: "Faça no domingo e use a semana toda: sanduíche, tapioca, wrap, escondidinho e sopa.",
+      ingredientes: ["1,2 kg de peito de frango", "1 cebola grande cortada em 4", "4 dentes de alho amassados", "2 folhas de louro", "1 col. chá de sal", "Água para cobrir"],
+      passos: [
+        "Coloque o frango, a cebola, o alho, o louro e o sal na panela de pressão.",
+        "Cubra com água e cozinhe por 20 minutos depois que pegar pressão.",
+        "Espere a pressão sair, tire o frango e guarde o caldo (serve para a sopa de quinta).",
+        "Separe 3 filés inteiros para grelhar na semana. Desfie o resto com dois garfos ainda morno.",
+        "Guarde em potes: 4 dias na geladeira ou 3 meses no congelador."
+      ],
+      dica: "Porção do cardápio: 4 colheres de sopa de frango desfiado = cerca de 100 g."
+    },
+    {
+      id: "frango-grelhado", nome: "Filé de frango grelhado", dias: [0], refeicao: "Almoço",
+      tempo: 15, porcoes: 1, kcal: 200, tags: ["Rápido"],
+      resumo: "O filé que mais aparece no cardápio. Suculento e pronto em 15 minutos.",
+      ingredientes: ["1 filé de peito de frango (120 g, do tamanho da palma da mão)", "1/2 limão", "1 dente de alho amassado", "1 pitada de sal e de páprica", "1 col. chá de azeite"],
+      passos: [
+        "Tempere o filé com limão, alho, sal e páprica. Se der, deixe 10 minutos no tempero.",
+        "Aqueça bem uma frigideira antiaderente com o azeite.",
+        "Grelhe 4 a 5 minutos de cada lado sem mexer, até dourar.",
+        "Corte no meio: por dentro não pode ficar rosado."
+      ],
+      dica: "Bata o filé com um copo para deixar fino por igual. Assim cozinha mais rápido e não resseca."
+    },
+    {
+      id: "omelete-tomate", nome: "Omelete de tomate e cebola", dias: [0], refeicao: "Jantar",
+      tempo: 10, porcoes: 1, kcal: 210, tags: ["Rápido", "Jantar leve"],
+      resumo: "Jantar de 10 minutos, com proteína para segurar a fome da noite.",
+      ingredientes: ["2 ovos", "1/2 tomate picado sem sementes", "1 col. sopa de cebola picada", "Cheiro-verde a gosto", "1 pitada de sal", "1 fio de azeite"],
+      passos: [
+        "Bata os ovos com o sal até espumar.",
+        "Misture o tomate, a cebola e o cheiro-verde.",
+        "Aqueça a frigideira com o azeite em fogo baixo e despeje a mistura.",
+        "Tampe e deixe 3 minutos. Vire com a ajuda de um prato e deixe mais 1 minuto."
+      ],
+      dica: "Sirva com 3 colheres de sopa de arroz e salada à vontade, como no cardápio."
+    },
+    {
+      id: "tapioca-ovo-queijo", nome: "Tapioca com ovo e queijo", dias: [1, 6], refeicao: "Café da manhã",
+      tempo: 10, porcoes: 1, kcal: 300, tags: ["Café da manhã", "Sem glúten"],
+      resumo: "Café da manhã quentinho que fica pronto enquanto o leite esquenta.",
+      ingredientes: ["3 col. sopa de goma de tapioca", "1 ovo", "1 fatia de queijo branco (30 g)", "1 pitada de sal", "Tomate em rodelas (domingo)"],
+      passos: [
+        "Faça o ovo mexido com uma pitada de sal e reserve.",
+        "Peneire a goma na frigideira fria, espalhando como um disco.",
+        "Ligue o fogo médio. Quando a goma grudar e soltar das bordas (uns 2 minutos), vire.",
+        "Recheie metade com o ovo e o queijo (e o tomate, no domingo), dobre e deixe 1 minuto."
+      ],
+      dica: "Peneirar a goma é o segredo para a tapioca não ficar dura."
+    },
+    {
+      id: "frango-desfiado-tomate", nome: "Frango desfiado refogado com tomate", dias: [1], refeicao: "Almoço",
+      tempo: 15, porcoes: 3, kcal: 170, tags: ["Usa o frango de domingo"],
+      resumo: "O frango da semana ganha molho e vira almoço em 15 minutos.",
+      ingredientes: ["12 col. sopa de frango desfiado (300 g)", "2 tomates maduros picados", "1/2 cebola picada", "1 dente de alho", "1 col. chá de azeite", "Cheiro-verde e sal a gosto"],
+      passos: [
+        "Refogue a cebola e o alho no azeite até murchar.",
+        "Junte o tomate e cozinhe 5 minutos, amassando com a colher.",
+        "Acrescente o frango, misture e deixe mais 3 minutos.",
+        "Finalize com cheiro-verde. Porção: 4 colheres de sopa."
+      ],
+      dica: "Rende 3 porções: almoço de terça e recheio do sanduíche e do wrap."
+    },
+    {
+      id: "sanduiche-frango", nome: "Sanduíche natural de frango", dias: [1], refeicao: "Jantar",
+      tempo: 5, porcoes: 1, kcal: 420, tags: ["5 minutos", "Sem fogão"],
+      resumo: "Jantar sem fogão para os dias mais cansativos.",
+      ingredientes: ["2 fatias de pão integral", "3 col. sopa de frango desfiado", "1 col. sopa de requeijão light", "Alface, tomate e cenoura ralada à vontade"],
+      passos: [
+        "Misture o frango com o requeijão.",
+        "Espalhe sobre uma fatia de pão.",
+        "Cubra com alface, tomate e cenoura ralada e feche com a outra fatia."
+      ],
+      dica: "Leve ao fogo numa frigideira, 1 minuto de cada lado, se quiser quentinho."
+    },
+    {
+      id: "panqueca-banana", nome: "Panqueca de banana e aveia", dias: [2], refeicao: "Café da manhã",
+      tempo: 10, porcoes: 1, kcal: 330, tags: ["Doce sem açúcar", "Café da manhã"],
+      resumo: "Doce, sem açúcar e cheia de proteína. Ótima para os dias de vontade de doce.",
+      ingredientes: ["1 banana madura", "2 ovos", "2 col. sopa de aveia em flocos", "1 pitada de canela"],
+      passos: [
+        "Amasse bem a banana com um garfo.",
+        "Misture os ovos, a aveia e a canela até ficar uma massa.",
+        "Despeje pequenas porções na frigideira antiaderente em fogo baixo.",
+        "Vire quando aparecerem bolhinhas (uns 2 minutos) e deixe mais 1 minuto."
+      ],
+      dica: "Quanto mais madura a banana, mais doce fica a panqueca."
+    },
+    {
+      id: "coxa-assada-brocolis", nome: "Coxa de frango assada com brócolis", dias: [2], refeicao: "Almoço",
+      tempo: 45, porcoes: 4, kcal: 230, tags: ["Forno", "Faça a mais"],
+      resumo: "Asse 4 coxas de uma vez: uma para hoje, as outras para sábado e domingo.",
+      ingredientes: ["4 coxas ou sobrecoxas de frango sem pele", "Suco de 1 limão", "2 dentes de alho", "1 col. chá de páprica", "1 col. chá de sal", "1 maço de brócolis em ramos"],
+      passos: [
+        "Tempere as coxas com limão, alho, páprica e sal.",
+        "Asse em forno a 200 °C por 35 minutos, numa assadeira untada com um fio de azeite.",
+        "Nos últimos 10 minutos, coloque os ramos de brócolis ao redor do frango.",
+        "Porção: 1 coxa + 4 ramos de brócolis."
+      ],
+      dica: "Tirar a pele corta quase metade da gordura do frango."
+    },
+    {
+      id: "macarrao-frango", nome: "Macarrão integral com frango ao molho de tomate", dias: [2], refeicao: "Jantar",
+      tempo: 20, porcoes: 2, kcal: 450, tags: ["Conforto"],
+      resumo: "Prato de conforto, na medida certa para o plano.",
+      ingredientes: ["160 g de macarrão integral (2 xícaras cozido)", "6 col. sopa de frango desfiado", "1 caixinha de molho de tomate (ou 3 tomates batidos)", "1/2 cebola e 1 dente de alho picados", "Manjericão ou orégano"],
+      passos: [
+        "Cozinhe o macarrão em água com sal pelo tempo da embalagem.",
+        "Refogue a cebola e o alho com um fio de azeite.",
+        "Junte o molho de tomate e o frango e cozinhe 5 minutos.",
+        "Misture ao macarrão. Porção: 1 prato raso (1 xícara de macarrão + molho)."
+      ],
+      dica: "Guarde a segunda porção para o almoço do dia seguinte."
+    },
+    {
+      id: "strogonoff-light", nome: "Strogonoff de frango light", dias: [3], refeicao: "Almoço",
+      tempo: 25, porcoes: 3, kcal: 230, tags: ["Favorito da família"],
+      resumo: "O sabor do strogonoff, trocando o creme de leite por iogurte natural.",
+      ingredientes: ["400 g de peito de frango em cubos", "1/2 cebola picada", "2 dentes de alho", "1 caixinha de molho de tomate", "1 col. sopa de mostarda", "6 col. sopa de iogurte natural", "Sal a gosto"],
+      passos: [
+        "Doure o frango em cubos com a cebola e o alho numa panela com um fio de azeite.",
+        "Junte o molho de tomate e a mostarda e cozinhe 10 minutos em fogo baixo.",
+        "Desligue o fogo e espere 2 minutos.",
+        "Só então misture o iogurte, para não talhar. Porção: 4 colheres de sopa."
+      ],
+      dica: "Acompanhe com 4 colheres de arroz e salada, e deixe a batata palha de fora."
+    },
+    {
+      id: "sopa-legumes-frango", nome: "Sopa de legumes com frango", dias: [3], refeicao: "Jantar",
+      tempo: 30, porcoes: 4, kcal: 330, tags: ["Congela bem", "Noite fria"],
+      resumo: "Faça o dobro e congele: é o jantar dos dias em que não der tempo de nada.",
+      ingredientes: ["2 batatas médias em cubos", "2 cenouras em rodelas", "1 chuchu em cubos", "1 abobrinha em cubos", "8 col. sopa de frango desfiado", "1 litro do caldo do frango (ou água)", "Cebola, alho, sal e cheiro-verde"],
+      passos: [
+        "Refogue a cebola e o alho com um fio de azeite.",
+        "Junte a batata, a cenoura e o chuchu, cubra com o caldo e cozinhe 15 minutos.",
+        "Acrescente a abobrinha e o frango e cozinhe mais 5 minutos.",
+        "Acerte o sal e finalize com cheiro-verde. Porção: 1 prato fundo."
+      ],
+      dica: "Congele em potes de 1 porção. Dura 3 meses."
+    },
+    {
+      id: "cuscuz-ovos", nome: "Cuscuz de milho com ovos mexidos", dias: [4], refeicao: "Café da manhã",
+      tempo: 15, porcoes: 1, kcal: 400, tags: ["Segura a fome", "Café da manhã"],
+      resumo: "O café da manhã que segura a fome até o almoço.",
+      ingredientes: ["4 col. sopa de flocão de milho", "4 col. sopa de água", "1 pitada de sal", "2 ovos", "1 fio de azeite"],
+      passos: [
+        "Misture o flocão, a água e o sal e deixe hidratar 5 minutos.",
+        "Coloque na cuscuzeira (ou num pote coberto no micro-ondas por 2 minutos).",
+        "Cozinhe no vapor por 8 minutos.",
+        "Enquanto isso, faça os ovos mexidos com o azeite e sirva junto."
+      ],
+      dica: "Sem cuscuzeira: use uma peneira de metal sobre uma panela com água fervendo, tampada."
+    },
+    {
+      id: "frango-acebolado-abobora", nome: "Frango acebolado com purê de abóbora", dias: [4], refeicao: "Almoço",
+      tempo: 25, porcoes: 1, kcal: 300, tags: ["Colorido"],
+      resumo: "Purê cremoso e docinho sem manteiga, com o filé acebolado.",
+      ingredientes: ["1 filé de frango (120 g)", "1 cebola em rodelas", "1 fatia grande de abóbora (200 g)", "2 col. sopa de leite", "Sal, alho e noz-moscada"],
+      passos: [
+        "Cozinhe a abóbora em cubos no vapor ou na água até ficar macia (12 minutos).",
+        "Amasse com o leite, uma pitada de sal e de noz-moscada.",
+        "Grelhe o filé temperado com sal e alho, 4 minutos de cada lado.",
+        "Na mesma frigideira, doure a cebola por 3 minutos e coloque por cima do frango. Porção do purê: 3 colheres de sopa."
+      ],
+      dica: "Abóbora cabotiá fica mais doce e cremosa."
+    },
+    {
+      id: "wrap-frango", nome: "Wrap de frango", dias: [4], refeicao: "Jantar",
+      tempo: 5, porcoes: 1, kcal: 430, tags: ["5 minutos", "Sem fogão"],
+      resumo: "Sexta-feira com cara de lanche, sem sair do plano.",
+      ingredientes: ["1 pão sírio integral", "3 col. sopa de frango desfiado", "1 col. sopa de requeijão light", "Alface, tomate e cenoura ralada"],
+      passos: [
+        "Abra o pão sírio e espalhe o requeijão.",
+        "Coloque o frango e as verduras no centro.",
+        "Enrole bem apertado e corte ao meio."
+      ],
+      dica: "Esquente o pão 30 segundos na frigideira para enrolar sem rasgar."
+    },
+    {
+      id: "escondidinho", nome: "Escondidinho de batata com frango", dias: [5], refeicao: "Almoço",
+      tempo: 35, porcoes: 3, kcal: 400, tags: ["Fim de semana", "Forno"],
+      resumo: "Almoço de sábado gostoso e na medida do plano.",
+      ingredientes: ["4 batatas médias", "1/2 xícara de leite", "12 col. sopa de frango desfiado", "1 tomate e 1/2 cebola picados", "3 col. sopa de queijo ralado", "Sal e noz-moscada"],
+      passos: [
+        "Cozinhe as batatas e amasse com o leite, o sal e a noz-moscada.",
+        "Refogue o frango com o tomate e a cebola por 5 minutos.",
+        "Num refratário, faça uma camada de frango e cubra com o purê.",
+        "Polvilhe o queijo e leve ao forno a 200 °C por 15 minutos, até gratinar. Porção: 4 cs de purê + 4 cs de frango."
+      ],
+      dica: "Monte na sexta à noite e só leve ao forno no sábado."
+    },
+    {
+      id: "pizza-frigideira", nome: "Pizza de frigideira", dias: [5], refeicao: "Jantar",
+      tempo: 15, porcoes: 1, kcal: 430, tags: ["Vontade de pizza", "Rápido"],
+      resumo: "Mata a vontade de pizza com massa de ovo e aveia.",
+      ingredientes: ["2 ovos", "2 col. sopa de aveia", "1 pitada de sal", "2 col. sopa de molho de tomate", "2 col. sopa de frango desfiado", "1 fatia de queijo (mussarela ou branco)", "Orégano e rodelas de tomate"],
+      passos: [
+        "Bata os ovos com a aveia e o sal.",
+        "Despeje numa frigideira antiaderente untada, tampe e deixe em fogo baixo 4 minutos.",
+        "Vire a massa e espalhe o molho, o frango, o queijo e o tomate.",
+        "Tampe de novo até o queijo derreter (3 minutos). Finalize com orégano."
+      ],
+      dica: "Fogo baixo e frigideira tampada: assim a massa cozinha sem queimar."
+    },
+    {
+      id: "coxa-batatas", nome: "Coxa de frango assada com batatas", dias: [6], refeicao: "Almoço",
+      tempo: 50, porcoes: 4, kcal: 380, tags: ["Almoço de família", "Forno"],
+      resumo: "Almoço de domingo de uma assadeira só.",
+      ingredientes: ["4 coxas de frango sem pele", "8 batatas pequenas cortadas ao meio", "1 cebola em gomos", "Suco de 1 limão", "3 dentes de alho", "Alecrim, páprica e sal", "1 col. sopa de azeite"],
+      passos: [
+        "Tempere as coxas com limão, alho, páprica e sal.",
+        "Misture as batatas e a cebola com o azeite, o alecrim e uma pitada de sal.",
+        "Coloque tudo na assadeira, cubra com papel-alumínio e asse a 200 °C por 25 minutos.",
+        "Tire o papel e asse mais 20 minutos para dourar. Porção: 1 coxa + 2 batatas pequenas."
+      ],
+      dica: "Enquanto o forno trabalha, faça o preparo da semana."
+    },
+    {
+      id: "risoto-frango", nome: "Arroz com legumes e frango (estilo risoto)", dias: [6], refeicao: "Jantar",
+      tempo: 25, porcoes: 2, kcal: 400, tags: ["Uma panela só"],
+      resumo: "Usa o arroz e o frango prontos. Uma panela só para lavar.",
+      ingredientes: ["2 xícaras de arroz cozido", "6 col. sopa de frango desfiado", "1 cenoura ralada", "1/2 abobrinha em cubinhos", "1/2 xícara de ervilha (opcional)", "1/2 xícara do caldo do frango", "1 col. sopa de queijo ralado"],
+      passos: [
+        "Refogue a cenoura e a abobrinha com um fio de azeite por 3 minutos.",
+        "Junte o frango, o arroz e o caldo e mexa por 5 minutos até ficar cremoso.",
+        "Desligue e misture o queijo ralado.",
+        "Porção: 1 prato raso."
+      ],
+      dica: "Um ótimo jeito de usar o arroz que sobrou da semana."
+    },
+    {
+      id: "vitamina-mamao", nome: "Vitamina de mamão com aveia", dias: [3, 6], refeicao: "Lanche da tarde",
+      tempo: 3, porcoes: 1, kcal: 210, tags: ["Bebida", "Intestino"],
+      resumo: "Lanche de 3 minutos que ajuda o intestino.",
+      ingredientes: ["200 ml de leite", "1/2 mamão papaia (ou 1 banana, no domingo)", "1 col. sopa de aveia", "Canela a gosto"],
+      passos: ["Bata tudo no liquidificador por 1 minuto.", "Beba na hora."],
+      dica: "Sem açúcar: a fruta madura já adoça."
+    }
+  ];
+  
+  var REC_ICON = {
+    "Café da manhã": '<path d="M12 4v2M5 7l1.5 1.5M19 7l-1.5 1.5M4 14h16"/><path d="M7 14a5 5 0 0 1 10 0"/>',
+    "Almoço": '<circle cx="12" cy="13" r="7"/><circle cx="12" cy="13" r="3.5"/>',
+    "Jantar": '<path d="M19 14A8 8 0 1 1 10 5a6 6 0 0 0 9 9z"/>',
+    "Lanche da tarde": '<path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/>',
+    "Preparo de domingo": '<path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-1.5 1-2 1-3M12 7c0-1.5 1-2 1-3M16 7c0-1.5 1-2 1-3"/>'
+  };
+  var REC_TONE = { "Café da manhã": "warm", "Almoço": "leaf", "Jantar": "night", "Lanche da tarde": "water", "Preparo de domingo": "warm" };
+  function recFor(day, slotName) {
+    return RECEITAS.filter(function (r) { return r.refeicao === slotName && r.dias.indexOf(day) >= 0; })[0] || null;
+  }
+  function recById(id) { return RECEITAS.filter(function (r) { return r.id === id; })[0] || null; }
+  function recIcon(r) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (REC_ICON[r.refeicao] || REC_ICON["Almoço"]) + '</svg>'; }
+  function recCard(r, compact) {
+    var days = r.dias.map(function (d) { return WEEK[d].short; }).join(" · ");
+    return '<button type="button" class="rcard ' + (REC_TONE[r.refeicao] || "leaf") + (compact ? " compact" : "") + '" data-rec="' + r.id + '">' +
+      '<span class="rband">' + recIcon(r) + '<small>' + esc(r.refeicao) + '</small></span>' +
+      '<span class="rbody"><b>' + esc(r.nome) + '</b>' +
+      '<span class="rmeta num">' + r.tempo + ' min · ' + r.kcal + ' kcal' + (compact ? '' : ' · ' + days) + '</span></span></button>';
+  }
+  var recDay = todayIdx;
+  function renderReceitas() {
+    $("rdays").innerHTML = '<button type="button" class="rday" data-rday="-1" aria-pressed="' + (recDay === -1) + '">Todas</button>' +
+      WEEK.map(function (d, i) { return '<button type="button" class="rday' + (i === todayIdx ? " today" : "") + '" data-rday="' + i + '" aria-pressed="' + (recDay === i) + '">' + d.short + '</button>'; }).join("");
+    var list = RECEITAS.filter(function (r) { return recDay === -1 || r.dias.indexOf(recDay) >= 0; });
+    var order = ["Preparo de domingo", "Café da manhã", "Almoço", "Lanche da tarde", "Jantar"];
+    list.sort(function (a, b) { return order.indexOf(a.refeicao) - order.indexOf(b.refeicao); });
+    $("rgrid").innerHTML = list.map(function (r) { return recCard(r, false); }).join("") ||
+      '<p class="muted">Nenhuma receita neste dia: as refeições são de montar, sem receita.</p>';
+  }
+  function renderTodayRec() {
+    var list = RECEITAS.filter(function (r) { return r.dias.indexOf(todayIdx) >= 0 && r.refeicao !== "Preparo de domingo"; });
+    $("today-rec").innerHTML = list.map(function (r) { return recCard(r, true); }).join("") || '<p class="muted">Hoje as refeições são de montar, sem receita.</p>';
+  }
+  var recFrom = "receitas";
+  function openRec(id) {
+    var r = recById(id); if (!r) return;
+    var days = r.dias.map(function (d) { return WEEK[d].name; }).join(", ");
+    $("rec").innerHTML =
+      '<div class="rhero ' + (REC_TONE[r.refeicao] || "leaf") + '">' + recIcon(r) +
+        '<p class="eyebrow">' + esc(r.refeicao) + ' · ' + esc(days) + '</p><h2>' + esc(r.nome) + '</h2><p>' + esc(r.resumo) + '</p></div>' +
+      '<div class="rfacts num"><div><b>' + r.tempo + '</b><small>minutos</small></div><div><b>' + r.porcoes + '</b><small>' + (r.porcoes > 1 ? "porções" : "porção") + '</small></div><div><b>' + r.kcal + '</b><small>kcal/porção</small></div></div>' +
+      (r.tags && r.tags.length ? '<div class="rtags">' + r.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join("") + '</div>' : '') +
+      '<div class="rsec"><h3>Ingredientes</h3><p class="muted" style="font-size:.85rem">Toque para marcar o que já separou.</p><ul class="ingr">' +
+        r.ingredientes.map(function (x, i) { return '<li><label for="ri-' + i + '"><input type="checkbox" id="ri-' + i + '"><span>' + esc(x) + '</span></label></li>'; }).join("") + '</ul></div>' +
+      '<div class="rsec"><h3>Modo de preparo</h3><ol class="rsteps">' + r.passos.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ol></div>' +
+      (r.dica ? '<div class="note"><p><strong>Dica:</strong> ' + esc(r.dica) + '</p></div>' : '');
+    show("receita");
+  }
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-rec]");
+    if (c) { recFrom = document.querySelector('section[data-view="hoje"]').hidden === false ? "hoje" : (document.querySelector('section[data-view="cardapio"]').hidden === false ? "cardapio" : "receitas"); openRec(c.getAttribute("data-rec")); return; }
+    var d = e.target.closest("[data-rday]");
+    if (d) { recDay = +d.getAttribute("data-rday"); renderReceitas(); }
+  });
+  $("rec-back").addEventListener("click", function () { show(recFrom); });
+  renderReceitas(); renderTodayRec();
+
   // ---------- ABAS ----------
-  var TABS = ["hoje", "cardapio", "nutri", "agua", "mais", "fome", "compras", "plano", "dicas", "lembretes"];
-  var NAV_OF = { fome: "mais", compras: "mais", plano: "mais", dicas: "mais", lembretes: "mais" };
+  var TABS = ["hoje", "cardapio", "nutri", "agua", "mais", "fome", "compras", "plano", "dicas", "lembretes", "receitas", "receita"];
+  var NAV_OF = { receitas: "mais", receita: "mais", fome: "mais", compras: "mais", plano: "mais", dicas: "mais", lembretes: "mais" };
   function show(tab) {
     if (TABS.indexOf(tab) < 0) tab = "hoje";
     document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });
@@ -1498,13 +1867,13 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   });
 
   renderCardapio(); renderWater(); renderShop(); renderPeso();
-  show((location.hash || "").slice(1) || "hoje");
+  var startTab = (location.hash || "").slice(1) || "hoje"; show(startTab === "receita" ? "receitas" : startTab);
 
   // atualiza "próxima refeição" a cada minuto
   setInterval(function () {
     now = new Date(); nowMin = now.getHours() * 60 + now.getMinutes();
     var newToday = (now.getDay() + 6) % 7;
-    if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; applyWake(); renderWater(); renderWTimes(); renderTimes(); renderWake(); }
+    if (newToday !== todayIdx) { todayIdx = newToday; selected = newToday; renderTodayRec(); applyWake(); renderWater(); renderWTimes(); renderTimes(); renderWake(); }
     renderNext(); renderMeals(); renderHoje();
   }, 60000);
 })();

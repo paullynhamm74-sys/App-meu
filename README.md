@@ -56,3 +56,7 @@ No Cardápio, o cartão **"Que horas você acordou hoje?"** (botão **Acordei ag
 ## Organização das telas
 
 Barra de baixo com 5 abas: **Hoje** (acordei, próxima refeição, progresso do dia em anéis, +1 copo e atalhos), **Cardápio** (semana), **Foto** (Nutri, botão central), **Água** e **Mais** (Lanches de fome, Compras e preparo, Meu plano e peso, Lembretes, Dicas — cada uma com "Voltar"). Endereços diretos: `#hoje`, `#cardapio`, `#nutri`, `#agua`, `#mais`, `#fome`, `#compras`, `#plano`, `#dicas`, `#lembretes`.
+
+## Receitas
+
+19 receitas do cardápio (dados em `RECEITAS` dentro do `index.html`): tela **Mais → Receitas da semana** com filtro por dia, cartões "Receitas de hoje" na tela Hoje, botão **Ver receita** em cada refeição do Cardápio, e tela da receita com tempo, porções, kcal por porção, ingredientes para marcar, passo a passo e dica.
