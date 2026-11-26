@@ -1,0 +1,22 @@
+{
+  "name": "promo-bot",
+  "version": "1.0.0",
+  "description": "Robô que busca ofertas de afiliado (Shopee, Mercado Livre e Amazon) e posta num grupo do WhatsApp",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "grupos": "node src/index.js --grupos",
+    "teste": "node src/index.js --teste",
+    "agora": "node src/index.js --agora",
+    "ml-token": "node src/ml-token.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "dotenv": "16.4.5",
+    "node-cron": "4.0.7",
+    "pino": "9.5.0",
+    "qrcode-terminal": "0.12.0"
+  }
+}

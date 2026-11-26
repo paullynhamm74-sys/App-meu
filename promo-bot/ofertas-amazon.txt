@@ -1,0 +1,6 @@
+# Ofertas da Amazon que o robô vai postar (uma por linha).
+# Formato:  link | título | preço | preço antigo (opcional) | link da imagem (opcional)
+# A sua tag de associado (AMAZON_TAG no .env) é colocada no link sozinha.
+# Linhas que começam com # são ignoradas. Apague o exemplo abaixo e coloque as suas.
+#
+# https://www.amazon.com.br/dp/B0XXXXXXXX | Echo Dot 5ª geração | 284,05 | 474,05
