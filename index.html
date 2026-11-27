@@ -360,6 +360,29 @@ ul.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--
 .rtags { display: flex; flex-wrap: wrap; gap: 6px; }
 .rtags span { background: var(--leaf-soft); color: var(--leaf); border-radius: 999px; padding: 4px 10px; font-size: .78rem; font-weight: 800; }
 .rsec { display: grid; gap: 8px; }
+.tq { display: grid; gap: 8px; }
+.tql { font-weight: 800; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: .88rem; }
+.seg button[aria-pressed="true"] { background: var(--leaf); border-color: var(--leaf); color: var(--bg); }
+.tphotos { display: flex; gap: 8px; flex-wrap: wrap; }
+.tph { position: relative; width: 96px; }
+.tph img { width: 96px; height: 128px; object-fit: cover; border-radius: 12px; display: block; }
+.tph button { position: absolute; top: -6px; right: -6px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: var(--ink); color: var(--bg); font-weight: 800; }
+.shoot2 { display: flex; gap: 8px; flex-wrap: wrap; }
+.shoot2 label { position: relative; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; }
+.shoot2 input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.btn.big { min-height: 52px; font-size: 1.05rem; }
+.tplan { display: grid; gap: 12px; }
+.tobs { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: .92rem; }
+.tday { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tmin { font-family: var(--display); font-size: 1.8rem; font-weight: 800; color: var(--water); line-height: 1; text-align: center; }
+.tmin small { display: block; font-family: var(--body); font-size: .7rem; color: var(--muted); }
+.texs label > span small { display: block; color: var(--muted); font-size: .84rem; }
+.tcta { width: 100%; border: 1px solid var(--line); background: var(--water-soft); border-radius: var(--r); padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; text-align: left; align-items: center; }
+.tcta b { font-family: var(--display); font-size: 1.02rem; color: var(--ink); }
+.tcta span { grid-column: 1; font-size: .85rem; color: var(--muted); }
+.tcta i { grid-row: 1 / span 2; grid-column: 2; font-style: normal; font-size: 1.4rem; color: var(--water); }
 .ingr { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .ingr label { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; min-height: 44px; }
 .ingr input { width: 22px; height: 22px; accent-color: var(--leaf); flex: none; }
@@ -424,6 +447,7 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
       <a class="qbtn soft" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><b>Pode ou não pode?</b><span>Resposta rápida</span></a>
       <button type="button" class="qbtn soft" data-go="lembretes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b>Lembretes</b><span>Água e refeições</span></button>
     </div>
+    <div id="treino-hoje"></div>
     <div class="todayrec">
       <div class="trhead"><h3>Receitas de hoje</h3><button type="button" class="linkbtn" data-go="receitas">Ver todas</button></div>
       <div class="trlist" id="today-rec"></div>
@@ -672,6 +696,67 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
     </div>
   </section>
 
+  <!-- TREINO -->
+  <section data-view="treino" hidden>
+    <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
+    <div class="head"><p class="eyebrow">Avaliação e exercícios</p><h2>Meu treino</h2></div>
+
+    <div id="tr-plan" hidden></div>
+
+    <div class="next" id="tr-form">
+      <h3 id="tr-form-title">Montar meu plano de exercícios</h3>
+      <p class="muted" style="font-size:.92rem">Responda rapidinho. A foto é opcional, mas ajuda a ver postura e pontos de atenção.</p>
+
+      <div class="tq">
+        <p class="tql">Quanto tempo faz que o bebê nasceu?</p>
+        <div class="seg" data-q="pos">
+          <button type="button" data-v="menos de 6 semanas">Menos de 6 sem.</button>
+          <button type="button" data-v="6 semanas a 3 meses">6 sem. a 3 meses</button>
+          <button type="button" data-v="3 a 6 meses">3 a 6 meses</button>
+          <button type="button" data-v="mais de 6 meses">Mais de 6 meses</button>
+        </div>
+      </div>
+      <div class="tq">
+        <p class="tql">Como foi o parto?</p>
+        <div class="seg" data-q="parto"><button type="button" data-v="normal">Normal</button><button type="button" data-v="cesárea">Cesárea</button></div>
+      </div>
+      <div class="tq">
+        <p class="tql">A médica já liberou exercícios?</p>
+        <div class="seg" data-q="liberada"><button type="button" data-v="sim">Sim</button><button type="button" data-v="não">Ainda não</button><button type="button" data-v="não perguntei">Não perguntei</button></div>
+      </div>
+      <div class="tq">
+        <p class="tql">Quanto tempo você tem por dia?</p>
+        <div class="seg" data-q="tempo"><button type="button" data-v="10">10 min</button><button type="button" data-v="20">20 min</button><button type="button" data-v="30">30 min</button></div>
+      </div>
+      <div class="tq">
+        <p class="tql">Sente alguma dessas coisas? <span class="muted" style="font-weight:600">(pode marcar mais de uma)</span></p>
+        <div class="seg multi" data-q="queixas">
+          <button type="button" data-v="dor nas costas">Dor nas costas</button>
+          <button type="button" data-v="dor no joelho">Dor no joelho</button>
+          <button type="button" data-v="escape de xixi">Escape de xixi</button>
+          <button type="button" data-v="barriga com abertura no meio (possível diástase)">Abertura na barriga</button>
+          <button type="button" data-v="nenhuma">Nenhuma</button>
+        </div>
+      </div>
+
+      <div class="tq">
+        <p class="tql">Fotos do corpo <span class="muted" style="font-weight:600">(opcional, até 2: de frente e de lado)</span></p>
+        <div class="tphotos" id="tr-photos"></div>
+        <div class="shoot2">
+          <label class="btn ghost" for="tr-cam">Tirar foto<input id="tr-cam" type="file" accept="image/*" capture="environment"></label>
+          <label class="btn ghost" for="tr-gal">Da galeria<input id="tr-gal" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+        </div>
+        <p class="muted" style="font-size:.82rem">Use roupa de ginástica, em pé, corpo inteiro na foto. <b>A foto não fica salva no app</b>: ela vai só para o Claude analisar e some quando você sai da tela.</p>
+      </div>
+
+      <button type="button" class="btn big" id="tr-go">Montar meu plano</button>
+      <p class="err" id="tr-err" hidden></p>
+    </div>
+    <div class="next" id="tr-wait" hidden><div class="thinking"><span class="dot"></span>Montando seu plano... pode levar até 1 minuto.</div></div>
+    <p class="muted" id="tr-off" hidden>Para montar o plano, abra pelo link do Claude ou coloque a sua chave da API na tela da Nutri.</p>
+    <div class="note"><p><strong>Importante:</strong> este plano não substitui a sua médica nem uma fisioterapeuta. Pare se sentir dor, sangramento, tontura ou se o xixi escapar durante o exercício.</p></div>
+  </section>
+
   <!-- RECEITAS -->
   <section data-view="receitas" hidden>
     <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
@@ -690,6 +775,7 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   <section data-view="mais" hidden>
     <div class="head"><p class="eyebrow">Tudo do app</p><h2>Mais</h2></div>
     <div class="list">
+      <button type="button" class="lrow" data-go="treino"><span class="li water"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="M12 8v6M8 21l4-7 4 7M6 11h12"/></svg></span><span class="lt"><b>Meu treino</b><small>Avaliação por foto e exercícios da semana</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="receitas"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-1.5 1-2 1-3M12 7c0-1.5 1-2 1-3M16 7c0-1.5 1-2 1-3"/></svg></span><span class="lt"><b>Receitas da semana</b><small>19 receitas fáceis do cardápio</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="fome"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg></span><span class="lt"><b>Lanches de fome</b><small>12 opções de até 200 kcal</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="compras"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span><span class="lt"><b>Compras e preparo</b><small>Lista da semana e domingo</small></span><span class="chev">›</span></button>
@@ -1844,9 +1930,137 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   $("rec-back").addEventListener("click", function () { show(recFrom); });
   renderReceitas(); renderTodayRec();
 
+  // ---------- MEU TREINO (avaliação do corpo por foto) ----------
+  var trAns = load("mp:treino:resp", {}), trPhotos = [], trBusy = false, trDay = todayIdx;
+  function trSyncSeg() {
+    document.querySelectorAll("#tr-form .seg").forEach(function (g) {
+      var q = g.getAttribute("data-q"), v = trAns[q];
+      g.querySelectorAll("button").forEach(function (b) {
+        var on = Array.isArray(v) ? v.indexOf(b.getAttribute("data-v")) >= 0 : v === b.getAttribute("data-v");
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    });
+  }
+  $("tr-form").addEventListener("click", function (e) {
+    var b = e.target.closest(".seg button"); if (!b) return;
+    var g = b.parentNode, q = g.getAttribute("data-q"), v = b.getAttribute("data-v");
+    if (g.classList.contains("multi")) {
+      var arr = Array.isArray(trAns[q]) ? trAns[q] : [];
+      if (v === "nenhuma") arr = arr.indexOf(v) >= 0 ? [] : ["nenhuma"];
+      else { arr = arr.filter(function (x) { return x !== "nenhuma"; }); arr = arr.indexOf(v) >= 0 ? arr.filter(function (x) { return x !== v; }) : arr.concat(v); }
+      trAns[q] = arr;
+    } else trAns[q] = v;
+    save("mp:treino:resp", trAns); trSyncSeg();
+  });
+  function trRenderPhotos() {
+    $("tr-photos").innerHTML = trPhotos.map(function (p, i) {
+      return '<div class="tph"><img src="' + p.url + '" alt="Foto ' + (i + 1) + '"><button type="button" data-trx="' + i + '" aria-label="Remover foto">×</button></div>';
+    }).join("");
+  }
+  function trPick(e) {
+    var f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    if (trPhotos.length >= 2) trPhotos.shift();
+    trPhotos.push({ file: f, url: URL.createObjectURL(f) }); trRenderPhotos();
+  }
+  $("tr-cam").addEventListener("change", trPick); $("tr-gal").addEventListener("change", trPick);
+  $("tr-photos").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-trx]"); if (!b) return;
+    var p = trPhotos.splice(+b.getAttribute("data-trx"), 1)[0]; if (p) URL.revokeObjectURL(p.url); trRenderPhotos();
+  });
+  function trClearPhotos() { trPhotos.forEach(function (p) { URL.revokeObjectURL(p.url); }); trPhotos = []; trRenderPhotos(); }
+
+  function trPrompt(withPhotos) {
+    var q = function (k, d) { var v = trAns[k]; return Array.isArray(v) ? (v.length ? v.join(", ") : d) : (v || d); };
+    return "Você é uma educadora física especializada em pós-parto, gentil e cuidadosa. Monte um plano de exercícios em casa para uma mulher que quer emagrecer com segurança.\n\n" +
+      "Dados: 1,50 m, " + fmt(curWeight(), 1) + " kg, AMAMENTANDO, dia muito corrido, faz os exercícios em casa com o bebê por perto, sem equipamentos.\n" +
+      "Tempo desde o parto: " + q("pos", "não informado") + ". Parto: " + q("parto", "não informado") + ". Liberação médica: " + q("liberada", "não informado") + ".\n" +
+      "Tempo por dia: " + q("tempo", "20") + " minutos. Queixas: " + q("queixas", "nenhuma informada") + ".\n" +
+      (withPhotos ? "As fotos anexadas são do corpo dela. Observe só postura (ombros, pelve, curvatura lombar), alinhamento e sinais visíveis de afastamento abdominal, para escolher exercícios. NÃO comente aparência, beleza, gordura, celulite ou estrias, NÃO estime peso nem percentual de gordura. Se a foto não mostrar o corpo, ignore a foto.\n" : "Ela não mandou foto.\n") +
+      "\nRegras de segurança (obrigatórias):\n" +
+      "- Menos de 6 semanas, ou sem liberação médica: só caminhada leve, respiração diafragmática e ativação do assoalho pélvico. Diga para pedir liberação na consulta.\n" +
+      "- Cesárea com menos de 3 meses: nada de abdominal tradicional, prancha ou pular.\n" +
+      "- Possível diástase: proibido abdominal tradicional, prancha frontal e torção; use ativação do transverso, ponte, exercícios em 4 apoios.\n" +
+      "- Escape de xixi: priorize assoalho pélvico, sem impacto, e recomende fisioterapeuta pélvica.\n" +
+      "- Dor no joelho: sem agachamento profundo nem afundo; dor nas costas: fortaleça glúteo e core profundo, sem flexão de tronco com carga.\n" +
+      "- Amamentando: beber água antes e depois, amamentar antes de treinar fica mais confortável, intensidade moderada (dá para conversar).\n" +
+      "- Inclua caminhada (pode ser com o carrinho) em vários dias: é o que mais ajuda a emagrecer com segurança. Inclua 1 ou 2 dias de descanso ativo.\n" +
+      "\nResponda SOMENTE com JSON:\n" +
+      '{"fase": "nome curto da fase, ex.: Volta aos exercícios (fase 2)", "observacoes": ["2 a 4 frases curtas e gentis sobre o que você levou em conta (postura, queixas, tempo de parto)"], "cuidados": ["2 a 4 cuidados importantes"], ' +
+      '"semana": [{"dia": "Segunda", "foco": "ex.: Caminhada + assoalho pélvico", "minutos": 20, "exercicios": [{"nome": "Ponte de glúteo", "quantidade": "3 x 12", "como": "1 frase simples de como fazer"}]}], "dica_bebe": "1 frase de como fazer com o bebê junto"}\n' +
+      "A semana deve ter os 7 dias, de Segunda a Domingo, cada dia com 2 a 5 exercícios que caibam no tempo dela. Português do Brasil, linguagem simples.";
+  }
+
+  function trRender() {
+    var plan = load("mp:treino:plano", null), box = $("tr-plan");
+    $("tr-form-title").textContent = plan ? "Refazer meu plano" : "Montar meu plano de exercícios";
+    if (!plan || !Array.isArray(plan.semana)) { box.hidden = true; renderTreinoHoje(); return; }
+    box.hidden = false;
+    var d = plan.semana[trDay] || plan.semana[0];
+    var doneKey = "mp:treino:feito:" + key(dateFor(trDay)), done = load(doneKey, {});
+    box.innerHTML =
+      '<div class="next tplan"><p class="eyebrow">' + esc(plan.fase || "Seu plano") + '</p>' +
+      (plan.observacoes && plan.observacoes.length ? '<ul class="tobs">' + plan.observacoes.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul>' : '') +
+      '<div class="rdays">' + WEEK.map(function (w, i) { return '<button type="button" class="rday' + (i === todayIdx ? " today" : "") + '" data-trday="' + i + '" aria-pressed="' + (i === trDay) + '">' + w.short + '</button>'; }).join("") + '</div>' +
+      '<div class="tday"><div><h3>' + esc(d.dia || WEEK[trDay].name) + (trDay === todayIdx ? ' (hoje)' : '') + '</h3><p class="muted">' + esc(d.foco || "") + '</p></div><span class="tmin num">' + (Number(d.minutos) || 0) + '<small>min</small></span></div>' +
+      '<ul class="ingr texs">' + (d.exercicios || []).map(function (x, i) {
+        return '<li><label for="tx-' + i + '"><input type="checkbox" id="tx-' + i + '" data-txi="' + i + '"' + (done[i] ? " checked" : "") + '><span><b>' + esc(x.nome || "") + '</b> · <span class="num">' + esc(x.quantidade || "") + '</span><small>' + esc(x.como || "") + '</small></span></label></li>';
+      }).join("") + '</ul>' +
+      (plan.dica_bebe ? '<p class="muted" style="font-size:.9rem"><b>Com o bebê:</b> ' + esc(plan.dica_bebe) + '</p>' : '') +
+      '</div>' +
+      (plan.cuidados && plan.cuidados.length ? '<div class="note"><p><strong>Cuidados:</strong></p><ul style="margin:0;padding-left:18px">' + plan.cuidados.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul></div>' : '');
+    renderTreinoHoje();
+  }
+  $("tr-plan").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-trday]"); if (b) { trDay = +b.getAttribute("data-trday"); trRender(); }
+  });
+  $("tr-plan").addEventListener("change", function (e) {
+    var i = e.target.getAttribute && e.target.getAttribute("data-txi"); if (i === null) return;
+    var k = "mp:treino:feito:" + key(dateFor(trDay)), done = load(k, {}); done[i] = e.target.checked; save(k, done); renderTreinoHoje();
+  });
+
+  function renderTreinoHoje() {
+    var el = $("treino-hoje"); if (!el) return;
+    var plan = load("mp:treino:plano", null);
+    if (!plan || !Array.isArray(plan.semana)) {
+      el.innerHTML = '<button type="button" class="tcta" data-go="treino"><b>Monte seu treino</b><span>Mande uma foto e receba exercícios para a sua fase</span><i>›</i></button>'; return;
+    }
+    var d = plan.semana[todayIdx] || {}, n = (d.exercicios || []).length, done = load("mp:treino:feito:" + key(new Date()), {});
+    var c = Object.keys(done).filter(function (k) { return done[k]; }).length;
+    el.innerHTML = '<button type="button" class="tcta has" data-go="treino"><b>Treino de hoje · ' + (Number(d.minutos) || 0) + ' min</b><span>' + esc(d.foco || "") + ' · ' + c + '/' + n + ' feitos</span><i>›</i></button>';
+  }
+
+  $("tr-go").addEventListener("click", function () {
+    if (trBusy) return;
+    var err = $("tr-err"); err.hidden = true;
+    if (!trAns.pos || !trAns.parto || !trAns.liberada) { err.textContent = "Responda pelo menos: tempo desde o parto, tipo de parto e liberação médica."; err.hidden = false; return; }
+    useCap("sample").then(function (fn) {
+      if (!fn) { $("tr-off").hidden = false; return; }
+      trBusy = true; $("tr-form").hidden = true; $("tr-wait").hidden = false;
+      var files = trPhotos.map(function (p) { return p.file; });
+      var opts = { effort: "medium" };
+      if (files.length) opts.images = files;
+      return fn.json(trPrompt(files.length > 0), opts).then(function (plan) {
+        if (!plan || !Array.isArray(plan.semana) || !plan.semana.length) throw { code: "invalid_json" };
+        save("mp:treino:plano", plan); trDay = todayIdx; trClearPhotos(); trRender();
+        window.scrollTo(0, 0); toast("Plano pronto ✓", "Seu treino da semana está logo acima.");
+      }).catch(function (e) {
+        var code = e && e.code;
+        err.textContent = code === "not_granted" ? "O Claude não foi liberado neste aparelho." :
+          code === "rate_limited" ? "Muitos pedidos seguidos. Espere alguns minutos." :
+          code === "image_rejected" ? "Não consegui abrir a foto. Tente outra." :
+          code === "refused" ? "Não consegui analisar essa foto. Tente sem foto ou com outra foto, de roupa de ginástica." :
+          code === "bad_key" ? "A chave da API não funcionou." :
+          code === "no_credit" ? "Acabaram os créditos da API." : "Não deu certo agora. Tente de novo.";
+        err.hidden = false;
+      }).then(function () { trBusy = false; $("tr-wait").hidden = true; $("tr-form").hidden = false; });
+    });
+  });
+  trSyncSeg(); trRender();
+
   // ---------- ABAS ----------
-  var TABS = ["hoje", "cardapio", "nutri", "agua", "mais", "fome", "compras", "plano", "dicas", "lembretes", "receitas", "receita"];
-  var NAV_OF = { receitas: "mais", receita: "mais", fome: "mais", compras: "mais", plano: "mais", dicas: "mais", lembretes: "mais" };
+  var TABS = ["hoje", "cardapio", "nutri", "agua", "mais", "fome", "compras", "plano", "dicas", "lembretes", "receitas", "receita", "treino"];
+  var NAV_OF = { treino: "mais", receitas: "mais", receita: "mais", fome: "mais", compras: "mais", plano: "mais", dicas: "mais", lembretes: "mais" };
   function show(tab) {
     if (TABS.indexOf(tab) < 0) tab = "hoje";
     document.querySelectorAll("section[data-view]").forEach(function (s) { s.hidden = s.getAttribute("data-view") !== tab; });

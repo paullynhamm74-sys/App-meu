@@ -60,3 +60,7 @@ Barra de baixo com 5 abas: **Hoje** (acordei, próxima refeição, progresso do 
 ## Receitas
 
 19 receitas do cardápio (dados em `RECEITAS` dentro do `index.html`): tela **Mais → Receitas da semana** com filtro por dia, cartões "Receitas de hoje" na tela Hoje, botão **Ver receita** em cada refeição do Cardápio, e tela da receita com tempo, porções, kcal por porção, ingredientes para marcar, passo a passo e dica.
+
+## Meu treino (avaliação por foto)
+
+**Mais → Meu treino**: perguntas rápidas (tempo de pós-parto, tipo de parto, liberação médica, minutos por dia, queixas) e até 2 fotos opcionais do corpo. O Claude monta um plano de 7 dias seguro para pós-parto e amamentação (regras para menos de 6 semanas, cesárea, diástase, escape de xixi, dor no joelho e nas costas), olhando só postura e alinhamento, sem comentar aparência. As fotos não são salvas; só o plano fica no aparelho. A tela Hoje mostra o "Treino de hoje" com os exercícios marcados.
