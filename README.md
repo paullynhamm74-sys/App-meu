@@ -15,6 +15,19 @@ Sem chia, quiabo, carne vermelha ou café. As marcações ficam salvas só no ap
 
 > Plano geral. Mostre para sua nutricionista ou médica.
 
+## Meus Treinos (`treinos.html`)
+
+Treinos em casa para emagrecer e definir, sem equipamento. Abre pelo botão **Treino de hoje** na tela Hoje ou em **Mais → Meus Treinos**.
+
+- **19 exercícios com bonequinho animado** mostrando o movimento, mais as imagens de começo e movimento, passo a passo, dica, erro comum e versão mais fácil.
+- **4 treinos**: Queima Total (cardio + pernas), Bumbum e Pernas, Barriga e Braços (abdômen seguro depois da gravidez, sem abdominal tradicional) e Caminhada com intervalos.
+- **Aba Semana**: escolha o dia (Seg a Dom) e veja todos os exercícios daquele dia com o bonequinho, na ordem e com o tempo de cada um, e comece dali. As bolinhas da semana na tela Hoje abrem o dia direto.
+- **Semana pronta**: Seg Queima Total, Ter Bumbum e Pernas, Qua Caminhada, Qui Barriga e Braços, Sex Queima Total, Sáb Bumbum e Pernas, Dom descanso.
+- **3 níveis** que sobem sozinhos (semanas 1–2, 3–6, 7+): 30/30s × 2 voltas, 40/20s × 3, 45/15s × 4.
+- **Treino guiado**: cronômetro, bonequinho do exercício, bipe, vibração e voz em português avisando a troca; tela fica acesa.
+- **Meta 71 → 58 kg até 31 de março**: conta quanto precisa perder por semana e quanto vem do cardápio, dos treinos e dos passos. Peso compartilhado com o Meu Prato.
+- **Progresso**: gráfico do peso com a linha da meta, treinos feitos, minutos e calorias (estimadas pelo seu peso).
+
 ## Pode ou Não Pode (`calorias.html`)
 
 Agente separado e simples: tire foto do que vai comer e ele mostra só as calorias e um semáforo:

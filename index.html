@@ -446,6 +446,7 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
       <button type="button" class="qbtn leaf" data-go="nutri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><b>Tirar foto</b><span>Calorias da comida</span></button>
       <a class="qbtn soft" href="https://claude.ai/artifact/WmfgUp6aLxhiP91EeT8g8M" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><b>Pode ou não pode?</b><span>Resposta rápida</span></a>
       <button type="button" class="qbtn soft" data-go="lembretes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><b>Lembretes</b><span>Água e refeições</span></button>
+      <a class="qbtn warm" href="treinos.html" style="grid-column:1 / -1;min-height:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg><b>Treino de hoje</b><span>Exercícios em casa com bonequinho mostrando</span></a>
     </div>
     <div id="treino-hoje"></div>
     <div class="todayrec">
@@ -699,7 +700,7 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   <!-- TREINO -->
   <section data-view="treino" hidden>
     <button type="button" class="back" data-go="mais"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar</button>
-    <div class="head"><p class="eyebrow">Avaliação e exercícios</p><h2>Meu treino</h2></div>
+    <div class="head"><p class="eyebrow">Plano feito pelo Claude</p><h2>Avaliação do corpo</h2></div>
 
     <div id="tr-plan" hidden></div>
 
@@ -775,7 +776,8 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
   <section data-view="mais" hidden>
     <div class="head"><p class="eyebrow">Tudo do app</p><h2>Mais</h2></div>
     <div class="list">
-      <button type="button" class="lrow" data-go="treino"><span class="li water"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="M12 8v6M8 21l4-7 4 7M6 11h12"/></svg></span><span class="lt"><b>Meu treino</b><small>Avaliação por foto e exercícios da semana</small></span><span class="chev">›</span></button>
+      <a class="lrow" href="treinos.html" style="text-decoration:none;color:inherit"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></span><span class="lt"><b>Meus Treinos</b><small>19 exercícios com bonequinho e treino guiado</small></span><span class="chev">›</span></a>
+      <button type="button" class="lrow" data-go="treino"><span class="li water"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="M12 8v6M8 21l4-7 4 7M6 11h12"/></svg></span><span class="lt"><b>Avaliação do corpo</b><small>Mande foto e o Claude monta seu plano da semana</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="receitas"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-1.5 1-2 1-3M12 7c0-1.5 1-2 1-3M16 7c0-1.5 1-2 1-3"/></svg></span><span class="lt"><b>Receitas da semana</b><small>19 receitas fáceis do cardápio</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="fome"><span class="li warm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-3-3-8-1-8 4 0 5 4 10 8 10s8-5 8-10c0-5-5-7-8-4z"/><path d="M12 7c0-2 1-4 3-4"/></svg></span><span class="lt"><b>Lanches de fome</b><small>12 opções de até 200 kcal</small></span><span class="chev">›</span></button>
       <button type="button" class="lrow" data-go="compras"><span class="li leaf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span><span class="lt"><b>Compras e preparo</b><small>Lista da semana e domingo</small></span><span class="chev">›</span></button>
@@ -2023,11 +2025,11 @@ nav.tabs button.foto[aria-current="page"] .fab { background: var(--apricot); }
     var el = $("treino-hoje"); if (!el) return;
     var plan = load("mp:treino:plano", null);
     if (!plan || !Array.isArray(plan.semana)) {
-      el.innerHTML = '<button type="button" class="tcta" data-go="treino"><b>Monte seu treino</b><span>Mande uma foto e receba exercícios para a sua fase</span><i>›</i></button>'; return;
+      el.innerHTML = '<button type="button" class="tcta" data-go="treino"><b>Avaliação do corpo</b><span>Mande uma foto e receba um plano para a sua fase</span><i>›</i></button>'; return;
     }
     var d = plan.semana[todayIdx] || {}, n = (d.exercicios || []).length, done = load("mp:treino:feito:" + key(new Date()), {});
     var c = Object.keys(done).filter(function (k) { return done[k]; }).length;
-    el.innerHTML = '<button type="button" class="tcta has" data-go="treino"><b>Treino de hoje · ' + (Number(d.minutos) || 0) + ' min</b><span>' + esc(d.foco || "") + ' · ' + c + '/' + n + ' feitos</span><i>›</i></button>';
+    el.innerHTML = '<button type="button" class="tcta has" data-go="treino"><b>Plano da avaliação · ' + (Number(d.minutos) || 0) + ' min</b><span>' + esc(d.foco || "") + ' · ' + c + '/' + n + ' feitos</span><i>›</i></button>';
   }
 
   $("tr-go").addEventListener("click", function () {
