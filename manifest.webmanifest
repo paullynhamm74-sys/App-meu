@@ -17,6 +17,7 @@
   "shortcuts": [
     { "name": "Fome agora", "url": "./index.html#fome", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Água", "url": "./index.html#agua", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Treino de hoje", "url": "./treinos.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Pode ou não pode", "url": "./calorias.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }
