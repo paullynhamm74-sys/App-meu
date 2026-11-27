@@ -140,6 +140,15 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
 .box b { font-size: .9rem; }
 
 /* plano */
+.daytabs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.dt { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 0; display: grid; justify-items: center; gap: 2px; font-weight: 800; font-size: .8rem; min-height: 56px; }
+.dt small { font-size: .68rem; color: var(--muted); font-weight: 800; }
+.dt.is-today { border-color: var(--apricot); }
+.dt[aria-selected="true"] { background: var(--leaf); border-color: var(--leaf); color: var(--bg); }
+.dt[aria-selected="true"] small { color: inherit; opacity: .85; }
+.dt .ok { color: var(--leaf); }
+.dt[aria-selected="true"] .ok { color: inherit; }
+.excard .tag { font-size: .72rem; font-weight: 800; color: var(--apricot); padding: 0 4px; }
 .dayrow { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .dayrow:last-child { border-bottom: 0; }
 .dayrow .dn { font-family: var(--display); font-weight: 800; }
@@ -245,10 +254,12 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
   <!-- PLANO -->
   <section data-view="plano" hidden>
     <div style="display:grid;gap:16px">
-      <div class="head"><p class="eyebrow">Até março</p><h2>Meu plano</h2></div>
+      <div class="head"><p class="eyebrow">Exercícios de cada dia</p><h2>Minha semana</h2></div>
+      <div class="daytabs" id="daytabs" role="tablist" aria-label="Dias da semana"></div>
+      <div class="card" id="dia"></div>
       <div class="card" id="meta"></div>
       <div class="card">
-        <h3>Treinos da semana</h3>
+        <h3>Resumo da semana</h3>
         <div id="semana"></div>
       </div>
       <div class="card">
@@ -309,7 +320,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
   <div class="in">
     <button type="button" data-tab="hoje" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>Hoje</button>
     <button type="button" data-tab="exercicios"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v7M12 9l-5 3M12 9l5 3M12 14l-4 7M12 14l4 7"/></svg>Exercícios</button>
-    <button type="button" data-tab="plano"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Plano</button>
+    <button type="button" data-tab="plano"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Semana</button>
     <button type="button" data-tab="progresso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19l5-6 4 3 7-9"/><path d="M15 7h5v5"/></svg>Progresso</button>
   </div>
 </nav>
@@ -735,7 +746,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
       btn.className = "wd" + (done.length ? " ok" : "") + (k === key(today) ? " today" : "") + (!SEMANA[dd] ? " rest" : "");
       btn.innerHTML = '<span>' + DIAS[dd] + '</span><span class="dot">' + (done.length ? "✓" : (SEMANA[dd] || "–")) + '</span>';
       btn.setAttribute("aria-label", DIAS_L[dd] + ": " + (SEMANA[dd] ? TREINOS[SEMANA[dd]].nome : "descanso") + (done.length ? ", feito" : ""));
-      (function (dd) { btn.onclick = function () { if (SEMANA[dd]) openTreino(SEMANA[dd]); }; })(dd);
+      (function (dd) { btn.onclick = function () { diaSel = dd; history = []; show("plano", false); }; })(dd);
       wk.appendChild(btn);
     }
     $("week-count").textContent = cnt + " de 6";
@@ -835,6 +846,63 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
     });
   }
 
+  var diaSel = today.getDay();
+  function dateOfWeekday(d) { var ws = weekStart(today), x = new Date(ws); x.setDate(ws.getDate() + ((d + 6) % 7)); return x; }
+  function renderDia() {
+    var tabs = $("daytabs"); tabs.innerHTML = "";
+    [1, 2, 3, 4, 5, 6, 0].forEach(function (d) {
+      var b = document.createElement("button"); b.type = "button"; b.setAttribute("role", "tab");
+      b.className = "dt" + (d === today.getDay() ? " is-today" : "");
+      b.setAttribute("aria-selected", d === diaSel ? "true" : "false");
+      var feito = doneOn(key(dateOfWeekday(d))).length > 0;
+      b.innerHTML = '<span>' + DIAS[d] + '</span><small>' + (feito ? '<span class="ok">✓</span>' : (SEMANA[d] ? { A: "Queima", B: "Bumbum", C: "Barriga", D: "Andar" }[SEMANA[d]] : "Folga")) + '</small>';
+      b.setAttribute("aria-label", DIAS_L[d]);
+      b.onclick = function () { diaSel = d; renderDia(); };
+      tabs.appendChild(b);
+    });
+    var box = $("dia"), d = diaSel, id = SEMANA[d], N = NIVEIS[nivel()];
+    var dt = dateOfWeekday(d), feito = doneOn(key(dt)).length > 0;
+    box.innerHTML = "";
+    var h = document.createElement("div"); h.className = "top";
+    var tx = document.createElement("div"); tx.className = "head";
+    if (!id) {
+      tx.innerHTML = '<p class="eyebrow">' + DIAS_L[d] + (d === today.getDay() ? " · hoje" : "") + '</p><h2>Descanso</h2>';
+      h.appendChild(tx); box.appendChild(h);
+      var p = document.createElement("p"); p.className = "muted small";
+      p.textContent = "Dia de recuperar o corpo. Se tiver vontade, faça uma caminhada leve de 20 a 30 minutos com o bebê e alongue."; box.appendChild(p);
+      var g0 = document.createElement("div"); g0.className = "grid2";
+      ["caminhada"].forEach(function (e) { g0.appendChild(exCard(e, "20 a 30 min, leve")); });
+      box.appendChild(g0);
+      var b0 = document.createElement("button"); b0.className = "btn ghost big"; b0.innerHTML = PLAY + "Caminhada leve (opcional)"; b0.onclick = function () { startPlayer("D"); }; box.appendChild(b0);
+      return;
+    }
+    var T = TREINOS[id], inf = stepsInfo(buildSteps(id));
+    tx.innerHTML = '<p class="eyebrow">' + DIAS_L[d] + (d === today.getDay() ? " · hoje" : "") + (feito ? " · feito ✓" : "") + '</p><h2>' + T.nome + '</h2>';
+    h.appendChild(tx); box.appendChild(h);
+    var pl = document.createElement("div"); pl.className = "pills";
+    pl.innerHTML = '<span class="pill">' + inf.min + ' min</span><span class="pill warm">~' + inf.kcal + ' kcal</span>' +
+      (T.walk ? '' : '<span class="pill water">' + N.work + 's cada · ' + N.rounds + ' voltas</span>');
+    box.appendChild(pl);
+    var sub = document.createElement("p"); sub.className = "muted small";
+    sub.textContent = T.walk ? "5 min leve, depois alterna 3 min rápido e 2 min moderado, e termina com 5 min leve." :
+      "Aquecimento de 2 minutos e depois estes " + T.ex.length + " exercícios, nesta ordem, repetidos " + N.rounds + " vezes. Toque num exercício para ver como faz.";
+    box.appendChild(sub);
+    var g = document.createElement("div"); g.className = "grid2";
+    T.ex.forEach(function (e, i) { g.appendChild(exCard(e, T.walk ? N.walk + " minutos" : (i + 1) + "º · " + N.work + " segundos")); });
+    box.appendChild(g);
+    var b = document.createElement("button"); b.className = "btn big warm"; b.innerHTML = PLAY + (d === today.getDay() ? "Começar treino de hoje" : "Fazer este treino agora");
+    b.onclick = function () { startPlayer(id); }; box.appendChild(b);
+  }
+  function exCard(id, tag) {
+    var e = EX[id], c = document.createElement("button"); c.type = "button"; c.className = "excard";
+    c.appendChild(figBox(id));
+    var t = document.createElement("span"); t.className = "tag"; t.textContent = tag; c.appendChild(t);
+    var b = document.createElement("b"); b.textContent = e.nome; c.appendChild(b);
+    var s2 = document.createElement("small"); s2.textContent = e.musc; c.appendChild(s2);
+    c.onclick = function () { openEx(id); };
+    return c;
+  }
+
   function renderPlano() {
     var pa = pesoAtual(), weeks = Math.max(1, (GOAL_DATE - today) / 864e5 / 7), need = (pa - GOAL_KG) / weeks;
     var ini = pesoInicial(), lost = Math.max(0, ini - pa), pct = Math.min(100, lost / (ini - GOAL_KG) * 100);
@@ -851,12 +919,13 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
       '<p class="small">Cardápio do Meu Prato: ~' + fmt(dietaKg, 1) + ' kg/semana.<br>Treinos de 6 dias (nível 3, ~' + fmt(semKcal) + ' kcal/semana): ~' + fmt(treinoKg, 2) + ' kg/semana.<br>8 a 10 mil passos por dia: ~' + fmt(passosKg, 2) + ' kg/semana.<br>Juntos: <b>~' + fmt(ritmo, 2) + ' kg/semana</b>.</p>' +
       '<p class="small">' + (ok ? "Nesse ritmo você chega aos 58 kg por volta do fim de março. 💪" : "Nesse ritmo você chega a ~" + fmt(prev, 1) + " kg no fim de março e aos 58 kg por volta de " + dataPrev.toLocaleDateString("pt-BR", { day: "numeric", month: "long" }) + ". Mais rápido que isso pode diminuir o leite.") + '</p></div>' +
       '<p class="small muted">Para 1,50 m, o peso saudável vai de 42 a 56 kg. 58 kg já é uma ótima meta.</p>';
+    renderDia();
     var sm = $("semana"); sm.innerHTML = "";
     [1, 2, 3, 4, 5, 6, 0].forEach(function (d) {
       var id = SEMANA[d], r = document.createElement("div"); r.className = "dayrow" + (d === today.getDay() ? " is-today" : "");
       var T = id && TREINOS[id];
       r.innerHTML = '<span class="dn">' + DIAS[d] + '</span><span><b>' + (T ? T.nome : "Descanso") + '</b><br><small class="muted">' + (T ? T.sub : "Caminhada leve opcional") + '</small></span>';
-      if (T) { var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = "Ver"; b.onclick = function () { openTreino(id); }; r.appendChild(b); }
+      var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = "Ver"; b.onclick = function () { diaSel = d; renderPlano(); window.scrollTo(0, 0); }; r.appendChild(b);
       sm.appendChild(r);
     });
     var nv = $("niveis"); nv.innerHTML = "";
